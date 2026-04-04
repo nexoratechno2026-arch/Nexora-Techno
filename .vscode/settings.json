@@ -1,0 +1,15 @@
+{
+  "files.associations": {
+    "**/dist/assets/*.css": "plaintext",
+    "dist/assets/*.css": "plaintext"
+  },
+  "css.lint.vendorPrefix": "ignore",
+  "css.lint.propertyIgnoredDueToDisplay": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  "search.exclude": {
+    "**/dist/**": true
+  },
+  "files.watcherExclude": {
+    "**/dist/**": true
+  }
+}
