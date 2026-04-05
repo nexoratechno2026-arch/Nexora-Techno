@@ -77,12 +77,12 @@ function AboutSection() {
                 KJ
               </div>
               <div>
-                <p className="text-xl font-semibold text-white">Kapil Js</p>
-                <p className="text-sm text-brand-100">Founder & CEO, Nexora Techno</p>
+                <p className="text-xl font-semibold text-white">Kapil JS</p>
+                <p className="text-sm text-brand-100">19-Year-Old Entrepreneur, Founder & CEO</p>
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-slate-300">
-              CS student and serial builder. Passionate about helping businesses grow through smart digital systems,
+              Based in Salem, 19-year-old founder Kapil JS is a serial builder passionate about helping businesses grow through smart digital systems,
               automation, and conversion-focused design.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">

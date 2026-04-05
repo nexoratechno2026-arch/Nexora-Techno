@@ -142,8 +142,8 @@ function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-center gap-3 p-6 text-center sm:flex-row sm:justify-between sm:text-left lg:px-10">
           <p className="text-sm text-slate-400">
-            © {year} Nexora Techno. All rights reserved. Founded by{" "}
-            <span className="font-medium text-white">Kapil Js</span>, Founder & CEO.
+            © {year} Nexora Techno, Salem. All rights reserved. Founded by{" "}
+            <span className="font-medium text-white">Kapil JS</span>, 19-Year-Old Entrepreneur & CEO.
           </p>
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <span className="inline-flex h-2 w-2 rounded-full bg-accent-400" />
