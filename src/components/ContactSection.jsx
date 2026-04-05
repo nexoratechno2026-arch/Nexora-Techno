@@ -74,8 +74,20 @@ function ContactSection() {
 
       if (error) throw error;
 
-      // Optional: If you still want to send n8n notification, you can keep the fetch here
-      // But Supabase is now your primary secure storage.
+      // n8n Webhook connection for WhatsApp Business AI Automation
+      await fetch("https://kapiljs.app.n8n.cloud/webhook-test/aaa56f17-10f3-47e7-b09c-c20dd148204a", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          course: data.service, // Mapped service to course based on payload structure
+          message: data.message // Added message just in case you want to process it in n8n
+        })
+      });
 
       setFormStatus("success");
       e.target.reset();
