@@ -56,6 +56,7 @@ function Internship() {
 
 
       setFormStatus("success");
+      alert("Application Submitted Successfully!");
       e.target.reset();
       setResumeFile(null);
       setTimeout(() => setFormStatus("idle"), 5000);

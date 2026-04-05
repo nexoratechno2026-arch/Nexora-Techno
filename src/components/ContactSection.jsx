@@ -78,6 +78,7 @@ function ContactSection() {
       }
 
       setFormStatus("success");
+      alert("Message Sent Successfully!");
       e.target.reset();
       setTimeout(() => setFormStatus("idle"), 5000);
     } catch (error) {
