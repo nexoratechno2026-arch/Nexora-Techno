@@ -53,21 +53,7 @@ function Internship() {
 
       if (dbError) throw dbError;
 
-      // n8n Webhook connection for WhatsApp Business AI Automation
-      await fetch("https://kapiljs.app.n8n.cloud/webhook-test/aaa56f17-10f3-47e7-b09c-c20dd148204a", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          course: data.program, // Mapped program to course
-          about: data.about,
-          resumeUrl: publicUrl
-        })
-      });
+
 
       setFormStatus("success");
       e.target.reset();
