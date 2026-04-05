@@ -72,28 +72,16 @@ function ContactSection() {
         .from("contact_messages")
         .insert([data]);
 
-      if (error) throw error;
-
-      // n8n Webhook connection for WhatsApp Business AI Automation
-      await fetch("https://kapiljs.app.n8n.cloud/webhook-test/aaa56f17-10f3-47e7-b09c-c20dd148204a", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          course: data.service, // Mapped service to course based on payload structure
-          message: data.message // Added message just in case you want to process it in n8n
-        })
-      });
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
       setFormStatus("success");
       e.target.reset();
       setTimeout(() => setFormStatus("idle"), 5000);
     } catch (error) {
-      console.error("Error saving to database:", error);
+      console.error("Error submitting form:", error);
       setFormStatus("error");
     }
   };
