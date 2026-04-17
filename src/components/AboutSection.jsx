@@ -1,103 +1,98 @@
 import { motion } from "framer-motion";
 
-const highlights = [
-  { icon: "🚀", title: "Founded 2026", desc: "Born out of a mission to give startups enterprise-grade digital tools." },
-  { icon: "🌍", title: "India & Global", desc: "Serving clients locally and internationally with digital-first workflows." },
-  { icon: "⚡", title: "3–6 Week Delivery", desc: "Fast execution without cutting corners on quality or performance." },
-  { icon: "🤖", title: "AI-Integrated", desc: "Every project considers automation from day one — not as an afterthought." },
-];
-
 function AboutSection() {
   return (
-    <section id="about" className="mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-24">
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.12 }}
-        transition={{ duration: 0.45 }}
-        className="grid gap-8 lg:grid-cols-[1fr_1fr]"
-      >
-        {/* Left: main about content */}
-        <div className="flex flex-col gap-6">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 lg:p-10 shadow-glow overflow-hidden">
-            <p className="text-sm uppercase tracking-[0.35em] text-brand-200">Our Digital Philosophy</p>
-            <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-              We translate business goals into <span className="gradient-text tracking-tighter">high-performance</span> digital engines.
+    <section id="about" className="bg-white py-20 lg:py-32">
+      <div className="mx-auto max-w-[1200px] px-6">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+          {/* Left: Visual */}
+          <motion.div
+            initial={{ opacity: 0, x: -32 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 p-1 shadow-2xl shadow-blue-500/20">
+              <div className="rounded-[22px] bg-[#F8FAFC] p-10">
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { label: "Design", icon: "🎨", color: "bg-blue-50" },
+                    { label: "Engineering", icon: "⚙️", color: "bg-slate-50" },
+                    { label: "AI & Automation", icon: "🤖", color: "bg-blue-50" },
+                    { label: "Growth", icon: "📈", color: "bg-slate-50" },
+                  ].map((item) => (
+                    <div key={item.label} className={`${item.color} rounded-2xl p-6 text-center transition-all duration-200 hover:-translate-y-1`}>
+                      <div className="text-3xl mb-2">{item.icon}</div>
+                      <p className="text-sm font-bold text-slate-700">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 p-5 text-center text-white">
+                  <p className="text-2xl font-black">Nexora Techno</p>
+                  <p className="text-sm text-blue-100 mt-1">Your Digital Growth Partner</p>
+                </div>
+              </div>
+            </div>
+            {/* Floating badge */}
+            <div className="absolute -top-4 -right-4 rounded-2xl bg-white px-5 py-3 shadow-xl border border-slate-100">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Based in</p>
+              <p className="text-sm font-black text-slate-900">Salem, Tamil Nadu</p>
+            </div>
+          </motion.div>
+
+          {/* Right: Content */}
+          <motion.div
+            initial={{ opacity: 0, x: 32 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <span className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
+              About Nexora
+            </span>
+            <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl leading-tight">
+              We Engineer <br />
+              <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
+                Market Leaders
+              </span>
             </h2>
-            <p className="mt-6 leading-8 text-slate-300 text-lg">
-              Generic templates don't solve complex brand challenges. At Nexora, we focus on "Performance First" engineering, combining sharp messaging, premium
-              design, and custom automation so your growth strategy works like an automated 24/7 revenue engine.
+            <p className="mt-6 text-lg text-slate-500 leading-relaxed">
+              Nexora Techno is a full-spectrum digital agency combining design excellence, engineering depth, and AI-powered automation. We work with ambitious startups, SMBs, and students to build scalable digital products and careers.
             </p>
-            
-            {/* Logo Cloud for Trust */}
-            <div className="mt-10 border-t border-white/5 pt-8">
-              <p className="text-xs uppercase tracking-[0.25em] text-slate-500 mb-6 font-semibold">Technologies we leverage</p>
-              <div className="flex flex-wrap gap-x-10 gap-y-6 opacity-30 grayscale hover:grayscale-0 transition duration-700 items-center">
-                 {['VERTEX', 'BLOOM', 'NOVA', 'EDGE', 'SCALE'].map((logo) => (
-                   <span key={logo} className="font-display text-sm font-black text-white tracking-[0.4em]">{logo}</span>
-                 ))}
-              </div>
-            </div>
-          </div>
 
-          {/* Tagline card */}
-          <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-brand-500/14 to-accent-500/10 p-8">
-            <p className="text-sm uppercase tracking-[0.35em] text-accent-400">Our Mission</p>
-            <h3 className="mt-4 text-2xl font-semibold text-white">Innovating Your Digital Future</h3>
-            <p className="mt-4 leading-7 text-slate-300">
-              From strategy to launch, every design, development, and automation decision is made to improve trust,
-              conversions, and long-term brand visibility.
-            </p>
-          </div>
-        </div>
-
-        {/* Right: highlights + leadership */}
-        <div className="flex flex-col gap-6">
-          {/* Highlights grid */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {highlights.map((h) => (
-              <motion.div
-                key={h.title}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5"
-              >
-                <span className="text-2xl">{h.icon}</span>
-                <p className="mt-3 font-semibold text-white">{h.title}</p>
-                <p className="mt-1.5 text-sm leading-6 text-slate-400">{h.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Leadership card */}
-          <div className="rounded-[2rem] border border-brand-300/25 bg-[linear-gradient(145deg,rgba(10,160,232,0.12),rgba(9,7,5,0.65))] p-6 shadow-glow">
-            <p className="text-xs uppercase tracking-[0.35em] text-brand-100">Leadership</p>
-            <div className="mt-5 flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-brand-200/30 bg-gradient-to-br from-brand-500 to-brand-300 text-sm font-bold text-slate-950">
-                KJ
-              </div>
-              <div>
-                <p className="text-xl font-semibold text-white">Kapil JS</p>
-                <p className="text-sm text-brand-100">19-Year-Old Entrepreneur, Founder & CEO</p>
-              </div>
-            </div>
-            <p className="mt-4 text-sm leading-7 text-slate-300">
-              Based in Salem, 19-year-old founder Kapil JS is a serial builder passionate about helping businesses grow through smart digital systems,
-              automation, and conversion-focused design.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {["Web Development", "AI Automation", "Growth Strategy"].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-brand-300/25 bg-brand-400/10 px-3 py-1 text-xs text-brand-100"
-                >
-                  {tag}
-                </span>
+            <div className="mt-10 grid gap-4">
+              {[
+                "High-Conversion UI/UX Design & Development",
+                "Scalable Full-Stack Web Engineering",
+                "AI Workflow Automation & Integration",
+                "Performance SEO & Digital Growth Strategy",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-4 group">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 transition-transform group-hover:scale-110">
+                    <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M2 6l3 3 5-5" />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-semibold text-slate-700">{item}</p>
+                </div>
               ))}
             </div>
-          </div>
+
+            <div className="mt-10">
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-[1.02]"
+              >
+                Start a Conversation
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

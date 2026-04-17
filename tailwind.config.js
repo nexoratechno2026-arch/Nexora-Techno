@@ -7,25 +7,25 @@ export default {
         ink: "#040b16",
         mist: "#eaf4ff",
         brand: {
-          50: "#ecf9ff",
-          100: "#d8f2ff",
-          200: "#afe6ff",
-          300: "#73d6ff",
-          400: "#31bfff",
-          500: "#0aa0e8",
-          600: "#0b7fbc",
-          700: "#0f658f",
-          800: "#124f70",
-          900: "#143a51"
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          200: "#bae6fd",
+          300: "#7dd3fc",
+          400: "#38bdf8",
+          500: "#0ea5e9", // The Primary Blue
+          600: "#0284c7",
+          700: "#0369a1",
+          800: "#075985",
+          900: "#0c4a6e"
         },
         accent: {
-          400: "#4ade80",
-          500: "#22c55e"
+          400: "#6366f1",
+          500: "#4f46e5"
         }
       },
       fontFamily: {
-        sans: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Sora", "ui-sans-serif", "system-ui", "sans-serif"]
+        sans: ["Inter", "Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       backgroundImage: {
         "hero-radial":

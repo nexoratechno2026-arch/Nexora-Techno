@@ -8,33 +8,10 @@ const links = [
   { label: "Home", href: "/#home" },
   { label: "About", href: "/#about" },
   { label: "Services", href: "/#services" },
-  { label: "Process", href: "/#portfolio" },
-  { label: "Results", href: "/#testimonials" },
+  { label: "Team", href: "/#team" },
   { label: "Internship", href: "/internship" },
   { label: "Contact", href: "/#contact" },
 ];
-
-function MenuIcon({ open }) {
-  return (
-    <div className="flex h-5 w-5 flex-col justify-center gap-1.5">
-      <motion.span
-        animate={open ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-        className="h-0.5 w-full rounded bg-white origin-center block"
-        transition={{ duration: 0.2 }}
-      />
-      <motion.span
-        animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-        className="h-0.5 w-full rounded bg-white block"
-        transition={{ duration: 0.2 }}
-      />
-      <motion.span
-        animate={open ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-        className="h-0.5 w-full rounded bg-white origin-center block"
-        transition={{ duration: 0.2 }}
-      />
-    </div>
-  );
-}
 
 function Navbar() {
   const [logoError, setLogoError] = useState(false);
@@ -42,119 +19,116 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on link click
-  const handleNavClick = () => setMobileOpen(false);
-
   return (
     <>
       <motion.header
-        initial={{ opacity: 0, y: -24 }}
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="sticky top-0 z-40"
+        transition={{ duration: 0.4 }}
+        className={`sticky top-0 z-50 w-full bg-white transition-all duration-300 ${
+          scrolled ? "shadow-[0_2px_20px_rgba(0,0,0,0.08)]" : "border-b border-slate-100"
+        }`}
       >
-        <div
-          className={`mx-auto mt-4 flex w-[min(94%,76rem)] items-center justify-between gap-2 rounded-full border px-3 py-3 backdrop-blur-sm transition-all duration-300 sm:px-4 lg:px-6 ${
-            scrolled
-              ? "border-brand-300/30 bg-[#06102280]/95 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-              : "border-brand-300/20 bg-[#09182f]/80"
-          }`}
-        >
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
           {/* Logo */}
-          <a
-            href="/#home"
-            className="inline-flex min-w-0 items-center gap-2 font-display text-lg font-bold tracking-tight text-white sm:gap-3 sm:text-xl"
-          >
+          <a href="/#home" className="inline-flex items-center gap-3">
             {!logoError ? (
               <img
-                src="/nexora-logo.png"
-                alt="Nexora Techno logo"
-                className="h-9 w-auto rounded-md border border-white/10 object-contain"
+                src="/Logo.jpeg"
+                alt="Nexora Techno"
+                className="h-10 w-auto rounded-lg object-contain"
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-brand-300 to-brand-500 text-xs font-semibold text-slate-950">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 text-sm font-black text-white">
                 NT
               </span>
             )}
-            <span className="truncate">Nexora</span>
-            <span className="hidden sm:inline">Techno</span>
+            <span className="hidden font-display text-xl font-black text-slate-900 sm:block">
+              Nexora <span className="text-blue-600">Techno</span>
+            </span>
           </a>
 
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-1 text-sm text-white/70 lg:flex">
+          {/* Desktop Nav */}
+          <nav className="hidden items-center gap-1 lg:flex">
             {links.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-white"
+                className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600"
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
-            {/* CTA */}
+          {/* CTA */}
+          <div className="flex items-center gap-3">
             <a
               href={GOOGLE_FORM_URL}
               target="_blank"
               rel="noreferrer"
-              className="hidden shrink-0 rounded-full bg-gradient-to-r from-brand-500 to-brand-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:brightness-110 sm:block"
+              className="hidden rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:shadow-blue-500/40 hover:scale-[1.02] sm:block"
             >
               Get Free Demo
             </a>
-
-            {/* Mobile hamburger */}
+            {/* Mobile Toggle */}
             <button
               id="mobile-menu-toggle"
               type="button"
               aria-label="Toggle menu"
-              aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((o) => !o)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/[0.05] transition hover:bg-white/[0.1] lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition hover:bg-slate-50 lg:hidden"
             >
-              <MenuIcon open={mobileOpen} />
+              {mobileOpen ? (
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile menu drawer */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             id="mobile-nav-drawer"
-            initial={{ opacity: 0, y: -16 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-[5.5rem] z-30 mx-auto w-[min(94%,76rem)] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#07142a]/95 p-5 shadow-2xl backdrop-blur-lg lg:hidden"
+            className="fixed inset-x-0 top-[73px] z-40 border-b border-slate-100 bg-white px-6 py-4 shadow-lg lg:hidden"
           >
             <nav className="flex flex-col gap-1">
               {links.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={handleNavClick}
-                  className="rounded-xl px-4 py-3 text-sm font-medium text-white/80 transition hover:bg-white/5 hover:text-white"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-600"
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
-            <div className="mt-4 border-t border-white/10 pt-4">
+            <div className="mt-4 border-t border-slate-100 pt-4">
               <a
                 href={GOOGLE_FORM_URL}
                 target="_blank"
                 rel="noreferrer"
-                onClick={handleNavClick}
-                className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-brand-500 to-brand-300 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110"
+                onClick={() => setMobileOpen(false)}
+                className="block w-full rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-500/25"
               >
                 Get Free Demo →
               </a>
