@@ -49,8 +49,13 @@ function Navbar() {
                 NT
               </span>
             )}
-            <span className="hidden font-display text-xl font-black text-slate-900 sm:block">
-              Nexora <span className="text-blue-600">Techno</span>
+            <span className="hidden font-display sm:block">
+              <span className="block text-xl font-black text-slate-900">
+                Nexora <span className="text-blue-600">Techno</span>
+              </span>
+              <span className="block text-xs font-semibold text-slate-400 tracking-wide">
+                Salem, Tamil Nadu
+              </span>
             </span>
           </a>
 

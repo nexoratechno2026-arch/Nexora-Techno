@@ -26,7 +26,7 @@ function HeroSection() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
             </span>
-            Trusted Digital Partner for Startups & SMBs
+            📍 Nexora Techno – Salem, Tamil Nadu
           </motion.div>
 
           {/* Headline */}
@@ -36,9 +36,9 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mx-auto max-w-4xl font-display text-5xl font-black leading-[1.1] text-slate-900 sm:text-6xl lg:text-7xl"
           >
-            Build Your Vision With Absolute{" "}
+            Internship & Training in Salem for{" "}
             <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
-              Precision
+              Future Developers 🚀
             </span>
           </motion.h1>
 
@@ -49,8 +49,8 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-slate-500"
           >
-            We combine elite design thinking, robust engineering, and AI automation
-            to build platforms that don't just exist — they perform.
+            Learn Full Stack Development, Digital Marketing & AI with Real-Time Projects.
+            Join Nexora Techno – Salem's #1 Tech Training & Internship Center.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -84,11 +84,11 @@ function HeroSection() {
             className="mt-16 flex flex-wrap items-center justify-center gap-8 border-t border-slate-100 pt-10"
           >
             {[
-              "UI/UX Design",
-              "Web Development",
-              "AI Automation",
-              "SEO Strategy",
-              "Digital Ads",
+              "Full Stack Course Salem",
+              "Digital Marketing Training Salem",
+              "AI Training Salem",
+              "Internship in Salem",
+              "Web Development Salem",
             ].map((tag) => (
               <span key={tag} className="flex items-center gap-2 text-sm font-semibold text-slate-400">
                 <svg className="h-4 w-4 text-blue-500" viewBox="0 0 20 20" fill="currentColor">

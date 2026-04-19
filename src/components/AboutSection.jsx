@@ -58,8 +58,17 @@ function AboutSection() {
               </span>
             </h2>
             <p className="mt-6 text-lg text-slate-500 leading-relaxed">
-              Nexora Techno is a full-spectrum digital agency combining design excellence, engineering depth, and AI-powered automation. We work with ambitious startups, SMBs, and students to build scalable digital products and careers.
+              Nexora Techno is a <strong>MSME Registered</strong> full-spectrum tech training & digital agency in <strong>Salem, Tamil Nadu</strong>. We offer Internships, Full Stack Development, Digital Marketing, and AI courses with real-time projects.
             </p>
+
+            {/* MSME Badge */}
+            <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border-2 border-blue-100 bg-blue-50 px-5 py-3">
+              <span className="text-2xl">🏛️</span>
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest text-blue-600">MSME Registered</p>
+                <p className="text-sm font-bold text-slate-800">Govt. of India – Salem, Tamil Nadu</p>
+              </div>
+            </div>
 
             <div className="mt-10 grid gap-4">
               {[

@@ -13,8 +13,8 @@ const contactDetails = [
       </svg>
     ),
     label: "Email",
-    value: "nexoratechnosalem@gmail.com",
-    href: "mailto:nexoratechnosalem@gmail.com",
+    value: "nexoratechno2026@gmail.com",
+    href: "mailto:nexoratechno2026@gmail.com",
   },
   {
     icon: (
@@ -73,10 +73,10 @@ function ContactSection() {
             Get In Touch
           </span>
           <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl">
-            Let's Build Something Great
+            Contact Us – Salem, Tamil Nadu
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-500">
-            Have a project in mind? Reach out and we'll get back to you within 24 hours.
+            Enroll for Internship, Full Stack Course, or Digital Marketing Training in Salem. We'll get back to you within 24 hours.
           </p>
         </motion.div>
 

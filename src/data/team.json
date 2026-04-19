@@ -10,7 +10,7 @@
   },
   {
     "name": "KANNAN .S",
-    "role": "Team Member",
+    "role": "Full Stack Developer",
     "email": "kannan13oct2006@gmail.com",
     "address": "90/37 Cholan west street, ammapet, Salem 636003",
     "phone": "8754733006",
@@ -19,7 +19,7 @@
   },
   {
     "name": "SRI PADMA YOGESH S",
-    "role": "Team Member",
+    "role": "Frontend Developer",
     "email": "syogeshbsccs@gmail.com",
     "address": "8/81 KUYAVAR STREET, SENDHARAPATTi(po), GANGAVALLI(tk), SALEM(dt).",
     "phone": "6379325711",
@@ -28,7 +28,7 @@
   },
   {
     "name": "MAHALAKSHMI G",
-    "role": "Team Member",
+    "role": "Digital Marketing",
     "email": "mahalakshmi45795@gmail.com",
     "address": "Kesava perumal Kovil west road near GET School naduvallur PO,Gangavalli Tk, salem dt",
     "phone": "8807942682",
@@ -37,7 +37,7 @@
   },
   {
     "name": "GOWTHAM PRIYAN R",
-    "role": "Team Member",
+    "role": "Web Designer",
     "email": "gowthampriyan05@gmail.com",
     "address": "9/61 MGR Street Near,Gudamalai (PO), Gangavalli (TK), Salem (DT).",
     "phone": "63743532891",
@@ -46,7 +46,7 @@
   },
   {
     "name": "PRIYA",
-    "role": "Team Member",
+    "role": "Web Designer",
     "email": "",
     "address": "",
     "phone": "",
@@ -55,20 +55,12 @@
   },
   {
     "name": "KISHORE KUMARAN",
-    "role": "Team Member",
+    "role": "Android Developer",
     "email": "",
     "address": "",
     "phone": "",
-    "linkedin": "#",
+    "linkedin": "https://www.linkedin.com/in/kishore-kumar-66666236a?utm_source=share_via&utm_content=profile&utm_medium=member_android",
     "image": "/Kishore.jpeg"
-  },
-  {
-    "name": "GOPI E",
-    "role": "Team Member",
-    "email": "",
-    "address": "",
-    "phone": "",
-    "linkedin": "#",
-    "image": ""
   }
 ]
+

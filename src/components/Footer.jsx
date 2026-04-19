@@ -25,7 +25,7 @@ const footerLinks = {
   Connect: [
     { label: "Get Free Demo", href: GOOGLE_FORM_URL, external: true },
     { label: "WhatsApp Us", href: `https://wa.me/${WHATSAPP_NUMBER}`, external: true },
-    { label: "Email Us", href: "mailto:nexoratechnosalem@gmail.com" },
+    { label: "Email Us", href: "mailto:nexoratechno2026@gmail.com" },
   ],
 };
 
@@ -76,9 +76,17 @@ function Footer() {
                 Nexora <span className="text-blue-400">Techno</span>
               </span>
             </a>
-            <p className="text-slate-400 leading-relaxed text-sm max-w-xs mb-8">
-              Helping businesses and ambitious individuals scale through innovative digital solutions, elite design, and strategic engineering.
+            <p className="text-slate-400 leading-relaxed text-sm max-w-xs mb-4">
+              Nexora Techno – Salem, Tamil Nadu. Internship, Full Stack Training & Digital Marketing courses with real-time projects.
             </p>
+            {/* MSME Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 rounded-xl bg-white/8 border border-white/10 px-4 py-2">
+              <span className="text-base">🏛️</span>
+              <div>
+                <p className="text-xs font-black text-white uppercase tracking-widest">MSME Registered</p>
+                <p className="text-xs text-slate-400">Govt. of India – Salem, Tamil Nadu</p>
+              </div>
+            </div>
             {/* Socials */}
             <div className="flex gap-3">
               {socialLinks.map((s) => (
@@ -120,7 +128,7 @@ function Footer() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 sm:flex-row">
           <p className="text-sm text-slate-500">
-            © {year} Nexora Techno. All Rights Reserved. Built in Salem, Tamil Nadu.
+            © {year} Nexora Techno – Salem, Tamil Nadu. All Rights Reserved. | MSME Registered | nexoratechno2026@gmail.com
           </p>
           <div className="flex gap-6">
             <a href="/privacy" className="text-sm text-slate-500 hover:text-blue-400 transition-colors">Privacy Policy</a>
