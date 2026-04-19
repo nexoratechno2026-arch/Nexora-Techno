@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Home from "./pages/Home";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -18,6 +19,7 @@ function App() {
           <Route path="/verify" element={<Verification />} />
           <Route path="/admin-data" element={<AdminInterns />} />
         </Routes>
+        <SpeedInsights />
       </div>
     </BrowserRouter>
   );
