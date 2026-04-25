@@ -15,7 +15,7 @@ function Internship() {
     { title: "Full Stack Development", duration: "15 Days", description: "Fast-track your skills in frontend and backend development with hands-on project building." },
     { title: "Digital Marketing", duration: "15 Days", description: "Master SEO, social media strategy, and data-driven marketing to grow online presence." },
     { title: "Prompt Engineering", duration: "15 Days", description: "Learn to design, optimize, and implement effective prompts for Large Language Models." },
-    { title: "Logo Creation & Design", duration: "15 Days", description: "Focus on branding, visual identity, and professional logo design using industry-standard tools." },
+    { title: "Designing", duration: "15 Days", description: "Focus on branding, visual identity, and professional logo design using industry-standard tools." },
   ];
 
   const handleSubmit = async (e) => {
@@ -122,7 +122,7 @@ function Internship() {
                         <option value="full-stack">Full Stack Development</option>
                         <option value="digital-marketing">Digital Marketing</option>
                         <option value="prompt-engineering">Prompt Engineering</option>
-                        <option value="logo-creation">Logo Creation & Design</option>
+                        <option value="logo-creation">Designing</option>
                     </select>
                 </div>
                 

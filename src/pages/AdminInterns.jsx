@@ -151,7 +151,7 @@ function AdminInterns() {
                       <option value="Full Stack Development">Full Stack Development</option>
                       <option value="Digital Marketing">Digital Marketing</option>
                       <option value="Prompt Engineering">Prompt Engineering</option>
-                      <option value="Logo Creation & Design">Logo Creation & Design</option>
+                      <option value="Designing">Designing</option>
                     </select>
                     <input type="date" value={newIntern.completionDate} onChange={(e) => setNewIntern({ ...newIntern, completionDate: e.target.value })} className="w-full rounded-xl bg-black/40 border border-white/10 p-3.5 text-sm outline-none focus:border-blue-500" required />
                     <button type="submit" className="w-full py-4 rounded-full bg-blue-500 text-slate-950 font-black uppercase text-xs tracking-widest hover:scale-105 transition">Save To Cloud</button>
