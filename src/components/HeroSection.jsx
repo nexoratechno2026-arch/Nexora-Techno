@@ -36,10 +36,11 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mx-auto max-w-4xl font-display text-5xl font-black leading-[1.1] text-slate-900 sm:text-6xl lg:text-7xl"
           >
-            Internship & Training in Salem for{" "}
+            We Build{" "}
             <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
-              Future Developers 🚀
+              Digital Engines
             </span>
+            {" "}That Grow Salem Businesses.
           </motion.h1>
 
           {/* Subtext */}
@@ -49,8 +50,7 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-slate-500"
           >
-            Learn Full Stack Development, Digital Marketing & AI with Real-Time Projects.
-            Join Nexora Techno – Salem's #1 Tech Training & Internship Center.
+            From custom websites and AI-powered software to SEO, UI/UX, and performance ads — Nexora Techno is Salem's IT startup delivering real web services for businesses ready to grow online. Real technology. Measurable results.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -62,6 +62,7 @@ function HeroSection() {
           >
             <a
               href="#contact"
+              aria-label="Get started with Nexora Techno IT services"
               className="rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-8 py-4 text-base font-bold text-white shadow-xl shadow-blue-500/30 transition-all duration-200 hover:scale-[1.03] hover:shadow-blue-500/40"
             >
               Get Started Free
@@ -70,30 +71,42 @@ function HeroSection() {
               href={GOOGLE_FORM_URL}
               target="_blank"
               rel="noreferrer"
+              aria-label="Book a free demo with Nexora Techno"
               className="rounded-xl border-2 border-blue-600 bg-white px-8 py-4 text-base font-bold text-blue-600 transition-all duration-200 hover:bg-blue-50"
             >
               Book a Demo →
             </a>
           </motion.div>
 
-          {/* Trust bar */}
+          {/* Secondary tagline */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.45 }}
+            className="mt-6 text-sm italic text-slate-400"
+          >
+            Partnering with select clients on live-project internship programs.
+          </motion.p>
+
+          {/* Service pills */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-16 flex flex-wrap items-center justify-center gap-8 border-t border-slate-100 pt-10"
+            className="mt-12 flex flex-wrap items-center justify-center gap-3"
           >
             {[
-              "Full Stack Course Salem",
-              "Digital Marketing Training Salem",
-              "AI Training Salem",
-              "Internship in Salem",
-              "Web Development Salem",
+              "Custom Business Website Development",
+              "UI/UX Design & Prototyping",
+              "AI-Powered Software & Automation",
+              "SEO & Content Strategy",
+              "Digital Ads & Performance Funnels",
+              "IT Brand & Consulting Services",
             ].map((tag) => (
-              <span key={tag} className="flex items-center gap-2 text-sm font-semibold text-slate-400">
-                <svg className="h-4 w-4 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+              <span
+                key={tag}
+                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm"
+              >
                 {tag}
               </span>
             ))}

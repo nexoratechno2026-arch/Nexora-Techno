@@ -31,8 +31,8 @@ const services = [
     ),
   },
   {
-    title: "SEO & Content Strategy",
-    desc: "Rank higher on search with technical SEO, strategic content structure, and intent-driven pages.",
+    title: "SEO & Content Strategy – Salem",
+    desc: "We help businesses in Salem rank higher on Google with technical SEO, local search optimization, strategic content, and intent-driven pages tailored for Salem audiences.",
     icon: (
       <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
         <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />

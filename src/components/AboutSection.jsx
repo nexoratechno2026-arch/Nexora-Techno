@@ -58,7 +58,7 @@ function AboutSection() {
               </span>
             </h2>
             <p className="mt-6 text-lg text-slate-500 leading-relaxed">
-              Nexora Techno is a <strong>MSME Registered</strong> full-spectrum tech training & digital agency in <strong>Salem, Tamil Nadu</strong>. We offer Internships, Full Stack Development, Digital Marketing, and AI courses with real-time projects.
+              Nexora Techno is an <strong>MSME Registered</strong> IT startup and web services company in <strong>Salem, Tamil Nadu</strong>. We deliver custom websites, AI-powered software, SEO, and complete digital solutions for businesses ready to grow online.
             </p>
 
             {/* MSME Badge */}
