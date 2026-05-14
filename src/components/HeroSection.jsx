@@ -26,7 +26,7 @@ function HeroSection() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
             </span>
-            📍 Nexora Techno – Salem, Tamil Nadu
+            📍 Nexora Techno – IT Software Company in Salem
           </motion.div>
 
           {/* Headline */}
@@ -40,7 +40,7 @@ function HeroSection() {
             <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
               Digital Engines
             </span>
-            {" "}That Grow Salem Businesses.
+            {" "}That Grow Businesses &amp; Careers in Salem.
           </motion.h1>
 
           {/* Subtext */}
@@ -50,7 +50,7 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-slate-500"
           >
-            From custom websites and AI-powered software to SEO, UI/UX, and performance ads — Nexora Techno is Salem's IT startup delivering real web services for businesses ready to grow online. Real technology. Measurable results.
+            From custom software development and AI-powered solutions to SEO and web services — Nexora Techno is a leading IT Software Company in Salem. We deliver results for businesses and provide professional tech internships for students.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -85,7 +85,7 @@ function HeroSection() {
             transition={{ duration: 0.7, delay: 0.45 }}
             className="mt-6 text-sm italic text-slate-400"
           >
-            Partnering with select clients on live-project internship programs.
+            Providing professional IT Internships in Salem with live-project experience.
           </motion.p>
 
           {/* Service pills */}
@@ -96,12 +96,12 @@ function HeroSection() {
             className="mt-12 flex flex-wrap items-center justify-center gap-3"
           >
             {[
-              "Custom Business Website Development",
-              "UI/UX Design & Prototyping",
-              "AI-Powered Software & Automation",
+              "Custom Software Development",
+              "IT Internships in Salem",
+              "AI-Powered Automation",
               "SEO & Content Strategy",
-              "Digital Ads & Performance Funnels",
-              "IT Brand & Consulting Services",
+              "Digital Ads & Performance",
+              "IT Consulting Services",
             ].map((tag) => (
               <span
                 key={tag}

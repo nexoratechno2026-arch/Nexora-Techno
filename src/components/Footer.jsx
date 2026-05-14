@@ -77,7 +77,7 @@ function Footer() {
               </span>
             </a>
             <p className="text-slate-400 leading-relaxed text-sm max-w-xs mb-4">
-              Nexora Techno – Salem, Tamil Nadu. Internship, Full Stack Training & Digital Marketing courses with real-time projects.
+              Nexora Techno is Salem's premier IT Software Company. We deliver custom software development and professional IT Internships with real-time projects.
             </p>
             {/* MSME Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-xl bg-white/8 border border-white/10 px-4 py-2">

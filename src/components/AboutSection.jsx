@@ -30,7 +30,7 @@ function AboutSection() {
                 </div>
                 <div className="mt-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 p-5 text-center text-white">
                   <p className="text-2xl font-black">Nexora Techno</p>
-                  <p className="text-sm text-blue-100 mt-1">Your Digital Growth Partner</p>
+                  <p className="text-sm text-blue-100 mt-1">Leading IT Software Company</p>
                 </div>
               </div>
             </div>
@@ -58,7 +58,7 @@ function AboutSection() {
               </span>
             </h2>
             <p className="mt-6 text-lg text-slate-500 leading-relaxed">
-              Nexora Techno is an <strong>MSME Registered</strong> IT startup and web services company in <strong>Salem, Tamil Nadu</strong>. We deliver custom websites, AI-powered software, SEO, and complete digital solutions for businesses ready to grow online.
+              Nexora Techno is an <strong>MSME Registered</strong> IT Software Company based in <strong>Salem, Tamil Nadu</strong>. We specialize in custom software development, web services, AI automation, and providing top-tier professional IT Internships to help students launch their careers.
             </p>
 
             {/* MSME Badge */}
@@ -72,10 +72,10 @@ function AboutSection() {
 
             <div className="mt-10 grid gap-4">
               {[
-                "High-Conversion UI/UX Design & Development",
-                "Scalable Full-Stack Web Engineering",
+                "High-Conversion Software & Web Development",
+                "Scalable Full-Stack Engineering",
                 "AI Workflow Automation & Integration",
-                "Performance SEO & Digital Growth Strategy",
+                "Professional IT Internships in Salem",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-4 group">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 transition-transform group-hover:scale-110">
