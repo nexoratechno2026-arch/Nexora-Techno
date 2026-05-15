@@ -34,11 +34,11 @@ function TeamSection() {
               className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white p-8 text-center shadow-sm transition-all duration-300"
             >
               {/* Circular image */}
-              <div className={`relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-blue-100 bg-blue-50 ${member.name.toLowerCase().includes("kapil") ? "p-2" : ""}`}>
+              <div className={`relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-blue-100 bg-blue-50 ${member.name.toLowerCase().includes("kapil") || member.name.toLowerCase().includes("tharani") ? "p-2" : ""}`}>
                 <img
                   src={member.image}
                   alt={member.name}
-                  className={`h-full w-full rounded-full object-cover transition-transform duration-500 hover:scale-110 ${member.name.toLowerCase().includes("kapil") ? "object-top" : "object-center"}`}
+                  className={`h-full w-full rounded-full object-cover transition-transform duration-500 hover:scale-110 ${member.name.toLowerCase().includes("kapil") || member.name.toLowerCase().includes("tharani") ? "object-top" : "object-center"}`}
                   onError={(e) => {
                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=2563EB&color=fff&size=200`;
                   }}
