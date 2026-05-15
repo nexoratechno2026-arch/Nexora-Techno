@@ -34,7 +34,7 @@ function TeamSection() {
               className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white p-8 text-center shadow-sm transition-all duration-300"
             >
               {/* Circular image */}
-              <div className={`relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-blue-100 bg-blue-50 ${member.name.toLowerCase().includes("kapil") ? "p-2" : member.name.toLowerCase().includes("tharani") ? "bg-white" : ""}`}>
+              <div className={`relative mb-6 h-32 w-32 overflow-hidden rounded-full border-4 border-blue-100 bg-blue-50 ${member.name.toLowerCase().includes("kapil") ? "p-2" : ""}`}>
                 <img
                   src={member.image}
                   alt={member.name}
@@ -42,7 +42,7 @@ function TeamSection() {
                     member.name.toLowerCase().includes("kapil")
                       ? "object-cover object-top"
                       : member.name.toLowerCase().includes("tharani")
-                      ? "object-contain"
+                      ? "object-cover object-[center_25%]"
                       : "object-cover object-center"
                   }`}
                   onError={(e) => {
