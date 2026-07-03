@@ -12,11 +12,26 @@ function Internship() {
   const formRef = useRef();
 
   const programs = [
-    { title: "Full Stack Development", duration: "15 Days", description: "Fast-track your skills in frontend and backend development with hands-on project building." },
-    { title: "Digital Marketing", duration: "15 Days", description: "Master SEO, social media strategy, and data-driven marketing to grow online presence." },
-    { title: "Prompt Engineering", duration: "15 Days", description: "Learn to design, optimize, and implement effective prompts for Large Language Models." },
-    { title: "Designing", duration: "15 Days", description: "Focus on branding, visual identity, and professional logo design using industry-standard tools." },
+    {
+      key: "full-stack",
+      title: "Full Stack Development",
+      duration: "05/05/2026 - 25/05/2026",
+      description: "Build real-world web applications end-to-end—frontend UI, backend APIs, databases, and deployment-ready workflows.",
+    },
+    {
+      key: "ui-ux",
+      title: "UI/UX Development",
+      duration: "05/05/2026 - 25/05/2026",
+      description: "Design intuitive user experiences and implement responsive UI—wireframes, usability-first layouts, and modern frontend design systems.",
+    },
+    {
+      key: "prompt-engineering-ai-ml",
+      title: "Prompt Engineering & AI/ML",
+      duration: "05/05/2026 - 25/05/2026",
+      description: "Learn prompt design and AI workflows—LLM prompting, evaluation, and practical ML concepts to ship AI-assisted solutions.",
+    },
   ];
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,12 +98,13 @@ function Internship() {
 
           <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {programs.map((program, idx) => (
-              <motion.div key={program.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }} className="rounded-3xl border border-white/5 bg-white/[0.03] p-6 backdrop-blur-sm transition hover:border-brand-300/30 hover:bg-white/[0.06]">
+              <motion.div key={program.key} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }} className="rounded-3xl border border-white/5 bg-white/[0.03] p-6 backdrop-blur-sm transition hover:border-brand-300/30 hover:bg-white/[0.06]">
                 <h3 className="text-xl font-semibold text-white">{program.title}</h3>
                 <p className="mt-1 text-xs font-medium text-accent-400 uppercase tracking-wider">{program.duration}</p>
                 <p className="mt-4 text-sm leading-relaxed text-slate-400">{program.description}</p>
               </motion.div>
             ))}
+
           </div>
 
           <div className="mt-24 mb-32 grid gap-12 lg:grid-cols-2">
@@ -119,11 +135,11 @@ function Internship() {
                     <input type="tel" name="phone" required placeholder="Phone number" className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-sm text-white outline-none focus:border-brand-500" />
                     <select name="program" required className="w-full rounded-2xl border border-white/10 bg-[#07142a] px-5 py-4 text-sm text-slate-300 outline-none focus:border-brand-500">
                         <option value="">Select program...</option>
-                        <option value="full-stack">Full Stack Development</option>
-                        <option value="digital-marketing">Digital Marketing</option>
-                        <option value="prompt-engineering">Prompt Engineering</option>
-                        <option value="logo-creation">Designing</option>
+                        <option value="full-stack">Full Stack Development (FS)</option>
+                        <option value="ui-ux">UI/UX Development (UD)</option>
+                        <option value="prompt-engineering-ai-ml">Prompt Engineering & AI/ML (PE)</option>
                     </select>
+
                 </div>
                 
                 <div className="space-y-4 rounded-3xl bg-slate-900/50 p-6 border border-white/5">

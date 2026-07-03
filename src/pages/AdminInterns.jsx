@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { supabase } from "../supabaseClient";
+import internsData from "../data/interns.json";
 
 function AdminInterns() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -10,10 +11,14 @@ function AdminInterns() {
   const [activeTab, setActiveTab] = useState("interns");
   
   const [newIntern, setNewIntern] = useState({
-    id: "", name: "", program: "Full Stack Development",
-    duration: "15 Days", status: "Completed",
-    completionDate: new Date().toISOString().split("T")[0],
+    id: "",
+    name: "",
+    program: "Full Stack Development",
+    duration: "05/05/2026 - 25/05/2026",
+    status: "Completed",
+    completionDate: "2026-05-25",
   });
+
 
   const [internList, setInternList] = useState([]);
   const [applicationList, setApplicationList] = useState([]);
@@ -75,15 +80,89 @@ function AdminInterns() {
       if (error) throw error;
       setMessage("Success: Record saved! ✅");
       setNewIntern({
-        id: "", name: "", program: "Full Stack Development", duration: "15 Days", status: "Completed",
-        completionDate: new Date().toISOString().split("T")[0],
+        id: "",
+        name: "",
+        program: "Full Stack Development",
+        duration: "05/05/2026 - 25/05/2026",
+        status: "Completed",
+        completionDate: "2026-05-25",
       });
+
       fetchAllData();
     } catch (err) {
       setMessage(`Error: ${err.message}`);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBulkImport = async () => {
+    if (window.confirm(`Import ${internsData.length} interns from JSON? This will add all records to Supabase.`)) {
+      setLoading(true);
+      setMessage("");
+
+      try {
+        // Prepare data
+        const formattedData = internsData.map(intern => ({
+          id: intern.id,
+          name: intern.name,
+          department: intern.department,
+          program: getDepartmentProgram(intern.department),
+          status: "Completed",
+          completionDate: "2026-05-25",
+          duration: "05/05/2026 - 25/05/2026",
+        }));
+
+        // Insert in batches
+        const batchSize = 100;
+        for (let i = 0; i < formattedData.length; i += batchSize) {
+          const batch = formattedData.slice(i, i + batchSize);
+          const { error } = await supabase.from("interns").insert(batch);
+          if (error) throw error;
+        }
+
+        setMessage(`✅ Successfully imported ${internsData.length} interns!`);
+        fetchAllData();
+      } catch (err) {
+        setMessage(`❌ Import error: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleUpdateAllDurations = async () => {
+    if (!window.confirm("Update all intern records to 05/05/2026 - 25/05/2026 (20 days)?")) return;
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const { data, error } = await supabase
+        .from("interns")
+        .update({
+          duration: "05/05/2026 - 25/05/2026",
+          completionDate: "2026-05-25",
+          status: "Completed",
+        })
+        .neq("id", "");
+
+      if (error) throw error;
+      setMessage(`✅ Updated ${data?.length ?? "all"} interns to 20 days`);
+      fetchAllData();
+    } catch (err) {
+      setMessage(`❌ Duration update failed: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDepartmentProgram = (dept) => {
+    const map = {
+      "FS": "Full Stack Development",
+      "UD": "UI/UX Development",
+      "PE": "Prompt Engineering & AI/ML",
+    };
+    return map[dept] || "Full Stack Development";
   };
 
   const downloadCSV = (data, filename) => {
@@ -125,8 +204,9 @@ function AdminInterns() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-10 flex flex-col md:flex-row justify-between items-center gap-6 text-white">
             <h1 className="text-4xl font-black uppercase tracking-tighter italic">NEXORA COMMAND</h1>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button onClick={fetchAllData} className="px-6 py-2.5 rounded-full border border-white/10 bg-white/5 text-sm font-bold hover:bg-white/10 transition">Refresh View</button>
+              <button onClick={handleUpdateAllDurations} disabled={loading} className="px-6 py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm font-bold hover:bg-emerald-500/20 transition disabled:opacity-50">Set 20-Day Duration</button>
               <button onClick={handleLogout} className="px-6 py-2.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold hover:bg-red-500/20">Logout</button>
             </div>
           </div>
@@ -148,14 +228,25 @@ function AdminInterns() {
                     <input type="text" placeholder="ID (e.g. NT2026)" value={newIntern.id} onChange={(e) => setNewIntern({ ...newIntern, id: e.target.value.toUpperCase() })} className="w-full rounded-xl bg-black/40 border border-white/10 p-3.5 text-sm outline-none focus:border-blue-500" required />
                     <input type="text" placeholder="Full Student Name" value={newIntern.name} onChange={(e) => setNewIntern({ ...newIntern, name: e.target.value })} className="w-full rounded-xl bg-black/40 border border-white/10 p-3.5 text-sm outline-none focus:border-blue-500" required />
                     <select value={newIntern.program} onChange={(e) => setNewIntern({ ...newIntern, program: e.target.value })} className="w-full rounded-xl bg-[#07142a] border border-white/10 p-3.5 text-sm outline-none focus:border-blue-500">
-                      <option value="Full Stack Development">Full Stack Development</option>
-                      <option value="Digital Marketing">Digital Marketing</option>
-                      <option value="Prompt Engineering">Prompt Engineering</option>
-                      <option value="Designing">Designing</option>
+                      <option value="Full Stack Development">Full Stack Development (FS)</option>
+                      <option value="UI/UX Development">UI/UX Development (UD)</option>
+                      <option value="Prompt Engineering & AI/ML">Prompt Engineering & AI/ML (PE)</option>
                     </select>
+
                     <input type="date" value={newIntern.completionDate} onChange={(e) => setNewIntern({ ...newIntern, completionDate: e.target.value })} className="w-full rounded-xl bg-black/40 border border-white/10 p-3.5 text-sm outline-none focus:border-blue-500" required />
-                    <button type="submit" className="w-full py-4 rounded-full bg-blue-500 text-slate-950 font-black uppercase text-xs tracking-widest hover:scale-105 transition">Save To Cloud</button>
+                    <button type="submit" disabled={loading} className="w-full py-4 rounded-full bg-blue-500 text-slate-950 font-black uppercase text-xs tracking-widest hover:scale-105 transition disabled:opacity-50">Save To Cloud</button>
                   </form>
+                  {activeTab === 'interns' && (
+                    <div className="mt-6 pt-6 border-t border-white/10">
+                      <p className="text-xs text-slate-400 mb-4 italic">Or bulk import all {internsData.length} interns from JSON</p>
+                      <button onClick={handleBulkImport} disabled={loading} className="w-full py-4 rounded-full bg-green-600 text-white font-black uppercase text-xs tracking-widest hover:scale-105 transition disabled:opacity-50">🚀 Bulk Import JSON</button>
+                    </div>
+                  )}
+                </div>
+              )}
+              {message && (
+                <div className={`rounded-[2rem] border p-6 text-center text-sm font-bold ${message.includes('✅') ? 'border-green-500/30 bg-green-500/10 text-green-400' : 'border-red-500/30 bg-red-500/10 text-red-400'}`}>
+                  {message}
                 </div>
               )}
               <div className="rounded-[2.5rem] border border-blue-500/10 bg-blue-500/5 p-8 text-center">

@@ -14,9 +14,7 @@ function TeamSection() {
           <span className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
             Our Team
           </span>
-          <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl">
-            Meet the Experts
-          </h2>
+          <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl">Meet Our Experts</h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-500">
             A tight-knit team of designers, engineers, and growth strategists dedicated to your success.
           </p>

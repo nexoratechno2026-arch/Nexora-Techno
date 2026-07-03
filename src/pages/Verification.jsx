@@ -12,6 +12,49 @@ function Verification() {
   const [error, setError] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
+  const parseDurationDays = (duration) => {
+    const fallbackDuration = "05/05/2026 - 25/05/2026";
+    const rawDuration = duration || fallbackDuration;
+    const match = rawDuration.match(/(\d{1,2}\/\d{1,2}\/\d{4})\s*-\s*(\d{1,2}\/\d{1,2}\/\d{4})/);
+    if (!match) return "20 Days";
+
+    const [, start, end] = match;
+    const parseDate = (value) => {
+      const [month, day, year] = value.split("/").map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    const startDate = parseDate(start);
+    const endDate = parseDate(end);
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) return "20 Days";
+
+    const diff = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+    return `${diff} Days`;
+  };
+
+  const getDisplayValue = (field, fallback = "") => {
+    return field ?? fallback;
+  };
+
+  const getProgramLabel = (record) => {
+    if (record?.program) return record.program;
+    if (record?.department) {
+      const map = { FS: "Full Stack Development", UD: "UI/UX Development", PE: "Prompt Engineering & AI/ML" };
+      return map[record.department] ?? record.department;
+    }
+    return "Unknown Program";
+  };
+
+  const getNameLabel = (record) => {
+    return (
+      record?.name || record?.full_name || record?.intern_name || record?.student_name || "Unknown Intern"
+    );
+  };
+
+  const getDateLabel = (record) => {
+    return record?.completionDate || record?.date || record?.certificateDate || "-";
+  };
+
   const handleVerify = async (e) => {
     e.preventDefault();
     if (!searchId.trim()) return;
@@ -21,26 +64,36 @@ function Verification() {
     setResult(null);
 
     try {
+      const searchTerm = searchId.trim().toUpperCase();
+      
       // Direct query to Supabase database
       const { data, error: dbError } = await supabase
         .from("interns")
         .select("*")
-        .eq("id", searchId.trim().toUpperCase())
+        .eq("id", searchTerm)
         .single();
 
       if (dbError) {
+          console.error("DB Error Details:", {
+            code: dbError.code,
+            message: dbError.message,
+            details: dbError.details,
+          });
+          
           if (dbError.code === 'PGRST116') {
-             setError("Invalid Certificate ID. Record not found.");
+             setError(`Certificate ID "${searchTerm}" not found. Please check the ID and try again.`);
+          } else if (dbError.message?.includes('CORS') || dbError.message?.includes('permission')) {
+             setError("Database access error. Please contact support.");
           } else {
-             console.error("DB Error:", dbError);
-             setError("A server error occurred. Please try again.");
+             setError("A server error occurred. Please try again or contact support.");
           }
       } else if (data) {
+        console.log("Supabase result:", data);
         setResult(data);
       }
     } catch (err) {
       console.error("Search error:", err);
-      setError("Unable to connect to verification server.");
+      setError("Unable to connect to verification server. Please check your internet connection.");
     } finally {
       setIsSearching(false);
     }
@@ -91,7 +144,7 @@ function Verification() {
                   type="text"
                   value={searchId}
                   onChange={(e) => setSearchId(e.target.value)}
-                  placeholder="EX: NT2024001"
+                  placeholder="Enter Certificate ID (e.g., NT26FS001)"
                   className="w-full rounded-2xl border border-white/10 bg-slate-900/50 px-6 py-5 text-center text-xl font-bold uppercase tracking-widest text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none transition-all shadow-inner"
                   required
                 />
@@ -157,25 +210,25 @@ function Verification() {
                     <div className="w-full space-y-3 pt-4 border-t border-white/10">
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Intern Name</span>
-                        <span className="font-semibold text-white">{result.name}</span>
+                        <span className="font-semibold text-slate-950">{getNameLabel(result)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Program</span>
-                        <span className="font-semibold text-white">{result.program}</span>
+                        <span className="font-semibold text-slate-950">{getProgramLabel(result)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Duration</span>
-                        <span className="font-semibold text-white">{result.duration}</span>
+                        <span className="font-semibold text-slate-950">{parseDurationDays(getDisplayValue(result.duration, "05/05/2026 - 25/05/2026"))}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Status</span>
                         <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-                          {result.status}
+                          {getDisplayValue(result.status, "Completed")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Date</span>
-                        <span className="font-semibold text-white">{result.completionDate}</span>
+                        <span className="font-semibold text-slate-950">{getDateLabel(result)}</span>
                       </div>
                     </div>
                   </div>
