@@ -6,6 +6,7 @@ const GOOGLE_FORM_URL =
 
 const links = [
   { label: "Home", href: "/#home" },
+  { label: "Portfolio", href: "/#portfolio" },
   { label: "About", href: "/#about" },
   { label: "Services", href: "/#services" },
   { label: "Team", href: "/#team" },

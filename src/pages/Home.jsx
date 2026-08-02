@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
+import PortfolioSection from "../components/PortfolioSection";
 import WhyChooseSection from "../components/WhyChooseSection";
 import AboutSection from "../components/AboutSection";
 import ServicesSection from "../components/ServicesSection";
@@ -15,6 +16,7 @@ function Home() {
       <Navbar />
       <main>
         <HeroSection />
+        <PortfolioSection />
         <WhyChooseSection />
         <AboutSection />
         <ServicesSection />

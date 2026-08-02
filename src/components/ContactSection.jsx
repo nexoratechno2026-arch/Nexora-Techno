@@ -34,7 +34,7 @@ const contactDetails = [
       </svg>
     ),
     label: "Location",
-    value: "237, East Premanur, Salem, Tamil Nadu",
+    value: "241, East Permanur, Anna Park Backside, Salem 7",
     href: null,
   },
 ];

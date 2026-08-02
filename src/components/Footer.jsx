@@ -6,6 +6,7 @@ const GOOGLE_FORM_URL =
 
 const footerLinks = {
   Company: [
+    { label: "Our Portfolio", href: "/#portfolio" },
     { label: "About Us", href: "/#about" },
     { label: "Our Team", href: "/#team" },
     { label: "Internship", href: "/internship" },
