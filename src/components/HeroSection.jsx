@@ -1,120 +1,178 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowRight, ShieldCheck, MapPin, Code2, CheckCircle } from "lucide-react";
+import ConsultationModal from "./ConsultationModal";
 
-const GOOGLE_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSedq-NXP8PE5gs3GQ7SNA-8KVlqgQG8yaLEESGIv1qu04CGBg/viewform?usp=dialog";
+export default function HeroSection() {
+  const [modalOpen, setModalOpen] = useState(false);
 
-function HeroSection() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] }
+    }
+  };
+
   return (
-    <section
-      id="home"
-      className="relative overflow-hidden bg-white"
-    >
-      {/* Soft blue gradient background blobs */}
-      <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-blue-100 to-blue-50 opacity-60 blur-3xl" />
-      <div className="absolute -bottom-20 -left-20 h-[400px] w-[400px] rounded-full bg-gradient-to-tr from-blue-50 to-indigo-100 opacity-50 blur-3xl" />
+    <section className="relative overflow-hidden bg-slate-950 text-white pt-12 pb-20 lg:pt-20 lg:pb-28 tech-grid-bg">
+      {/* Animated Background Glow Accent Circles */}
+      <motion.div
+        animate={{
+          scale: [1, 1.15, 1],
+          opacity: [0.2, 0.35, 0.2]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/25 blur-[120px] rounded-full pointer-events-none"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.15, 0.25, 0.15]
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2
+        }}
+        className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-emerald-500/15 blur-[110px] rounded-full pointer-events-none"
+      />
 
-      <div className="relative mx-auto max-w-[1200px] px-6 py-24 lg:py-36">
-        <div className="text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-5 py-2 text-sm font-semibold text-blue-700"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
-            </span>
-            📍 Nexora Techno – IT Software Company in Salem
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-4xl mx-auto text-center space-y-6"
+        >
+          
+          {/* Top pill badge */}
+          <motion.div variants={itemVariants} className="inline-block">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs sm:text-sm font-medium text-slate-300 shadow-xl backdrop-blur-md">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-slate-200 font-semibold">Nexora Techno</span>
+              <span className="text-slate-500">|</span>
+              <span className="text-indigo-400">Software & AI Solutions in Salem</span>
+            </div>
           </motion.div>
 
-          {/* Headline */}
+          {/* Main Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mx-auto max-w-4xl font-display text-5xl font-black leading-[1.1] text-slate-900 sm:text-6xl lg:text-7xl"
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]"
           >
-            We Build{" "}
-            <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
-              Digital Engines
+            Websites, Software & AI Solutions for{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400">
+              Growing Businesses.
             </span>
-            {" "}That Grow Businesses &amp; Careers in Salem.
           </motion.h1>
 
-          {/* Subtext */}
+          {/* Supporting text */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-slate-500"
+            variants={itemVariants}
+            className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed"
           >
-            From custom software development and AI-powered solutions to SEO and web services — Nexora Techno is a leading IT Software Company in Salem. We deliver results for businesses and provide professional tech internships for students.
+            From business websites to custom software and AI automation, Nexora Techno helps businesses turn ideas into reliable digital products.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            variants={itemVariants}
+            className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a
-              href="#contact"
-              aria-label="Get started with Nexora Techno IT services"
-              className="rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-8 py-4 text-base font-bold text-white shadow-xl shadow-blue-500/30 transition-all duration-200 hover:scale-[1.03] hover:shadow-blue-500/40"
+            <motion.button
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setModalOpen(true)}
+              className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-3 group text-base"
             >
-              Get Started Free
-            </a>
-            <a
-              href={GOOGLE_FORM_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Book a free demo with Nexora Techno"
-              className="rounded-xl border-2 border-blue-600 bg-white px-8 py-4 text-base font-bold text-blue-600 transition-all duration-200 hover:bg-blue-50"
-            >
-              Book a Demo →
-            </a>
+              <span>Get a Free Consultation</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
+
+            <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }} className="w-full sm:w-auto">
+              <Link
+                to="/projects"
+                className="w-full sm:w-auto px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold rounded-2xl border border-slate-800 transition-all hover:border-slate-700 flex items-center justify-center gap-2 text-base"
+              >
+                <span>View Our Work</span>
+              </Link>
+            </motion.div>
           </motion.div>
 
-          {/* Secondary tagline */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
-            className="mt-6 text-sm italic text-slate-400"
-          >
-            Providing professional IT Internships in Salem with live-project experience.
-          </motion.p>
-
-          {/* Service pills */}
+          {/* Trust Indicators */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-12 flex flex-wrap items-center justify-center gap-3"
+            variants={itemVariants}
+            className="pt-10 border-t border-slate-800/80 mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
           >
             {[
-              "Custom Software Development",
-              "IT Internships in Salem",
-              "AI-Powered Automation",
-              "SEO & Content Strategy",
-              "Digital Ads & Performance",
-              "IT Consulting Services",
-            ].map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm"
+              {
+                icon: <ShieldCheck className="w-5 h-5 text-emerald-400" />,
+                title: "MSME Registered",
+                sub: "Verified Govt Entity",
+                bg: "bg-emerald-500/10"
+              },
+              {
+                icon: <MapPin className="w-5 h-5 text-indigo-400" />,
+                title: "Salem Based",
+                sub: "Tamil Nadu, India",
+                bg: "bg-indigo-500/10"
+              },
+              {
+                icon: <Code2 className="w-5 h-5 text-sky-400" />,
+                title: "Custom Development",
+                sub: "Zero Template Trap",
+                bg: "bg-sky-500/10"
+              },
+              {
+                icon: <CheckCircle className="w-5 h-5 text-purple-400" />,
+                title: "Real Projects",
+                sub: "Proven Deliveries",
+                bg: "bg-purple-500/10"
+              }
+            ].map((trust, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ y: -4, borderColor: "rgba(99, 102, 241, 0.4)" }}
+                className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/60 flex items-center gap-3 text-left transition-all"
               >
-                {tag}
-              </span>
+                <div className={`p-2 rounded-lg ${trust.bg}`}>
+                  {trust.icon}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-white">{trust.title}</div>
+                  <div className="text-xs text-slate-400">{trust.sub}</div>
+                </div>
+              </motion.div>
             ))}
           </motion.div>
-        </div>
+
+        </motion.div>
       </div>
+
+      {/* Consultation Modal */}
+      <ConsultationModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </section>
   );
 }
-
-export default HeroSection;

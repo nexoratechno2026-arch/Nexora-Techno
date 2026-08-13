@@ -6,20 +6,28 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Internship from "./pages/Internship";
 import Verification from "./pages/Verification";
 import AdminInterns from "./pages/AdminInterns";
+import ServiceDetail from "./pages/ServiceDetail";
+import Projects from "./pages/Projects";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import Contact from "./pages/Contact";
 
-function HashScrollHandler() {
+function ScrollToTopHandler() {
   const location = useLocation();
 
   useEffect(() => {
-    if (!location.hash) return;
-
-    const id = location.hash.replace("#", "");
-    const target = document.getElementById(id);
-    if (!target) return;
-
-    const headerOffset = 96;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-    window.scrollTo({ top, behavior: "smooth" });
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      const target = document.getElementById(id);
+      if (target) {
+        const headerOffset = 96;
+        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top, behavior: "smooth" });
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
   }, [location.pathname, location.hash]);
 
   return null;
@@ -28,15 +36,21 @@ function HashScrollHandler() {
 function App() {
   return (
     <BrowserRouter>
-      <div className="relative min-h-screen overflow-x-clip bg-white text-slate-900">
-        <HashScrollHandler />
+      <div className="relative min-h-screen overflow-x-clip bg-white text-slate-900 font-sans">
+        <ScrollToTopHandler />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/services/:serviceId" element={<ServiceDetail />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/about" element={<About />} />
           <Route path="/internship" element={<Internship />} />
           <Route path="/verify" element={<Verification />} />
           <Route path="/admin-data" element={<AdminInterns />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:blogId" element={<BlogPost />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
       </div>
     </BrowserRouter>

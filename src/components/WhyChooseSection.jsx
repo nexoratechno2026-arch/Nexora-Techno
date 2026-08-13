@@ -1,130 +1,116 @@
+import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, ShieldCheck, Sparkles, Zap, Layers, Smartphone, ShoppingCart, Search, HeartHandshake, DollarSign, Clock } from "lucide-react";
+import { 
+  DollarSign, 
+  MessageSquare, 
+  Layers, 
+  Cpu, 
+  Headphones, 
+  Eye 
+} from "lucide-react";
 
-const reasons = [
-  {
-    title: "Professional Website Development",
-    desc: "Custom, high-performing websites built to showcase your brand, drive engagements, and convert visitors.",
-    icon: <Layers className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Mobile Application Development",
-    desc: "Native & cross-platform Android and iOS applications designed with smooth UI and robust backend architecture.",
-    icon: <Smartphone className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Custom Software Solutions",
-    desc: "Tailored business software solutions engineered to automate workflows and optimize internal operations.",
-    icon: <Zap className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "E-Commerce Development",
-    desc: "Full-featured online stores equipped with product catalogs, secure checkout, and WhatsApp order integrations.",
-    icon: <ShoppingCart className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "SEO-Friendly Websites",
-    desc: "Built-in technical SEO optimization, fast loading speeds, and search-engine-friendly structure to boost rankings.",
-    icon: <Search className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Responsive & Modern UI/UX",
-    desc: "User-centric design system ensuring flawless visual layout and effortless navigation across every device screen.",
-    icon: <Sparkles className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Reliable Technical Support",
-    desc: "Continuous technical maintenance, security monitoring, and dedicated post-launch support for peace of mind.",
-    icon: <HeartHandshake className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Affordable Pricing",
-    desc: "Transparent, budget-friendly pricing models structured to deliver maximal ROI without hidden costs.",
-    icon: <DollarSign className="h-6 w-6 text-blue-600" />,
-  },
-  {
-    title: "Timely Project Delivery",
-    desc: "Agile execution milestones guaranteeing on-time project completion and swift time-to-market.",
-    icon: <Clock className="h-6 w-6 text-blue-600" />,
-  },
-];
+export default function WhyChooseSection() {
+  const points = [
+    {
+      icon: <DollarSign className="w-6 h-6 text-emerald-600" />,
+      title: "Affordable Development",
+      description: "Custom software and web solutions designed for startups and growing businesses without enterprise bloat or hidden fees."
+    },
+    {
+      icon: <MessageSquare className="w-6 h-6 text-indigo-600" />,
+      title: "Direct Communication",
+      description: "Communicate directly with our lead developers and project managers in Salem without layers of sales middlemen."
+    },
+    {
+      icon: <Layers className="w-6 h-6 text-sky-600" />,
+      title: "Custom Built",
+      description: "100% custom codebase designed specifically around your operational workflow rather than restricted templates."
+    },
+    {
+      icon: <Cpu className="w-6 h-6 text-purple-600" />,
+      title: "Modern Technology",
+      description: "Built with modern frameworks like React, Node.js, Python, Flask, MongoDB, MySQL, and state-of-the-art AI automation tools."
+    },
+    {
+      icon: <Headphones className="w-6 h-6 text-amber-600" />,
+      title: "Post-Launch Support",
+      description: "We continue maintaining, securing, and scaling your digital products long after initial deployment."
+    },
+    {
+      icon: <Eye className="w-6 h-6 text-teal-600" />,
+      title: "Transparent Process",
+      description: "Clear milestone updates, transparent timelines, direct code repositories, and no unexpected lock-ins."
+    }
+  ];
 
-function WhyChooseSection() {
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
   return (
-    <section id="why-us" className="bg-slate-50 py-20 lg:py-32">
-      <div className="mx-auto max-w-[1200px] px-6">
+    <section className="py-20 bg-white text-slate-900 border-t border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
-            <ShieldCheck className="h-4 w-4" /> Why Choose Us
-          </span>
-          <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl">
-            Why Choose Nexora Techno?
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3">
+            Why Partner With Us
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Why Businesses Choose Nexora
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
-            We are committed to delivering innovative digital solutions that help businesses grow and succeed in the digital world.
+          <p className="text-slate-600 text-base sm:text-lg mt-3">
+            We combine high-level software engineering with local accountability, transparent pricing, and practical business focus.
           </p>
         </motion.div>
 
-        {/* 9 Pillars Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {reasons.map((r, i) => (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {points.map((pt, idx) => (
             <motion.div
-              key={r.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              whileHover={{ y: -6, boxShadow: "0 20px 40px -8px rgba(37,99,235,0.14)" }}
-              className="group rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm transition-all duration-300 hover:border-blue-300"
+              key={idx}
+              variants={cardVariants}
+              whileHover={{ y: -6, boxShadow: "0 20px 25px -5px rgba(0,0,0,0.06)" }}
+              className="p-8 rounded-3xl bg-slate-50/80 border border-slate-200 hover:border-indigo-200 transition-all duration-300 hover:bg-white group"
             >
-              <div className="mb-4 flex items-center justify-between">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 transition duration-300 group-hover:bg-blue-600 group-hover:text-white">
-                  <div className="transition duration-300 group-hover:brightness-200 group-hover:invert">
-                    {r.icon}
-                  </div>
-                </div>
-                <CheckCircle2 className="h-5 w-5 text-blue-500 opacity-60 transition duration-300 group-hover:opacity-100" />
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                {pt.icon}
               </div>
-              <h3 className="mb-2 text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                {r.title}
+              <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                {pt.title}
               </h3>
-              <p className="text-sm leading-relaxed text-slate-500">{r.desc}</p>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                {pt.description}
+              </p>
             </motion.div>
           ))}
-        </div>
-
-        {/* Commitment Banner */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-16 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 p-8 text-center text-white shadow-xl shadow-blue-600/20 sm:p-10"
-        >
-          <h3 className="font-display text-2xl font-bold sm:text-3xl">
-            Partner with Nexora Techno Today
-          </h3>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-blue-100">
-            We are committed to delivering innovative digital solutions that help businesses grow and succeed in the digital world.
-          </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <a
-              href="/#contact"
-              className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-blue-700 shadow-md transition hover:bg-slate-100 hover:scale-105 active:scale-95"
-            >
-              Start Your Project
-            </a>
-          </div>
         </motion.div>
+
       </div>
     </section>
   );
 }
-
-export default WhyChooseSection;

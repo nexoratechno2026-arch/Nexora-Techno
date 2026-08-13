@@ -1,116 +1,118 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { servicesData } from "../data/servicesData";
+import { 
+  Globe, 
+  Code2, 
+  Bot, 
+  ShoppingBag, 
+  Zap, 
+  Smartphone, 
+  TrendingUp, 
+  ArrowRight 
+} from "lucide-react";
 
-const services = [
-  {
-    title: "Business Website Development",
-    desc: "Fast, responsive, and SEO-ready websites tailored for trust, lead capture, and conversion.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" />
-      </svg>
-    ),
-  },
-  {
-    title: "UI/UX Design Systems",
-    desc: "Modern interfaces with clear hierarchy, better spacing, and friction-free user journeys.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <circle cx="12" cy="12" r="10" /><path d="M8 12h8M12 8v8" />
-      </svg>
-    ),
-  },
-  {
-    title: "AI Automation Solutions",
-    desc: "Automate repetitive business tasks with AI workflows, smart assistants, and CRM integrations.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <circle cx="12" cy="12" r="3.5" />
-        <path d="M12 2.8v2.8M12 18.4v2.8M21.2 12h-2.8M5.6 12H2.8M18.8 5.2l-2 2M7.2 16.8l-2 2M18.8 18.8l-2-2M7.2 7.2l-2-2" />
-      </svg>
-    ),
-  },
-  {
-    title: "SEO & Content Strategy – Salem",
-    desc: "We help businesses in Salem rank higher on Google with technical SEO, local search optimization, strategic content, and intent-driven pages tailored for Salem audiences.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-      </svg>
-    ),
-  },
-  {
-    title: "Digital Ads & Lead Funnels",
-    desc: "Data-backed ad campaigns and conversion funnels designed to turn clicks into qualified leads.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-      </svg>
-    ),
-  },
-  {
-    title: "Brand Consulting",
-    desc: "Strategic support to improve your messaging, offer clarity, and optimize customer decision flow.",
-    icon: (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-  },
-];
+export default function ServicesSection() {
+  const getIconComponent = (iconName) => {
+    switch (iconName) {
+      case "Globe": return <Globe className="w-6 h-6 text-indigo-600" />;
+      case "Code2": return <Code2 className="w-6 h-6 text-indigo-600" />;
+      case "Bot": return <Bot className="w-6 h-6 text-indigo-600" />;
+      case "ShoppingBag": return <ShoppingBag className="w-6 h-6 text-indigo-600" />;
+      case "Zap": return <Zap className="w-6 h-6 text-indigo-600" />;
+      case "Smartphone": return <Smartphone className="w-6 h-6 text-indigo-600" />;
+      case "TrendingUp": return <TrendingUp className="w-6 h-6 text-indigo-600" />;
+      default: return <Globe className="w-6 h-6 text-indigo-600" />;
+    }
+  };
 
-function ServicesSection() {
-  const [hovered, setHovered] = useState(null);
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
 
   return (
-    <section id="services" className="bg-white py-20 lg:py-32">
-      <div className="mx-auto max-w-[1200px] px-6">
+    <section className="py-20 bg-slate-50 text-slate-900 border-t border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
-            Our Services
-          </span>
-          <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl">
-            Solutions Built for Growth
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold uppercase tracking-wider mb-3">
+            Core Engineering Services
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Software & Technology Solutions Designed for Business Growth
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-500">
-            From design to deployment — every service is engineered to drive real business outcomes.
+          <p className="text-slate-600 text-base sm:text-lg mt-3">
+            From modern responsive web applications to AI workflow automation, we build custom solutions around real business requirements.
           </p>
         </motion.div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => (
-            <motion.article
-              key={s.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className={`group cursor-default rounded-2xl border p-8 transition-all duration-300 ${
-                hovered === i
-                  ? "border-blue-200 bg-white shadow-2xl shadow-blue-500/10 -translate-y-1 scale-[1.01]"
-                  : "border-slate-100 bg-white shadow-sm"
-              }`}
+        {/* Services Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {servicesData.map((service) => (
+            <motion.div
+              key={service.id}
+              variants={cardVariants}
+              whileHover={{ y: -8, boxShadow: "0 20px 25px -5px rgba(79,70,229,0.1)" }}
+              className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm transition-all duration-300 flex flex-col justify-between group"
             >
-              <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-200 ${
-                hovered === i ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600"
-              }`}>
-                {s.icon}
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                  {React.cloneElement(getIconComponent(service.icon), {
+                    className: "w-7 h-7 group-hover:text-white transition-colors"
+                  })}
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                  {service.title}
+                </h3>
+
+                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                  {service.shortDescription}
+                </p>
               </div>
-              <h3 className="mb-3 text-lg font-bold text-slate-900">{s.title}</h3>
-              <p className="text-sm leading-relaxed text-slate-500">{s.desc}</p>
-            </motion.article>
+
+              <div className="pt-4 border-t border-slate-100">
+                <Link
+                  to={`/services/${service.id}`}
+                  className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors group/link"
+                >
+                  <span>Learn More</span>
+                  <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+
       </div>
     </section>
   );
 }
-
-export default ServicesSection;
