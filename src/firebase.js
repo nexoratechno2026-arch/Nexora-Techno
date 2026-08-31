@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "placeholder",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "placeholder.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "placeholder",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "placeholder.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef"
+  apiKey: "AIzaSyDagJFsZNDFhS9PcV9W0is5HLt2xKzWqUY",
+  authDomain: "nexoratechno-lms.firebaseapp.com",
+  projectId: "nexoratechno-lms",
+  storageBucket: "nexoratechno-lms.firebasestorage.app",
+  messagingSenderId: "457679796165",
+  appId: "1:457679796165:web:7adc0f493d77a8f9ca7dac",
+  measurementId: "G-KBSH6B9XV2"
 };
 
 const app = initializeApp(firebaseConfig);
