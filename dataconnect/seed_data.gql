@@ -1,0 +1,21 @@
+mutation CreateSeedData @transaction {
+  user_insertMany(data: [
+    { id: "00000000-0000-0000-0000-000000000001", email: "alice@example.com", role: "admin", displayName: "Alice Admin", bio: "Course admin" },
+    { id: "00000000-0000-0000-0000-000000000002", email: "bob@example.com", role: "instructor", displayName: "Bob Instructor", bio: "Passionate teacher" },
+    { id: "00000000-0000-0000-0000-000000000003", email: "charlie@example.com", role: "student", displayName: "Charlie Student", bio: "Lifelong learner" }
+  ])
+  course_insertMany(data: [
+    { id: "10000000-0000-0000-0000-000000000001", title: "Intro to GraphQL", category: "Tech", instructorId: "00000000-0000-0000-0000-000000000002" },
+    { id: "10000000-0000-0000-0000-000000000002", title: "Advanced FDC", category: "Tech", instructorId: "00000000-0000-0000-0000-000000000002" }
+  ])
+  lesson_insertMany(data: [
+    { id: "20000000-0000-0000-0000-000000000001", title: "Schemas 101", contentUrl: "https://video.link/1", sequenceOrder: 1, courseId: "10000000-0000-0000-0000-000000000001" },
+    { id: "20000000-0000-0000-0000-000000000002", title: "Mutations 101", contentUrl: "https://video.link/2", sequenceOrder: 2, courseId: "10000000-0000-0000-0000-000000000001" }
+  ])
+  enrollment_insertMany(data: [
+    { id: "30000000-0000-0000-0000-000000000001", userId: "00000000-0000-0000-0000-000000000003", courseId: "10000000-0000-0000-0000-000000000001", enrollmentDate: "2023-10-01T10:00:00Z", progressPercentage: 25.0 }
+  ])
+  progress_insertMany(data: [
+    { id: "40000000-0000-0000-0000-000000000001", userId: "00000000-0000-0000-0000-000000000003", lessonId: "20000000-0000-0000-0000-000000000001", isCompleted: true }
+  ])
+}

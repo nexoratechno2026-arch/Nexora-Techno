@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin-data
+
+Sitemap: https://www.nexoratechno.in/sitemap.xml

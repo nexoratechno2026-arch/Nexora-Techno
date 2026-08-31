@@ -1,0 +1,76 @@
+mutation CreateUser @auth(level: USER) {
+  user_upsert(data: { id_expr: "auth.uid", email: "user@example.com", role: "STUDENT" })
+}
+
+mutation UpdateUserBio($bio: String!) @auth(level: USER) {
+  user_update(key: { id_expr: "auth.uid" }, data: { bio: $bio })
+}
+
+query GetMyProfile @auth(level: USER) {
+  user(key: { id_expr: "auth.uid" }) {
+    email
+    displayName
+    bio
+  }
+}
+
+mutation CreateCourse($title: String!, $category: String) @auth(level: USER) {
+  course_insert(data: { title: $title, category: $category, instructorId_expr: "auth.uid" })
+}
+
+mutation UpdateCourse($id: UUID!, $title: String) @auth(level: USER) {
+  course_update(key: { id: $id }, data: { title: $title })
+}
+
+mutation DeleteCourse($id: UUID!) @auth(level: USER) {
+  course_delete(key: { id: $id })
+}
+
+query ListCourses @auth(level: PUBLIC, insecureReason: "Courses are public learning resources.") {
+  courses {
+    title
+    instructor { displayName }
+    category
+  }
+}
+
+mutation EnrollInCourse($courseId: UUID!) @auth(level: USER) {
+  enrollment_insert(data: { courseId: $courseId, userId_expr: "auth.uid", enrollmentDate_expr: "request.time" })
+}
+
+query ListMyEnrollments @auth(level: USER) {
+  enrollments(where: { userId: { eq_expr: "auth.uid" } }) {
+    course { title }
+    enrollmentDate
+    progressPercentage
+  }
+}
+
+mutation UpdateEnrollmentProgress($id: UUID!, $percentage: Float!) @auth(level: USER) {
+  enrollment_update(key: { id: $id }, data: { progressPercentage: $percentage })
+}
+
+mutation CreateLesson($courseId: UUID!, $title: String!, $url: String!, $order: Int!) @auth(level: USER) {
+  lesson_insert(data: { courseId: $courseId, title: $title, contentUrl: $url, sequenceOrder: $order })
+}
+
+query GetLessonsForCourse($courseId: UUID!) @auth(level: PUBLIC, insecureReason: "Lesson metadata is public for enrolled students.") {
+  lessons(where: { courseId: { eq: $courseId } }, orderBy: [{ sequenceOrder: ASC }]) {
+    title
+    durationMinutes
+  }
+}
+
+mutation UpsertProgress($lessonId: UUID!, $completed: Boolean!) @auth(level: USER) {
+  progress_upsert(data: { 
+    id_expr: "uuidV4()",
+    lessonId: $lessonId, 
+    userId_expr: "auth.uid", 
+    isCompleted: $completed,
+    lastAccessedAt_expr: "request.time"
+  })
+}
+
+mutation DeleteProgress($id: UUID!) @auth(level: USER) {
+  progress_delete(key: { id: $id })
+}

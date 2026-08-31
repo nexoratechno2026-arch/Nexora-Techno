@@ -1,0 +1,36 @@
+type User @table {
+  email: String!
+  role: String!
+  displayName: String
+  bio: String
+}
+
+type Course @table {
+  title: String!
+  instructor: User!
+  description: String
+  category: String
+  thumbnailUrl: String
+}
+
+type Lesson @table {
+  title: String!
+  contentUrl: String!
+  sequenceOrder: Int!
+  durationMinutes: Int
+  course: Course!
+}
+
+type Enrollment @table {
+  user: User!
+  course: Course!
+  enrollmentDate: Timestamp!
+  progressPercentage: Float
+}
+
+type Progress @table {
+  user: User!
+  lesson: Lesson!
+  isCompleted: Boolean!
+  lastAccessedAt: Timestamp
+}
