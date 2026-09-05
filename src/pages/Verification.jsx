@@ -16,6 +16,16 @@ function Verification() {
   const [downloading, setDownloading] = useState(false);
 
   const parseDurationDays = (record) => {
+    if (record?.batches?.start_date && record?.batches?.end_date) {
+      const start = new Date(record.batches.start_date);
+      const end = new Date(record.batches.end_date);
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      const typeLabel = record.batches.name || "Program";
+      
+      // If it's a webinar and 1 day, just say '1 Day Webinar'
+      return `${diffDays} Day${diffDays !== 1 ? 's' : ''} ${typeLabel.includes('Webinar') ? 'Webinar' : 'Internship'}`;
+    }
     return "30 Days Internship";
   };
 
@@ -73,17 +83,25 @@ function Verification() {
         const data = certRes.docs[0].data();
         let finalData = { ...data };
         
-        if (data.user_id) {
-          const profileDoc = await getDoc(doc(db, "profiles", data.user_id));
-          if (profileDoc.exists()) {
-             finalData.profiles = profileDoc.data();
+        if (data.user_id && !data.profiles) {
+          try {
+            const profileDoc = await getDoc(doc(db, "profiles", data.user_id));
+            if (profileDoc.exists()) {
+               finalData.profiles = profileDoc.data();
+            }
+          } catch (e) {
+            console.warn("Could not fetch profile", e);
           }
         }
 
-        if (data.batch_id) {
-          const batchDoc = await getDoc(doc(db, "batches", data.batch_id));
-          if (batchDoc.exists()) {
-             finalData.batches = batchDoc.data();
+        if (data.batch_id && !data.batches) {
+          try {
+            const batchDoc = await getDoc(doc(db, "batches", data.batch_id));
+            if (batchDoc.exists()) {
+               finalData.batches = batchDoc.data();
+            }
+          } catch (e) {
+            console.warn("Could not fetch batch", e);
           }
         }
         

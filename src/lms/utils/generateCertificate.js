@@ -111,8 +111,14 @@ export async function generateCertificatePDF({ name, domain, batchName, startDat
   doc.setFont("helvetica", "normal");
   const formattedStart = new Date(startDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   const formattedEnd = new Date(endDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  
+  let dateText = `${formattedStart} to ${formattedEnd}`;
+  if (formattedStart === formattedEnd) {
+    dateText = formattedStart;
+  }
+  
   doc.text(
-    `at Nexora Techno · ${batchName} · ${formattedStart} to ${formattedEnd}`,
+    `at Nexora Techno · ${batchName} · ${dateText}`,
     W / 2, 124, { align: "center" }
   );
 
@@ -123,7 +129,7 @@ export async function generateCertificatePDF({ name, domain, batchName, startDat
     doc.text(`Project: ${projectName}`, W / 2, 132, { align: "center" });
   }
 
-  // ── Bottom row: Cert ID + Signature + Date ───────────────────────────────
+  // ── Bottom row: Cert ID + Verification + Signatures ───────────────────────────────
   // Left: cert number
   doc.setTextColor(71, 85, 105);
   doc.setFontSize(7);
@@ -134,21 +140,62 @@ export async function generateCertificatePDF({ name, domain, batchName, startDat
   doc.setFont("helvetica", "bold");
   doc.text(certNumber, 25, 161);
 
-  // Right: Director signature line
+  // Center: Karthikeyan A signature line
+  doc.setDrawColor(71, 85, 105);
+  doc.setLineWidth(0.4);
+  doc.line(W/2 - 35, 163, W/2 + 35, 163);
+
+  try {
+    const karthikImg = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = "/Karthi Sign.png";
+    });
+    doc.addImage(karthikImg, "PNG", W/2 - 25, 142, 50, 20);
+  } catch (e) {
+    doc.setTextColor(14, 165, 233);
+    doc.setFontSize(22);
+    doc.setFont("times", "italic");
+    doc.text("Karthikeyan A", W/2, 158, { align: "center" });
+  }
+
+  doc.setTextColor(71, 85, 105);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("Karthikeyan A, Project Manager", W/2, 168, { align: "center" });
+
+  // Far-Right: Kapil JS signature line
   doc.setDrawColor(71, 85, 105);
   doc.setLineWidth(0.4);
   doc.line(W - 85, 163, W - 15, 163);
 
-  // Handwritten style sign (using times italic as a simple built-in proxy for signature)
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(22);
-  doc.setFont("times", "italic");
-  doc.text("Kapil JS", W - 50, 158, { align: "center" });
+  try {
+    const kapilImg = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = "/Kapil Sign.png";
+    });
+    doc.addImage(kapilImg, "PNG", W - 75, 142, 50, 20);
+  } catch (e) {
+    doc.setTextColor(14, 165, 233);
+    doc.setFontSize(22);
+    doc.setFont("times", "italic");
+    doc.text("Kapil JS", W - 50, 158, { align: "center" });
+  }
 
   doc.setTextColor(71, 85, 105);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.text("Kapil JS, Founder & CEO", W - 50, 168, { align: "center" });
+
+  // Center: Verification Link & Issue Date
+  doc.setTextColor(14, 165, 233);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.text("Verify authenticity at: nexoratechno.in/verify", W / 2, 175, { align: "center" });
+
 
   // Issue date bottom center
   doc.setTextColor(71, 85, 105);
