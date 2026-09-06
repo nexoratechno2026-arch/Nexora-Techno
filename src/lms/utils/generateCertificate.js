@@ -1,16 +1,65 @@
 import { jsPDF } from "jspdf";
+import QRCode from "qrcode";
 
 /**
- * Generate a Nexora Techno internship completion certificate PDF.
+ * Safely load an image for jsPDF
+ */
+async function loadImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
+/**
+ * Draw a crisp 5-pointed star in jsPDF
+ */
+function drawStar(doc, cx, cy, spikes, outerRadius, innerRadius, fillColor) {
+  let rot = (Math.PI / 2) * 3;
+  let x = cx;
+  let y = cy;
+  const step = Math.PI / spikes;
+  const points = [];
+
+  for (let i = 0; i < spikes; i++) {
+    x = cx + Math.cos(rot) * outerRadius;
+    y = cy + Math.sin(rot) * outerRadius;
+    points.push([x, y]);
+    rot += step;
+
+    x = cx + Math.cos(rot) * innerRadius;
+    y = cy + Math.sin(rot) * innerRadius;
+    points.push([x, y]);
+    rot += step;
+  }
+
+  const startX = points[0][0];
+  const startY = points[0][1];
+  const relativeLines = [];
+  for (let i = 1; i < points.length; i++) {
+    relativeLines.push([points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]]);
+  }
+  relativeLines.push([points[0][0] - points[points.length - 1][0], points[0][1] - points[points.length - 1][1]]);
+
+  doc.setFillColor(fillColor[0], fillColor[1], fillColor[2]);
+  doc.lines(relativeLines, startX, startY, [1, 1], "F", true);
+}
+
+/**
+ * Generate a Nexora Techno certificate PDF in the luxury gold & navy corporate style.
+ * Includes official company logo, company seal, karthi sign, kapil sign, and dynamic QR verification.
  * Returns a Blob URL string.
  */
 export async function generateCertificatePDF({
-  name,
-  domain,
+  name = "Participant",
+  domain = "Technology",
   batchName,
   startDate,
   endDate,
-  certNumber,
+  certNumber = "NT-CERT",
   projectName,
   regNo,
   college,
@@ -21,96 +70,119 @@ export async function generateCertificatePDF({
   const W = 297;
   const H = 210;
 
-  // ── Background ──────────────────────────────────────────────────────────────
-  // White background
+  // ── Color Palette ───────────────────────────────────────────────────────────
+  const NAVY = [11, 25, 44];        // #0B192C (Luxury Navy)
+  const GOLD = [197, 160, 89];       // #C5A059 (Brushed Gold)
+  const GOLD_DARK = [155, 115, 45];  // Shaded Gold for ribbon depth
+  const SLATE = [100, 116, 139];     // #64748B
+  const SLATE_DARK = [30, 41, 59];   // #1E293B
+
+  // ── 1. Pristine Canvas & Subtle Geometric Grid Watermark ────────────────────
   doc.setFillColor(255, 255, 255);
   doc.rect(0, 0, W, H, "F");
 
-  // Subtle border frame
-  doc.setDrawColor(14, 165, 233); // sky-500
-  doc.setLineWidth(1.5);
-  doc.rect(10, 10, W - 20, H - 20);
-
-  // Inner border
-  doc.setDrawColor(30, 58, 95);
-  doc.setLineWidth(0.4);
-  doc.rect(14, 14, W - 28, H - 28);
-
-  // Top accent bar
-  doc.setFillColor(14, 165, 233);
-  doc.rect(10, 10, W - 20, 3, "F");
-
-  // Bottom accent bar
-  doc.rect(10, H - 13, W - 20, 3, "F");
-
-  // ── Logo area (top left) ─────────────────────────────────────────────────
-  try {
-    const logoImg = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = "/Logo.jpeg"; // Assuming Logo.jpeg is in public/
-    });
-    // Draw the logo (adjusting coordinates and size)
-    doc.addImage(logoImg, "JPEG", 20, 25, 20, 20);
-  } catch (e) {
-    // Fallback if logo cannot load
-    doc.setFillColor(14, 165, 233, 0.15);
-    doc.circle(30, 35, 12, "F");
-    doc.setTextColor(14, 165, 233);
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("N", 27, 38);
+  doc.setDrawColor(242, 245, 248);
+  doc.setLineWidth(0.18);
+  const gridSize = 11;
+  for (let x = 14; x <= W - 14; x += gridSize) {
+    doc.line(x, 12, x, H - 12);
+  }
+  for (let y = 12; y <= H - 12; y += gridSize) {
+    doc.line(14, y, W - 14, y);
   }
 
-  // Company name
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("NEXORA TECHNO", 45, 33);
-  doc.setTextColor(71, 85, 105); // slate-500
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "normal");
-  doc.text("IT Software Company · Salem, Tamil Nadu", 45, 39);
+  // ── 2. Dual Luxury Framing Borders & Corner Accents ─────────────────────────
+  // Outer Navy Border
+  doc.setDrawColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setLineWidth(1.15);
+  doc.rect(10, 8, W - 20, H - 16);
 
-  // ── Certificate type & title determination ──────────────────────────────
+  // Inner Gold Border
+  doc.setDrawColor(GOLD[0], GOLD[1], GOLD[2]);
+  doc.setLineWidth(0.55);
+  doc.rect(13, 11, W - 26, H - 22);
+
+  // Corner Art-Deco Geometric Diagonal Triples
+  const corners = [
+    { x: 10, y: 8, dx: 1, dy: 1 },         // Top-Left
+    { x: W - 10, y: 8, dx: -1, dy: 1 },    // Top-Right
+    { x: 10, y: H - 8, dx: 1, dy: -1 },    // Bottom-Left
+    { x: W - 10, y: H - 8, dx: -1, dy: -1 } // Bottom-Right
+  ];
+
+  corners.forEach(({ x, y, dx, dy }) => {
+    [11, 15, 19].forEach((off, idx) => {
+      const isNavy = idx === 1;
+      doc.setDrawColor(isNavy ? NAVY[0] : GOLD[0], isNavy ? NAVY[1] : GOLD[1], isNavy ? NAVY[2] : GOLD[2]);
+      doc.setLineWidth(isNavy ? 0.6 : 0.4);
+      doc.line(x, y + dy * off, x + dx * off, y);
+    });
+  });
+
+  // ── 3. Top Header Branding & Company Logo ───────────────────────────────────
+  const logoImg = (await loadImage("/nt_symbol_clean.png")) || (await loadImage("/NT Logo (2).jpeg"));
+  if (logoImg) {
+    const sW = 18;
+    const sH = 13.8;
+    doc.addImage(logoImg, "PNG", W / 2 - sW / 2, 14, sW, sH);
+  } else {
+    // Vector fallback apex emblem
+    doc.setDrawColor(GOLD[0], GOLD[1], GOLD[2]);
+    doc.setLineWidth(0.7);
+    doc.lines([[4.5, 3.8], [-1.2, 5.2], [-6.6, 0], [-1.2, -5.2], [4.5, -3.8]], W / 2, 17.5, [1, 1], "S", true);
+    doc.setFillColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.circle(W / 2, 22.8, 0.85, "F");
+  }
+
+  // Company Name
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.text("N E X O R A   T E C H N O", W / 2, 33, { align: "center" });
+
+  // Subtitle
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(6.5);
+  doc.text("INNOVATION & PROFESSIONAL DEVELOPMENT", W / 2, 37.2, { align: "center" });
+
+  // ── 4. Certificate Title ───────────────────────────────────────────────────
   const isWebinar =
     (type && type.toLowerCase() === "webinar") ||
     (batchName && batchName.toLowerCase().includes("webinar")) ||
     (certNumber && certNumber.toUpperCase().includes("WEB"));
 
   const certTitle = isWebinar ? "CERTIFICATE OF PARTICIPATION" : "CERTIFICATE OF COMPLETION";
+  const spacedTitle = certTitle.split("").join(" ");
 
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(14);
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setFont("times", "bold");
+  doc.setFontSize(19);
+  doc.text(spacedTitle, W / 2, 48.5, { align: "center" });
+
+  // Small Gold Dot Divider
+  doc.setFillColor(GOLD[0], GOLD[1], GOLD[2]);
+  doc.circle(W / 2, 52.2, 0.75, "F");
+
+  // "THIS IS PROUDLY PRESENTED TO"
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "bold");
-  doc.text(certTitle, W / 2, 50, { align: "center" });
+  doc.setFontSize(7.5);
+  doc.text("T H I S   I S   P R O U D L Y   P R E S E N T E D   T O", W / 2, 57.5, { align: "center" });
 
-  // Decorative line under title
-  const titleWidth = doc.getTextWidth(certTitle);
-  doc.setDrawColor(14, 165, 233);
-  doc.setLineWidth(0.8);
-  doc.line(W / 2 - titleWidth / 2 - 8, 53.5, W / 2 + titleWidth / 2 + 8, 53.5);
+  // ── 5. Recipient Name ───────────────────────────────────────────────────────
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setFont("times", "bolditalic");
+  doc.setFontSize(30);
+  doc.text(name, W / 2, 71.5, { align: "center" });
 
-  // ── Presented to ────────────────────────────────────────────────────────
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "italic");
-  doc.text("This is to certify that", W / 2, 65, { align: "center" });
-
-  // Recipient name (large)
-  doc.setTextColor(15, 23, 42); // slate-900
-  doc.setFontSize(28);
-  doc.setFont("helvetica", "bold");
-  doc.text(name, W / 2, 79, { align: "center" });
-
-  // Underline name
+  // Underline beneath recipient name
   const nameWidth = doc.getTextWidth(name);
-  doc.setDrawColor(14, 165, 233);
-  doc.setLineWidth(0.5);
-  doc.line(W / 2 - nameWidth / 2, 82, W / 2 + nameWidth / 2, 82);
+  doc.setDrawColor(GOLD[0], GOLD[1], GOLD[2]);
+  doc.setLineWidth(0.6);
+  doc.line(W / 2 - nameWidth / 2 - 4, 75, W / 2 + nameWidth / 2 + 4, 75);
 
-  // ── Affiliation / Academic Details (Reg No, College, Role) ───────────────
+  // ── 6. Recipient Affiliation / College ─────────────────────────────────────
   const cleanRole = (role || "").trim();
   const isStaff =
     cleanRole &&
@@ -122,58 +194,42 @@ export async function generateCertificatePDF({
       cleanRole.toLowerCase().includes("teacher"));
 
   let affiliationParts = [];
-  if (isStaff) {
-    const roleDisplay = cleanRole.toLowerCase() === "staff" ? "Faculty / Staff" : cleanRole;
-    affiliationParts.push(roleDisplay);
-    if (regNo && regNo.trim()) {
-      affiliationParts.push(`(ID: ${regNo.trim()})`);
-    }
-  } else {
-    if (cleanRole && cleanRole.toLowerCase() !== "student" && cleanRole.toLowerCase() !== "intern") {
-      affiliationParts.push(cleanRole);
-    }
-    if (regNo && regNo.trim()) {
-      affiliationParts.push(`Reg. No: ${regNo.trim()}`);
-    }
-  }
-
   if (college && college.trim()) {
-    affiliationParts.push(college.trim());
+    affiliationParts.push(college.trim().toUpperCase());
   }
-
   if (affiliationParts.length > 0) {
     const affiliationLine = affiliationParts.join("  ·  ");
-    let affFontSize = 9.5;
-    doc.setFontSize(affFontSize);
+    let affFontSize = 8.5;
     doc.setFont("helvetica", "bold");
+    doc.setFontSize(affFontSize);
     if (doc.getTextWidth(affiliationLine) > W - 50) {
-      affFontSize = 8;
+      affFontSize = 7.2;
       doc.setFontSize(affFontSize);
     }
-    doc.setTextColor(51, 65, 85); // slate-700
-    doc.text(affiliationLine, W / 2, 91, { align: "center" });
+    doc.setTextColor(SLATE_DARK[0], SLATE_DARK[1], SLATE_DARK[2]);
+    doc.text(affiliationLine, W / 2, 81.5, { align: "center" });
   }
 
-  // ── Body text ────────────────────────────────────────────────────────────
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(10);
+  // ── 7. Narrative / Body Text ───────────────────────────────────────────────
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
   const introText = isWebinar
-    ? (isStaff ? "has actively participated in the live webinar on" : "has successfully participated in the live webinar on")
-    : "has successfully completed the internship program in";
+    ? (isStaff ? "for actively participating in the technical live webinar on" : "for successfully participating in the technical live webinar on")
+    : "for successfully completing the internship program in";
+  doc.text(introText, W / 2, 93, { align: "center" });
 
-  doc.text(introText, W / 2, 101, { align: "center" });
-
-  // Domain highlight
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(16);
+  // Domain / Topic Highlight
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
   doc.setFont("helvetica", "bold");
-  doc.text(domain, W / 2, 112, { align: "center" });
+  doc.setFontSize(12.5);
+  doc.text(`“${domain}”`, W / 2, 101.5, { align: "center" });
 
-  // Duration / Organization line
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(9);
+  // Organization & Date Line
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+
   const formattedStart = startDate
     ? new Date(startDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
     : "";
@@ -187,97 +243,140 @@ export async function generateCertificatePDF({
   }
 
   const orgLine = isWebinar
-    ? `organized by Nexora Techno on ${dateText}`
+    ? `Organized by Nexora Techno on ${dateText}`
     : `at Nexora Techno · ${batchName || "Internship"} · ${dateText}`;
 
-  doc.text(orgLine, W / 2, 122, { align: "center" });
+  doc.text(orgLine, W / 2, 108.5, { align: "center" });
 
   if (projectName) {
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(10);
+    doc.setTextColor(SLATE_DARK[0], SLATE_DARK[1], SLATE_DARK[2]);
     doc.setFont("helvetica", "bold");
-    doc.text(`Project: ${projectName}`, W / 2, 130, { align: "center" });
+    doc.setFontSize(9);
+    doc.text(`Project: ${projectName}`, W / 2, 114.5, { align: "center" });
   }
 
-  // ── Bottom row: Cert ID + Verification + Signatures ───────────────────────────────
-  // Left: cert number
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "normal");
-  doc.text("Certificate ID", 25, 155);
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.text(certNumber, 25, 161);
+  // ── 8. Bottom Three-Column Section ─────────────────────────────────────────
 
-  // Center: Karthikeyan A signature line
-  doc.setDrawColor(71, 85, 105);
-  doc.setLineWidth(0.4);
-  doc.line(W/2 - 35, 163, W/2 + 35, 163);
-
+  // ── Column A: QR Code & Verification Identifiers ──────────
+  const qrUrl = `https://nexoratechno.in/verify?certId=${encodeURIComponent(certNumber)}`;
   try {
-    const karthikImg = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = "/Karthi Sign.png";
+    const qrDataUrl = await QRCode.toDataURL(qrUrl, {
+      margin: 1,
+      width: 160,
+      color: { dark: "#0B192C", light: "#FFFFFF" },
     });
-    doc.addImage(karthikImg, "PNG", W/2 - 25, 142, 50, 20);
+    doc.addImage(qrDataUrl, "PNG", 24, 135, 18, 18);
   } catch (e) {
-    doc.setTextColor(14, 165, 233);
-    doc.setFontSize(22);
-    doc.setFont("times", "italic");
-    doc.text("Karthikeyan A", W/2, 158, { align: "center" });
+    doc.setDrawColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.rect(24, 135, 18, 18);
   }
 
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "normal");
-  doc.text("Karthikeyan A, Project Manager", W/2, 168, { align: "center" });
-
-  // Far-Right: Kapil JS signature line
-  doc.setDrawColor(71, 85, 105);
-  doc.setLineWidth(0.4);
-  doc.line(W - 85, 163, W - 15, 163);
-
-  try {
-    const kapilImg = await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = "/Kapil Sign.png";
-    });
-    doc.addImage(kapilImg, "PNG", W - 75, 142, 50, 20);
-  } catch (e) {
-    doc.setTextColor(14, 165, 233);
-    doc.setFontSize(22);
-    doc.setFont("times", "italic");
-    doc.text("Kapil JS", W - 50, 158, { align: "center" });
-  }
-
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(7);
-  doc.setFont("helvetica", "normal");
-  doc.text("Kapil JS, Founder & CEO", W - 50, 168, { align: "center" });
-
-  // Center: Verification Link & Issue Date
-  doc.setTextColor(14, 165, 233);
-  doc.setFontSize(8);
+  // Metadata labels & values
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "bold");
-  doc.text("Verify authenticity at: nexoratechno.in/verify", W / 2, 175, { align: "center" });
+  doc.setFontSize(6.5);
+  doc.text("CERTIFICATE ID", 46, 140);
 
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.text(certNumber, 46, 145);
 
-  // Issue date bottom center
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(7);
-  const issuedOn = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  doc.text(`Issued on: ${issuedOn}`, W / 2, 178, { align: "center" });
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(6.5);
+  doc.text(isStaff ? "STAFF ID" : "REGISTRATION NO", 46, 151);
 
-  // ── Footer ───────────────────────────────────────────────────────────────
-  doc.setTextColor(71, 85, 105);
-  doc.setFontSize(7);
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.text(regNo || "N/A", 46, 156);
+
+  // Authenticity text & issue date below QR
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "normal");
-  doc.text("nexoratechno.in · nexoratechno2026@gmail.com · Salem, Tamil Nadu · MSME Registered", W / 2, H - 7, { align: "center" });
+  doc.setFontSize(6.8);
+  doc.text("Verify authenticity at: nexoratechno.in/verify", 24, 161.5);
+
+  const issuedOnDate = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  doc.text(`Issued on: ${issuedOnDate}`, 24, 165.8);
+
+  // ── Column B: Signatures & Company Seal ───────────────────
+  // 1. Karthikeyan A (Project Manager)
+  const sig1X = 208;
+  const sig1LineY = 154;
+  doc.setDrawColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setLineWidth(0.45);
+  doc.line(sig1X - 18, sig1LineY, sig1X + 18, sig1LineY);
+
+  const karthiSignImg = await loadImage("/karthi_sign_clean.png");
+  if (karthiSignImg) {
+    doc.addImage(karthiSignImg, "PNG", sig1X - 12, sig1LineY - 14, 24, 13);
+  } else {
+    doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.setFont("times", "bolditalic");
+    doc.setFontSize(16);
+    doc.text("Karthikeyan", sig1X, sig1LineY - 4, { align: "center" });
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.text("Karthikeyan A", sig1X, sig1LineY + 4.5, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
+  doc.setFontSize(6.5);
+  doc.text("Project Manager", sig1X, sig1LineY + 8, { align: "center" });
+
+  // 2. Kapil JS (Founder & CEO) with Company Seal & Signature
+  const sig2X = 254;
+  const sig2LineY = 154;
+  doc.setDrawColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.setLineWidth(0.45);
+  doc.line(sig2X - 18, sig2LineY, sig2X + 18, sig2LineY);
+
+  // Official Company Rubber Stamp Top ("For NEXORA TECHNO")
+  const sealTopImg = await loadImage("/company_seal_top.png");
+  if (sealTopImg) {
+    doc.addImage(sealTopImg, "PNG", sig2X - 17, sig2LineY - 15.5, 34, 4.5);
+  }
+
+  // Kapil Signature
+  const kapilSignImg = await loadImage("/kapil_sign_clean.png");
+  if (kapilSignImg) {
+    doc.addImage(kapilSignImg, "PNG", sig2X - 14, sig2LineY - 12.5, 28, 12.5);
+  } else {
+    doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+    doc.setFont("times", "bolditalic");
+    doc.setFontSize(16);
+    doc.text("Kapil JS", sig2X, sig2LineY - 4, { align: "center" });
+  }
+
+  // Official Company Rubber Stamp Bottom ("PROPRIETOR.")
+  const sealBottomImg = await loadImage("/company_seal_bottom.png");
+  if (sealBottomImg) {
+    doc.addImage(sealBottomImg, "PNG", sig2X - 10, sig2LineY + 1.2, 20, 2.3);
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  doc.text("Kapil JS", sig2X, sig2LineY + 6.8, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
+  doc.setFontSize(6.5);
+  doc.text("Founder & CEO", sig2X, sig2LineY + 10.5, { align: "center" });
+
+  // ── 9. Official Footer ──────────────────────────────────────────────────────
+  doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.8);
+  doc.text(
+    "nexoratechno.in    |    nexoratechno2026@gmail.com    |    Salem, Tamil Nadu    (MSME Registered Micro-Enterprise)",
+    W / 2,
+    191,
+    { align: "center" }
+  );
 
   const blob = doc.output("blob");
   return URL.createObjectURL(blob);
