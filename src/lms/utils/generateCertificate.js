@@ -341,10 +341,10 @@ export async function generateCertificatePDF({
     doc.addImage(sealTopImg, "PNG", sig2X - 17, sig2LineY - 15.5, 34, 4.5);
   }
 
-  // Kapil Signature
+  // Kapil Signature (Medium size, cropped tightly to ink)
   const kapilSignImg = await loadImage("/kapil_sign_clean.png");
   if (kapilSignImg) {
-    doc.addImage(kapilSignImg, "PNG", sig2X - 14, sig2LineY - 12.5, 28, 12.5);
+    doc.addImage(kapilSignImg, "PNG", sig2X - 13.5, sig2LineY - 10.2, 27, 9.5);
   } else {
     doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
     doc.setFont("times", "bolditalic");
