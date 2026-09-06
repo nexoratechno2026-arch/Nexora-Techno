@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { GraduationCap, Phone, School, Briefcase, Link as LinkIcon, CheckCircle } from "lucide-react";
+import { GraduationCap, Phone, School, Briefcase, Link as LinkIcon, CheckCircle, Hash } from "lucide-react";
 import toast from "react-hot-toast";
 
 const DOMAINS = [
@@ -19,7 +19,7 @@ export default function Onboarding() {
   const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ college: "", phone: "", domain: "", year: "", resume: "" });
+  const [form, setForm] = useState({ college: "", regNo: "", phone: "", domain: "", year: "", resume: "" });
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
 
@@ -37,6 +37,7 @@ export default function Onboarding() {
     try {
       await updateProfile({
         college: form.college,
+        regNo: form.regNo || null,
         phone: form.phone,
         domain: form.domain,
         resume_url: form.resume || null,
@@ -94,6 +95,22 @@ export default function Onboarding() {
                 <input
                   id="ob-college" type="text" required value={form.college} onChange={set("college")}
                   placeholder="Anna University, Chennai"
+                  className="w-full bg-white/5 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-slate-700
+                    placeholder-slate-500 text-sm focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Register Number */}
+            <div className="space-y-1">
+              <label htmlFor="ob-regno" className="block text-slate-600 text-sm font-medium">
+                Register Number / Roll Number
+              </label>
+              <div className="relative">
+                <Hash size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                <input
+                  id="ob-regno" type="text" value={form.regNo} onChange={set("regNo")}
+                  placeholder="e.g. 731521104001 or 21UCS101"
                   className="w-full bg-white/5 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-slate-700
                     placeholder-slate-500 text-sm focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 transition-all"
                 />

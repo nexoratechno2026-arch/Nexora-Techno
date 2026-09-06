@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "../../../firebase";
-import { collection, query, where, getDocs, doc, addDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, addDoc, deleteDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import LMSLayout from "../../components/LMSLayout";
 import { Badge, Button, SectionHeader, EmptyState, Select } from "../../components/ui.jsx";
 import { Award, Download, Plus, CheckCircle, Users, Trash2 } from "lucide-react";
@@ -18,8 +18,25 @@ export default function AdminCertificates() {
   
   // Bulk Generation State
   const [showBulkModal, setShowBulkModal] = useState(false);
-  const [bulkData, setBulkData] = useState({ type: "Webinar", domain: "", startDate: "", endDate: "", names: "" });
+  const [bulkData, setBulkData] = useState({
+    type: "Webinar",
+    domain: "",
+    startDate: "",
+    endDate: "",
+    names: "",
+    defaultCollege: "",
+    defaultRole: "Student",
+  });
   const [isBulkGenerating, setIsBulkGenerating] = useState(false);
+
+  // Single Issue Modal State
+  const [issueModalMember, setIssueModalMember] = useState(null);
+  const [issueFormData, setIssueFormData] = useState({
+    projectName: "",
+    regNo: "",
+    college: "",
+    role: "Student",
+  });
 
   useEffect(() => {
     getDocs(collection(db, "batches")).then((snapshot) => {
@@ -56,13 +73,27 @@ export default function AdminCertificates() {
     setLoading(false);
   }
 
-  async function issueCert(member) {
-    const batch = batches.find((b) => b.id === selectedBatch);
+  function openIssueModal(member) {
     const existing = certificates.find((c) => c.user_id === member.user_id);
     if (existing) { toast("Certificate already issued."); return; }
 
-    const projectName = window.prompt("Enter the Project Name for this intern:");
-    if (projectName === null) return; // User cancelled
+    const pRole = member.profiles?.role || "Student";
+    const normalizedRole = /^(prof|faculty|staff)/i.test(pRole) ? pRole : (pRole === "intern" ? "Student" : pRole);
+
+    setIssueFormData({
+      projectName: "",
+      regNo: member.profiles?.regNo || member.profiles?.reg_no || member.profiles?.register_no || "",
+      college: member.profiles?.college || "",
+      role: normalizedRole,
+    });
+    setIssueModalMember(member);
+  }
+
+  async function confirmIssueCert(e) {
+    e.preventDefault();
+    if (!issueModalMember) return;
+    const member = issueModalMember;
+    const batch = batches.find((b) => b.id === selectedBatch);
 
     setGenerating((p) => ({ ...p, [member.user_id]: true }));
     try {
@@ -74,7 +105,11 @@ export default function AdminCertificates() {
         startDate: batch?.start_date,
         endDate: batch?.end_date,
         certNumber,
-        projectName: projectName || undefined,
+        projectName: issueFormData.projectName || undefined,
+        regNo: issueFormData.regNo || undefined,
+        college: issueFormData.college || undefined,
+        role: issueFormData.role || undefined,
+        type: batch?.type || (batch?.name?.toLowerCase().includes("webinar") ? "Webinar" : "Internship"),
       });
 
       await addDoc(collection(db, "certificates"), {
@@ -82,15 +117,32 @@ export default function AdminCertificates() {
         batch_id: selectedBatch,
         cert_number: certNumber,
         pdf_url: pdfUrl,
-        project_name: projectName || null,
+        project_name: issueFormData.projectName || null,
+        regNo: issueFormData.regNo || null,
+        college: issueFormData.college || null,
+        role: issueFormData.role || null,
+        type: batch?.type || (batch?.name?.toLowerCase().includes("webinar") ? "Webinar" : "Internship"),
         issued_at: serverTimestamp()
       });
+
+      // Also update intern profile with regNo / college if not set
+      if (member.user_id && (issueFormData.regNo || issueFormData.college)) {
+        try {
+          const pRef = doc(db, "profiles", member.user_id);
+          const updates = {};
+          if (issueFormData.regNo) updates.regNo = issueFormData.regNo;
+          if (issueFormData.college && !member.profiles?.college) updates.college = issueFormData.college;
+          await setDoc(pRef, updates, { merge: true });
+        } catch (err) {
+          console.warn("Could not update profile", err);
+        }
+      }
 
       // Notify intern
       await addDoc(collection(db, "notifications"), {
         user_id: member.user_id,
         title: "🎓 Certificate Issued!",
-        message: `Your internship completion certificate for "${batch?.name}" is ready to download.`,
+        message: `Your certificate for "${batch?.name}" is ready to download.`,
         type: "certificate",
         is_read: false,
         created_at: serverTimestamp()
@@ -101,6 +153,7 @@ export default function AdminCertificates() {
       // Open PDF in new tab for admin preview
       window.open(pdfUrl, "_blank");
 
+      setIssueModalMember(null);
       fetchData();
     } catch (err) {
       toast.error(err.message);
@@ -122,6 +175,10 @@ export default function AdminCertificates() {
         endDate: batch?.end_date,
         certNumber: cert?.cert_number || "N/A",
         projectName: cert?.project_name || undefined,
+        regNo: cert?.regNo || member.profiles?.regNo || member.profiles?.reg_no || member.profiles?.register_no,
+        college: cert?.college || member.profiles?.college,
+        role: cert?.role || member.profiles?.role,
+        type: cert?.type || batch?.type || (batch?.name?.toLowerCase().includes("webinar") ? "Webinar" : "Internship"),
       });
       window.open(pdfUrl, "_blank");
     } catch (err) {
@@ -144,6 +201,53 @@ export default function AdminCertificates() {
     } catch(e) {}
   }
 
+  function parseParticipantLine(line, defaultCollege, defaultRole) {
+    if (!line || !line.trim()) return null;
+    const parts = line.split(/[,\t|]+/).map((p) => p.trim());
+    let name = parts[0] || "";
+    if (!name) return null;
+
+    let regNo = "";
+    let college = defaultCollege || "";
+    let role = defaultRole || "Student";
+
+    const isProfTitle = /^(Dr\.|Prof\.|Professor)\s/i.test(name) || /\((faculty|staff|professor|prof)\)/i.test(name);
+    if (isProfTitle && role === "Student") {
+      role = "Professor";
+    }
+
+    if (parts.length === 2) {
+      const p1 = parts[1];
+      if (/^(faculty|staff|professor|prof|assistant prof|assoc prof|student|intern)$/i.test(p1)) {
+        role = p1;
+      } else if (p1.toLowerCase().includes("college") || p1.toLowerCase().includes("university") || p1.toLowerCase().includes("institute") || p1.toLowerCase().includes("school")) {
+        college = p1;
+      } else {
+        regNo = p1;
+      }
+    } else if (parts.length === 3) {
+      const p1 = parts[1];
+      const p2 = parts[2];
+      if (/^(faculty|staff|professor|prof|assistant prof|assoc prof|student|intern)$/i.test(p2)) {
+        role = p2;
+        if (p1.toLowerCase().includes("college") || p1.toLowerCase().includes("university") || p1.toLowerCase().includes("institute") || p1.toLowerCase().includes("school")) {
+          college = p1;
+        } else {
+          regNo = p1;
+        }
+      } else {
+        regNo = p1;
+        college = p2;
+      }
+    } else if (parts.length >= 4) {
+      regNo = parts[1];
+      college = parts[2];
+      role = parts[3];
+    }
+
+    return { name, regNo, college, role };
+  }
+
   const handleBulkGenerate = async (e) => {
     e.preventDefault();
     if (!bulkData.domain || !bulkData.names.trim() || !bulkData.startDate) {
@@ -157,33 +261,45 @@ export default function AdminCertificates() {
        toast.error("Please provide both start and end dates for Internships.");
        return;
     }
+
+    const rawLines = bulkData.names.split('\n').map(n => n.trim()).filter(n => n);
+    const parsedParticipants = rawLines
+      .map(line => parseParticipantLine(line, bulkData.defaultCollege, bulkData.defaultRole))
+      .filter(Boolean);
+
+    if (parsedParticipants.length === 0) {
+      toast.error("No valid participants found in the list.");
+      return;
+    }
     
     setIsBulkGenerating(true);
     try {
-      const nameList = bulkData.names.split('\n').map(n => n.trim()).filter(n => n);
       let count = 0;
-      
       const virtualBatchId = `bulk-${Date.now()}`;
       
-      for (const personName of nameList) {
+      for (const participant of parsedParticipants) {
         const randId = Math.random().toString(36).substring(2, 7).toUpperCase();
         const prefix = bulkData.type === 'Webinar' ? 'WEB' : 'INT';
         const certNumber = `NT-${prefix}-${randId}`;
         
         // Actually generate the PDF blob URL
         const pdfUrl = await generateCertificatePDF({
-           name: personName,
+           name: participant.name,
            domain: bulkData.domain,
            batchName: bulkData.type,
            startDate: bulkData.startDate,
            endDate: finalEndDate,
            certNumber: certNumber,
+           regNo: participant.regNo,
+           college: participant.college,
+           role: participant.role,
+           type: bulkData.type,
         });
 
         // Trigger automatic download
         const a = document.createElement('a');
         a.href = pdfUrl;
-        a.download = `${personName.replace(/\\s+/g, '_')}_Certificate.pdf`;
+        a.download = `${participant.name.replace(/\s+/g, '_')}_Certificate.pdf`;
         a.click();
         
         await addDoc(collection(db, "certificates"), {
@@ -192,10 +308,17 @@ export default function AdminCertificates() {
            cert_number: certNumber,
            pdf_url: pdfUrl, 
            project_name: null,
+           type: bulkData.type,
+           regNo: participant.regNo || null,
+           college: participant.college || null,
+           role: participant.role || null,
            issued_at: new Date().getTime(),
            profiles: {
-              name: personName,
-              domain: bulkData.domain
+              name: participant.name,
+              domain: bulkData.domain,
+              college: participant.college || null,
+              regNo: participant.regNo || null,
+              role: participant.role || null,
            },
            batches: {
               name: bulkData.type,
@@ -208,7 +331,15 @@ export default function AdminCertificates() {
       
       toast.success(`Successfully generated and saved ${count} certificates!`);
       setShowBulkModal(false);
-      setBulkData({ type: "Webinar", domain: "", startDate: "", endDate: "", names: "" });
+      setBulkData({
+        type: "Webinar",
+        domain: "",
+        startDate: "",
+        endDate: "",
+        names: "",
+        defaultCollege: "",
+        defaultRole: "Student",
+      });
       fetchData();
     } catch (err) {
       console.error(err);
@@ -310,7 +441,7 @@ export default function AdminCertificates() {
                           {!issued ? (
                             <Button
                               size="sm"
-                              onClick={() => issueCert(m)}
+                              onClick={() => openIssueModal(m)}
                               loading={generating[m.user_id]}
                               id={`issue-cert-${m.user_id}`}
                             >
@@ -348,10 +479,103 @@ export default function AdminCertificates() {
         )}
       </div>
 
+      {/* Issue Single Certificate Modal */}
+      {issueModalMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
+            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Award size={18} className="text-sky-500" />
+                Issue Certificate
+              </h2>
+              <button
+                type="button"
+                onClick={() => setIssueModalMember(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100"
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={confirmIssueCert} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Participant Name</label>
+                <input
+                  type="text"
+                  disabled
+                  value={issueModalMember.profiles?.name || "Intern"}
+                  className="w-full bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 cursor-not-allowed"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Role / Category</label>
+                  <select
+                    value={issueFormData.role}
+                    onChange={(e) => setIssueFormData({ ...issueFormData, role: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                  >
+                    <option value="Student">Student</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Assistant Professor">Assistant Professor</option>
+                    <option value="Faculty / Staff">Faculty / Staff</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                    {issueFormData.role.toLowerCase().includes("prof") || issueFormData.role.toLowerCase().includes("staff") || issueFormData.role.toLowerCase().includes("faculty")
+                      ? "Staff ID (Optional)"
+                      : "Register Number"}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder={
+                      issueFormData.role.toLowerCase().includes("prof") || issueFormData.role.toLowerCase().includes("staff") || issueFormData.role.toLowerCase().includes("faculty")
+                        ? "e.g. STF-102"
+                        : "e.g. 21UCS101"
+                    }
+                    value={issueFormData.regNo}
+                    onChange={(e) => setIssueFormData({ ...issueFormData, regNo: e.target.value })}
+                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">College / University Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Muthayammal College of Arts and Science"
+                  value={issueFormData.college}
+                  onChange={(e) => setIssueFormData({ ...issueFormData, college: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Project Name (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. AI-Powered Web Application"
+                  value={issueFormData.projectName}
+                  onChange={(e) => setIssueFormData({ ...issueFormData, projectName: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                />
+              </div>
+              <div className="pt-2 flex justify-end gap-2">
+                <Button type="button" variant="secondary" onClick={() => setIssueModalMember(null)}>
+                  Cancel
+                </Button>
+                <Button type="submit" loading={generating[issueModalMember.user_id]}>
+                  <Award size={14} className="mr-1" /> Issue Certificate
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Bulk Generate Modal */}
       {showBulkModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl overflow-hidden flex flex-col max-h-[92vh]">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Users size={18} className="text-sky-500" />
@@ -372,8 +596,8 @@ export default function AdminCertificates() {
                       onChange={(e) => setBulkData({...bulkData, type: e.target.value})}
                       className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
                     >
-                      <option value="Webinar">Webinar</option>
-                      <option value="Internship">Internship</option>
+                      <option value="Webinar">Webinar (Certificate of Participation)</option>
+                      <option value="Internship">Internship (Certificate of Completion)</option>
                     </select>
                   </div>
                   {bulkData.type === "Webinar" ? (
@@ -414,7 +638,7 @@ export default function AdminCertificates() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Course / Domain Name</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Course / Domain / Topic Name</label>
                   <input
                     type="text"
                     value={bulkData.domain}
@@ -425,16 +649,53 @@ export default function AdminCertificates() {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Default College / Institution</label>
+                    <input
+                      type="text"
+                      value={bulkData.defaultCollege}
+                      onChange={(e) => setBulkData({...bulkData, defaultCollege: e.target.value})}
+                      placeholder="e.g. Muthayammal College of Arts and Science"
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                    />
+                    <p className="text-[11px] text-slate-500 mt-1">Applied to all participants without a specific college.</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Default Role / Category</label>
+                    <select
+                      value={bulkData.defaultRole}
+                      onChange={(e) => setBulkData({...bulkData, defaultRole: e.target.value})}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                    >
+                      <option value="Student">Students (Default)</option>
+                      <option value="Professor">Professors</option>
+                      <option value="Faculty / Staff">Faculty / Staff</option>
+                    </select>
+                    <p className="text-[11px] text-slate-500 mt-1">Dr. / Prof. in names will be auto-recognized as faculty.</p>
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">List of Names (One per line)</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Participant List (One per line)
+                    </label>
+                    <span className="text-[11px] text-sky-600 font-medium">
+                      Format: Name, RegNo, College, Role
+                    </span>
+                  </div>
                   <textarea
                     value={bulkData.names}
                     onChange={(e) => setBulkData({...bulkData, names: e.target.value})}
-                    placeholder="Kavitha M&#10;John Doe&#10;Jane Smith"
+                    placeholder={`Kavitha M, 21UCS101\nDr. S. Ramesh, Faculty\nPraveen Kumar, 21UCS105, Salem College\nJane Doe`}
                     rows={6}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500 resize-y"
+                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-sky-500 resize-y"
                     required
                   />
+                  <p className="text-xs text-slate-500 mt-1">
+                    💡 Tip: You can paste columns directly from Excel or Google Sheets. Reg No and College will automatically be included on their certificates.
+                  </p>
                 </div>
               </form>
             </div>

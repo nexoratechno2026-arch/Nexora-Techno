@@ -4,7 +4,7 @@ import { db } from "../../../firebase";
 import { collection, query, where, getDocs, getDoc, orderBy, updateDoc, addDoc, doc, limit, serverTimestamp } from "firebase/firestore";
 import LMSLayout from "../../components/LMSLayout";
 import { Badge, Button, Card, ProgressBar } from "../../components/ui.jsx";
-import { ArrowLeft, User, Mail, Phone, School, Briefcase, FileText, ExternalLink, ClipboardList, CalendarCheck } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, School, Briefcase, FileText, ExternalLink, ClipboardList, CalendarCheck, Hash } from "lucide-react";
 import { formatDate, formatDateTime, getInitials } from "../../utils/helpers";
 import toast from "react-hot-toast";
 
@@ -120,6 +120,11 @@ export default function InternProfile() {
                 {profile.college && (
                   <div className="flex items-center gap-2 text-slate-500 text-sm">
                     <School size={14} className="text-slate-500" /> {profile.college}
+                  </div>
+                )}
+                {(profile.regNo || profile.reg_no) && (
+                  <div className="flex items-center gap-2 text-slate-500 text-sm">
+                    <Hash size={14} className="text-slate-500" /> Reg: {profile.regNo || profile.reg_no}
                   </div>
                 )}
                 <div className="flex items-center gap-2 text-slate-500 text-sm">

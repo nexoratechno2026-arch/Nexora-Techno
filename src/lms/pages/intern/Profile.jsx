@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import LMSLayout from "../../components/LMSLayout";
 import { Button, Input, Textarea, EmptyState } from "../../components/ui.jsx";
-import { User, Mail, Phone, School, Briefcase, Link as LinkIcon, Save, FileText, ExternalLink } from "lucide-react";
+import { User, Mail, Phone, School, Briefcase, Link as LinkIcon, Save, FileText, ExternalLink, Hash } from "lucide-react";
 import { getInitials } from "../../utils/helpers";
 import toast from "react-hot-toast";
 
@@ -10,13 +10,20 @@ const DOMAINS = ["Web Development", "AI & Machine Learning", "AI Automation", "S
 
 export default function InternProfile() {
   const { profile, updateProfile, user } = useAuth();
-  const [form, setForm] = useState({ name: "", phone: "", college: "", domain: "", resume: "" });
+  const [form, setForm] = useState({ name: "", regNo: "", phone: "", college: "", domain: "", resume: "" });
   const [saving, setSaving] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if (profile && !initialized) {
-      setForm({ name: profile.name || "", phone: profile.phone || "", college: profile.college || "", domain: profile.domain || "", resume: profile.resume_url || "" });
+      setForm({
+        name: profile.name || "",
+        regNo: profile.regNo || profile.reg_no || profile.register_no || "",
+        phone: profile.phone || "",
+        college: profile.college || "",
+        domain: profile.domain || "",
+        resume: profile.resume_url || "",
+      });
       setInitialized(true);
     }
   }, [profile]);
@@ -30,6 +37,7 @@ export default function InternProfile() {
     try {
       let updates = {
         name: form.name,
+        regNo: form.regNo || null,
         phone: form.phone,
         college: form.college,
         domain: form.domain,
@@ -109,6 +117,20 @@ export default function InternProfile() {
               <input
                 id="prof-college" type="text" value={form.college} onChange={set("college")}
                 placeholder="Anna University, Chennai"
+                className="w-full bg-white/5 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-slate-700 text-sm
+                  focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Register Number */}
+          <div className="space-y-1">
+            <label htmlFor="prof-regno" className="block text-slate-600 text-sm font-medium">Register Number / Roll Number</label>
+            <div className="relative">
+              <Hash size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+              <input
+                id="prof-regno" type="text" value={form.regNo} onChange={set("regNo")}
+                placeholder="e.g. 731521104001 or 21UCS101"
                 className="w-full bg-white/5 border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-slate-700 text-sm
                   focus:outline-none focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 transition-all"
               />

@@ -68,6 +68,10 @@ export default function InternCertificate() {
         endDate: batch.end_date,
         certNumber: certificate.cert_number,
         projectName: certificate.project_name || undefined,
+        regNo: certificate.regNo || profile?.regNo || profile?.reg_no || profile?.register_no,
+        college: certificate.college || profile?.college,
+        role: certificate.role || profile?.role || "Student",
+        type: certificate.type || batch.type || (batch.name?.toLowerCase().includes("webinar") ? "Webinar" : "Internship"),
       });
       window.open(pdfUrl, "_blank");
     } catch (err) {

@@ -4,7 +4,19 @@ import { jsPDF } from "jspdf";
  * Generate a Nexora Techno internship completion certificate PDF.
  * Returns a Blob URL string.
  */
-export async function generateCertificatePDF({ name, domain, batchName, startDate, endDate, certNumber, projectName }) {
+export async function generateCertificatePDF({
+  name,
+  domain,
+  batchName,
+  startDate,
+  endDate,
+  certNumber,
+  projectName,
+  regNo,
+  college,
+  role,
+  type,
+}) {
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const W = 297;
   const H = 210;
@@ -61,72 +73,130 @@ export async function generateCertificatePDF({ name, domain, batchName, startDat
   doc.setFont("helvetica", "normal");
   doc.text("IT Software Company · Salem, Tamil Nadu", 45, 39);
 
-  // ── Certificate title ────────────────────────────────────────────────────
+  // ── Certificate type & title determination ──────────────────────────────
+  const isWebinar =
+    (type && type.toLowerCase() === "webinar") ||
+    (batchName && batchName.toLowerCase().includes("webinar")) ||
+    (certNumber && certNumber.toUpperCase().includes("WEB"));
+
+  const certTitle = isWebinar ? "CERTIFICATE OF PARTICIPATION" : "CERTIFICATE OF COMPLETION";
+
   doc.setTextColor(14, 165, 233);
-  doc.setFontSize(8);
+  doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.text("CERTIFICATE OF COMPLETION", W / 2, 52, { align: "center" });
+  doc.text(certTitle, W / 2, 50, { align: "center" });
 
   // Decorative line under title
+  const titleWidth = doc.getTextWidth(certTitle);
   doc.setDrawColor(14, 165, 233);
   doc.setLineWidth(0.8);
-  doc.line(W / 2 - 45, 55, W / 2 + 45, 55);
+  doc.line(W / 2 - titleWidth / 2 - 8, 53.5, W / 2 + titleWidth / 2 + 8, 53.5);
 
   // ── Presented to ────────────────────────────────────────────────────────
   doc.setTextColor(71, 85, 105);
   doc.setFontSize(9);
   doc.setFont("helvetica", "italic");
-  doc.text("This is to certify that", W / 2, 70, { align: "center" });
+  doc.text("This is to certify that", W / 2, 65, { align: "center" });
 
-  // Intern name (large)
+  // Recipient name (large)
   doc.setTextColor(15, 23, 42); // slate-900
-  doc.setFontSize(32);
+  doc.setFontSize(28);
   doc.setFont("helvetica", "bold");
-  doc.text(name, W / 2, 88, { align: "center" });
+  doc.text(name, W / 2, 79, { align: "center" });
 
   // Underline name
   const nameWidth = doc.getTextWidth(name);
   doc.setDrawColor(14, 165, 233);
   doc.setLineWidth(0.5);
-  doc.line(W / 2 - nameWidth / 2, 91, W / 2 + nameWidth / 2, 91);
+  doc.line(W / 2 - nameWidth / 2, 82, W / 2 + nameWidth / 2, 82);
+
+  // ── Affiliation / Academic Details (Reg No, College, Role) ───────────────
+  const cleanRole = (role || "").trim();
+  const isStaff =
+    cleanRole &&
+    (cleanRole.toLowerCase().includes("prof") ||
+      cleanRole.toLowerCase().includes("staff") ||
+      cleanRole.toLowerCase().includes("faculty") ||
+      cleanRole.toLowerCase().includes("lecturer") ||
+      cleanRole.toLowerCase().includes("hod") ||
+      cleanRole.toLowerCase().includes("teacher"));
+
+  let affiliationParts = [];
+  if (isStaff) {
+    const roleDisplay = cleanRole.toLowerCase() === "staff" ? "Faculty / Staff" : cleanRole;
+    affiliationParts.push(roleDisplay);
+    if (regNo && regNo.trim()) {
+      affiliationParts.push(`(ID: ${regNo.trim()})`);
+    }
+  } else {
+    if (cleanRole && cleanRole.toLowerCase() !== "student" && cleanRole.toLowerCase() !== "intern") {
+      affiliationParts.push(cleanRole);
+    }
+    if (regNo && regNo.trim()) {
+      affiliationParts.push(`Reg. No: ${regNo.trim()}`);
+    }
+  }
+
+  if (college && college.trim()) {
+    affiliationParts.push(college.trim());
+  }
+
+  if (affiliationParts.length > 0) {
+    const affiliationLine = affiliationParts.join("  ·  ");
+    let affFontSize = 9.5;
+    doc.setFontSize(affFontSize);
+    doc.setFont("helvetica", "bold");
+    if (doc.getTextWidth(affiliationLine) > W - 50) {
+      affFontSize = 8;
+      doc.setFontSize(affFontSize);
+    }
+    doc.setTextColor(51, 65, 85); // slate-700
+    doc.text(affiliationLine, W / 2, 91, { align: "center" });
+  }
 
   // ── Body text ────────────────────────────────────────────────────────────
   doc.setTextColor(71, 85, 105);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text(
-    "has successfully completed the internship program in",
-    W / 2, 102, { align: "center" }
-  );
+  const introText = isWebinar
+    ? (isStaff ? "has actively participated in the live webinar on" : "has successfully participated in the live webinar on")
+    : "has successfully completed the internship program in";
+
+  doc.text(introText, W / 2, 101, { align: "center" });
 
   // Domain highlight
   doc.setTextColor(14, 165, 233);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text(domain, W / 2, 114, { align: "center" });
+  doc.text(domain, W / 2, 112, { align: "center" });
 
-  // Duration
+  // Duration / Organization line
   doc.setTextColor(71, 85, 105);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  const formattedStart = new Date(startDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  const formattedEnd = new Date(endDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  
+  const formattedStart = startDate
+    ? new Date(startDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+    : "";
+  const formattedEnd = endDate
+    ? new Date(endDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+    : "";
+
   let dateText = `${formattedStart} to ${formattedEnd}`;
-  if (formattedStart === formattedEnd) {
+  if (formattedStart === formattedEnd || !endDate) {
     dateText = formattedStart;
   }
-  
-  doc.text(
-    `at Nexora Techno · ${batchName} · ${dateText}`,
-    W / 2, 124, { align: "center" }
-  );
+
+  const orgLine = isWebinar
+    ? `organized by Nexora Techno on ${dateText}`
+    : `at Nexora Techno · ${batchName || "Internship"} · ${dateText}`;
+
+  doc.text(orgLine, W / 2, 122, { align: "center" });
 
   if (projectName) {
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text(`Project: ${projectName}`, W / 2, 132, { align: "center" });
+    doc.text(`Project: ${projectName}`, W / 2, 130, { align: "center" });
   }
 
   // ── Bottom row: Cert ID + Verification + Signatures ───────────────────────────────
