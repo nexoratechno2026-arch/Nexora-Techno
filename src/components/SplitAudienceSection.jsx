@@ -113,6 +113,18 @@ export default function SplitAudienceSection() {
                 Gain practical experience through internships, real client project workflows and technology-focused hands-on training.
               </p>
 
+              <div className="flex flex-wrap gap-2 mt-4">
+                <span className="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 text-xs font-semibold border border-indigo-500/30">
+                  🎓 1,000+ Students Oriented
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 text-xs font-semibold border border-sky-500/30">
+                  🛠️ 100+ Workshops
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
+                  💼 55+ Interns Graduated
+                </span>
+              </div>
+
               <div className="mt-6 pt-6 border-t border-slate-800/80">
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                   Program Highlights:

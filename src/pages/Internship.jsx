@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 import WhatsAppButton from "../components/WhatsAppButton";
+import StudentImpactSection from "../components/StudentImpactSection";
 import { 
   GraduationCap, 
   Award, 
@@ -158,6 +159,9 @@ Goals/Experience: ${data.about}`;
 
           </div>
         </section>
+
+        {/* Student Milestones & Impact: 1000+ Orientation, 100+ Workshops, 55+ Internships */}
+        <StudentImpactSection />
 
         {/* Available Programs */}
         <section className="py-20 bg-slate-900 border-b border-slate-800">
@@ -339,16 +343,18 @@ Goals/Experience: ${data.about}`;
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Internship Program Track *</label>
+                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Internship Program / Session Track *</label>
                       <select
                         name="program"
                         required
                         className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm focus:border-emerald-500 focus:outline-none"
                       >
-                        <option value="full-stack">Full Stack Development (FS)</option>
-                        <option value="python-full-stack">Python Full Stack (PFS)</option>
-                        <option value="prompt-engineering-ai-ml">Prompt Engineering & AI/ML (PE)</option>
-                        <option value="ui-ux">UI/UX Development (UD)</option>
+                        <option value="full-stack">Full Stack Development (FS) - Internship</option>
+                        <option value="python-full-stack">Python Full Stack (PFS) - Internship</option>
+                        <option value="prompt-engineering-ai-ml">Prompt Engineering & AI/ML (PE) - Internship</option>
+                        <option value="ui-ux">UI/UX Development (UD) - Internship</option>
+                        <option value="college-workshop">College Campus Technical Workshop (Hands-on)</option>
+                        <option value="college-orientation">College Orientation & Career Roadmap Session</option>
                       </select>
                     </div>
                   </div>
