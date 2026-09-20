@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import WhatsAppButton from "../components/WhatsAppButton";
 import ScrollToTop from "../components/ScrollToTop";
-import teamMembers from "../data/team.json";
 import { 
   Building2, 
   Target, 
@@ -89,76 +88,6 @@ export default function About() {
           </div>
         </section>
 
-        {/* Meet the Team Section */}
-        <section id="team" className="py-20 bg-slate-950">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-3 border border-indigo-500/30">
-                Leadership & Developers
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Our Engineering & Leadership Team
-              </h2>
-              <p className="text-slate-400 text-base mt-2">
-                Meet the passionate founders, project managers, HR leads, and developers driving Nexora Techno forward.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {teamMembers.map((m) => (
-                <div
-                  key={m.id}
-                  className="bg-slate-900 rounded-3xl p-6 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between group shadow-xl"
-                >
-                  <div>
-                    <div className="relative h-72 overflow-hidden rounded-2xl bg-slate-950 mb-6 border border-slate-800 flex items-center justify-center">
-                      <img
-                        src={m.image}
-                        alt={m.name}
-                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${
-                          m.name.toLowerCase().includes("kapil")
-                            ? "object-cover object-top"
-                            : m.name.toLowerCase().includes("tharani")
-                            ? "object-cover object-[center_20%]"
-                            : "object-cover object-top"
-                        }`}
-                        onError={(e) => { e.target.style.display = "none"; }}
-                      />
-                    </div>
-
-                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
-                      {m.role}
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{m.name}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed mb-3">
-                      {m.education}
-                    </p>
-                    <p className="text-slate-300 text-xs leading-relaxed line-clamp-4 mb-4">
-                      {m.bio}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                    <a
-                      href={m.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-semibold"
-                    >
-                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      </svg>
-                      Connect on LinkedIn
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
         {/* Credentials & Location */}
         <section className="py-20 bg-slate-900 border-t border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -185,7 +114,7 @@ export default function About() {
                   <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
                     <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
                     <span className="text-xs text-slate-300">
-                      <strong>Contact Helpline:</strong> +91 93451 21988 / +91 99435 78591
+                      <strong>Contact Helpline:</strong> +91 93451 21988
                     </span>
                   </div>
                   <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">

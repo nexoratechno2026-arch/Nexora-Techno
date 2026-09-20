@@ -7,9 +7,9 @@ export const blogData = [
     category: "Web Development & Pricing",
     readTime: "5 min read",
     author: {
-      name: "Kapil JS",
-      role: "CEO & Tech Lead, Nexora Techno",
-      image: "/Kapil Js.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 Building a modern website is one of the most critical investments for any business in Salem and across Tamil Nadu. However, website pricing can often feel confusing because quotes range anywhere from ₹3,000 to ₹1,500,000+. 
@@ -56,9 +56,9 @@ At **Nexora Techno**, we believe in 100% transparent pricing with zero hidden fe
     category: "Technology Insights",
     readTime: "6 min read",
     author: {
-      name: "Kannan S",
-      role: "Full Stack Developer, Nexora Techno",
-      image: "/Kannan.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 When planning a new website, one of the first technical decisions you'll face is choosing between a **Static Website** and a **Dynamic Website**. Understanding the distinction is essential for your budget and growth plans.
@@ -100,9 +100,9 @@ Nexora Techno builds both static and dynamic solutions optimized for top perform
     category: "AI & Automation",
     readTime: "7 min read",
     author: {
-      name: "Kishore A",
-      role: "AI Developer, Nexora Techno",
-      image: "/Kishore.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 Artificial Intelligence is no longer just for massive tech giants in Silicon Valley. Small and medium enterprises in Salem and across India are leveraging AI tools to automate routine tasks, respond to inquiries instantly, and outpace competition.
@@ -138,9 +138,9 @@ Implementing AI automation doesn't require millions in budget. Using tools like 
     category: "Business Strategy",
     readTime: "4 min read",
     author: {
-      name: "Karthikeyan A",
-      role: "Co-Founder & Project Manager",
-      image: "/Karthikeyan.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 Many small business owners ask: *"I have an Instagram page and WhatsApp, why do I need a website?"* 
@@ -174,9 +174,9 @@ Ready to establish a commanding online presence? **Nexora Techno** crafts modern
     category: "E-commerce Insights",
     readTime: "5 min read",
     author: {
-      name: "Kapil JS",
-      role: "CEO, Nexora Techno",
-      image: "/Kapil Js.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 Selling products online requires a reliable, secure e-commerce storefront. Understanding the budget required to build an online store will help you avoid costly trial-and-error.
@@ -208,9 +208,9 @@ Contact Nexora Techno to launch your e-commerce business with zero marketplace c
     category: "Student Careers & Internships",
     readTime: "6 min read",
     author: {
-      name: "Tharani B",
-      role: "HR & UI/UX Lead, Nexora Techno",
-      image: "/Tharani.png"
+      name: "Nexora Editorial Team",
+      role: "Nexora Techno",
+      image: "/Logo.jpeg"
     },
     content: `
 For Computer Science, IT, and AI/ML students in Salem and surrounding districts like Namakkal, Erode, and Dharmapuri, securing hands-on industry experience before graduation is key to landing great developer jobs.
