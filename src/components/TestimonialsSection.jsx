@@ -6,7 +6,7 @@ export default function TestimonialsSection() {
     {
       name: "SANJEEVI A",
       role: "Full Stack Intern (Certificate ID: NT26FS002)",
-      organization: "Muthayammal College of Arts and Science",
+      organization: "Computer Science Graduate, Salem",
       text: "The Full Stack Internship at Nexora Techno gave me practical coding experience with React and Node.js. Working on real client project components in Salem prepared me for developer interviews.",
       rating: 5
     },

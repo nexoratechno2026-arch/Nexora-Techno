@@ -364,7 +364,7 @@ Goals/Experience: ${data.about}`;
                     <input
                       type="text"
                       name="college"
-                      placeholder="e.g. Muthayammal College of Arts and Science - Final Year B.Sc. CS"
+                      placeholder="e.g. Government Engineering College - Final Year B.E. / B.Sc."
                       className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none"
                     />
                   </div>
