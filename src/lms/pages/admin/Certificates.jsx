@@ -19,7 +19,7 @@ export default function AdminCertificates() {
   // Bulk Generation State
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkData, setBulkData] = useState({
-    type: "Webinar",
+    type: "Workshop",
     domain: "",
     startDate: "",
     endDate: "",
@@ -261,6 +261,10 @@ export default function AdminCertificates() {
        toast.error("Please provide both start and end dates for Internships.");
        return;
     }
+    if (bulkData.type === 'Workshop' && !bulkData.endDate) {
+       toast.error("Please provide both starting and ending dates for Workshops.");
+       return;
+    }
 
     const rawLines = bulkData.names.split('\n').map(n => n.trim()).filter(n => n);
     const parsedParticipants = rawLines
@@ -279,7 +283,7 @@ export default function AdminCertificates() {
       
       for (const participant of parsedParticipants) {
         const randId = Math.random().toString(36).substring(2, 7).toUpperCase();
-        const prefix = bulkData.type === 'Webinar' ? 'WEB' : 'INT';
+        const prefix = bulkData.type === 'Workshop' ? 'WRK' : bulkData.type === 'Webinar' ? 'WEB' : 'INT';
         const certNumber = `NT-${prefix}-${randId}`;
         
         // Actually generate the PDF blob URL
@@ -332,7 +336,7 @@ export default function AdminCertificates() {
       toast.success(`Successfully generated and saved ${count} certificates!`);
       setShowBulkModal(false);
       setBulkData({
-        type: "Webinar",
+        type: "Workshop",
         domain: "",
         startDate: "",
         endDate: "",
@@ -588,7 +592,7 @@ export default function AdminCertificates() {
             
             <div className="p-6 overflow-y-auto">
               <form id="bulk-gen-form" onSubmit={handleBulkGenerate} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Type</label>
                     <select
@@ -596,45 +600,42 @@ export default function AdminCertificates() {
                       onChange={(e) => setBulkData({...bulkData, type: e.target.value})}
                       className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
                     >
-                      <option value="Webinar">Webinar (Certificate of Participation)</option>
+                      <option value="Workshop">Workshop (Certificate of Participation)</option>
                       <option value="Internship">Internship (Certificate of Completion)</option>
+                      <option value="Webinar">Webinar (Certificate of Participation)</option>
                     </select>
                   </div>
-                  {bulkData.type === "Webinar" ? (
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Date</label>
-                      <input
-                        type="date"
-                        value={bulkData.startDate}
-                        onChange={(e) => setBulkData({...bulkData, startDate: e.target.value, endDate: e.target.value})}
-                        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
-                        required
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">From Date</label>
-                        <input
-                          type="date"
-                          value={bulkData.startDate}
-                          onChange={(e) => setBulkData({...bulkData, startDate: e.target.value})}
-                          className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">To Date</label>
-                        <input
-                          type="date"
-                          value={bulkData.endDate}
-                          onChange={(e) => setBulkData({...bulkData, endDate: e.target.value})}
-                          className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
-                          required
-                        />
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      {bulkData.type === "Webinar" ? "Date / Starting Date" : "Starting Date"}
+                    </label>
+                    <input
+                      type="date"
+                      value={bulkData.startDate}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (bulkData.type === "Webinar" && !bulkData.endDate) {
+                          setBulkData({...bulkData, startDate: val, endDate: val});
+                        } else {
+                          setBulkData({...bulkData, startDate: val});
+                        }
+                      }}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Ending Date {bulkData.type === "Webinar" ? "(Optional)" : ""}
+                    </label>
+                    <input
+                      type="date"
+                      value={bulkData.endDate}
+                      onChange={(e) => setBulkData({...bulkData, endDate: e.target.value})}
+                      className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
+                      required={bulkData.type !== "Webinar"}
+                    />
+                  </div>
                 </div>
 
                 <div>

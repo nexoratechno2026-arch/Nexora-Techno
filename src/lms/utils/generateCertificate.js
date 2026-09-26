@@ -152,7 +152,12 @@ export async function generateCertificatePDF({
     (batchName && batchName.toLowerCase().includes("webinar")) ||
     (certNumber && certNumber.toUpperCase().includes("WEB"));
 
-  const certTitle = isWebinar ? "CERTIFICATE OF PARTICIPATION" : "CERTIFICATE OF COMPLETION";
+  const isWorkshop =
+    (type && type.toLowerCase() === "workshop") ||
+    (batchName && batchName.toLowerCase().includes("workshop")) ||
+    (certNumber && (certNumber.toUpperCase().includes("WRK") || certNumber.toUpperCase().includes("WKS")));
+
+  const certTitle = (isWebinar || isWorkshop) ? "CERTIFICATE OF PARTICIPATION" : "CERTIFICATE OF COMPLETION";
   const spacedTitle = certTitle.split("").join(" ");
 
   doc.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
@@ -214,9 +219,16 @@ export async function generateCertificatePDF({
   doc.setTextColor(SLATE[0], SLATE[1], SLATE[2]);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9.5);
-  const introText = isWebinar
-    ? (isStaff ? "for actively participating in the technical live webinar on" : "for successfully participating in the technical live webinar on")
-    : "for successfully completing the internship program in";
+  let introText = "for successfully completing the internship program in";
+  if (isWorkshop) {
+    introText = isStaff
+      ? "for actively participating in the technical workshop on"
+      : "for successfully participating in the technical workshop on";
+  } else if (isWebinar) {
+    introText = isStaff
+      ? "for actively participating in the technical live webinar on"
+      : "for successfully participating in the technical live webinar on";
+  }
   doc.text(introText, W / 2, 93, { align: "center" });
 
   // Domain / Topic Highlight
@@ -242,8 +254,8 @@ export async function generateCertificatePDF({
     dateText = formattedStart;
   }
 
-  const orgLine = isWebinar
-    ? `Organized by Nexora Techno on ${dateText}`
+  const orgLine = (isWebinar || isWorkshop)
+    ? `Organized by Nexora Techno ${formattedStart === formattedEnd || !endDate ? `on ${dateText}` : `from ${formattedStart} to ${formattedEnd}`}`
     : `at Nexora Techno · ${batchName || "Internship"} · ${dateText}`;
 
   doc.text(orgLine, W / 2, 108.5, { align: "center" });
