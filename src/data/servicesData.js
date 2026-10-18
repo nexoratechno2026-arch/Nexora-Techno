@@ -31,7 +31,7 @@ export const servicesData = [
       "Higher Google search rankings in local Salem and regional searches",
       "Complete ownership with zero mandatory monthly software lock-ins"
     ],
-    relevantProjects: ["varavu-selavu", "buddies-unleashed", "home-nest"],
+    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed", "home-nest"],
     faq: [
       {
         question: "How long does it take to build a business website?",
@@ -79,7 +79,7 @@ export const servicesData = [
       "Gain total control and security over proprietary business data",
       "Scale features seamlessly as your business grows"
     ],
-    relevantProjects: ["varavu-selavu", "buddies-unleashed"],
+    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
     faq: [
       {
         question: "Why should we choose custom software over ready-made SaaS tools?",
@@ -122,7 +122,7 @@ export const servicesData = [
       "Zero human error in structured data extraction and routing",
       "Stay ahead of local competitors with modern AI capabilities"
     ],
-    relevantProjects: ["varavu-selavu", "buddies-unleashed"],
+    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
     faq: [
       {
         question: "Is AI automation expensive for small or medium businesses?",
@@ -248,7 +248,7 @@ export const servicesData = [
       "High performance on low-bandwidth mobile networks",
       "Immediate over-the-air updates without app store approval waits"
     ],
-    relevantProjects: ["varavu-selavu", "buddies-unleashed"],
+    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
     faq: [
       {
         question: "Is a Progressive Web Application (PWA) better than a native mobile app?",
@@ -287,11 +287,143 @@ export const servicesData = [
       "Improved brand authority and online credibility",
       "Long-term value that compounds over time"
     ],
-    relevantProjects: ["varavu-selavu", "home-nest"],
+    relevantProjects: ["codexpertai", "varavu-selavu", "home-nest"],
     faq: [
       {
         question: "How soon can we see SEO results on Google?",
         answer: "Local SEO optimizations in Salem typically begin showing improved search positions and local maps visibility within 4 to 8 weeks."
+      }
+    ]
+  },
+  {
+    id: "full-stack-development",
+    title: "Full Stack Development",
+    shortDescription: "End-to-end full stack web applications with modern frontends, robust REST APIs, scalable database architectures, and seamless cloud deployments.",
+    icon: "Layers",
+    category: "Engineering",
+    heroTitle: "Scalable Full Stack Web Application Development",
+    heroSubtitle: "Build robust, scalable, and responsive web applications from database modeling to intuitive user interfaces.",
+    problem: "Businesses often suffer when separate frontend and backend systems aren't designed to work together, resulting in sluggish performance, data synchronization bugs, and expensive maintenance.",
+    solution: "Nexora Techno delivers unified full stack systems using modern JavaScript/TypeScript, React, Node.js, and relational or NoSQL databases. We build cohesive architectures with end-to-end security, authentication, and cloud scalability.",
+    features: [
+      { title: "Custom API & Microservice Engineering", description: "Secure, high-throughput REST and GraphQL APIs with input validation and rate limiting." },
+      { title: "Database Modeling & Optimization", description: "Normalized relational schemas or flexible NoSQL architectures in PostgreSQL and MongoDB." },
+      { title: "Authentication & Role-Based Access", description: "JWT, OAuth, and multi-tenant permission controls designed for enterprise security." },
+      { title: "Responsive Frontend Integration", description: "High-performance reactive interfaces built with React, Vite, and modern styling." },
+      { title: "CI/CD & Cloud Deployment", description: "Automated test runs, containerization with Docker, and cloud hosting on VPS or AWS." }
+    ],
+    technologies: ["React", "Node.js", "Express.js", "MongoDB", "PostgreSQL", "REST APIs", "Tailwind CSS", "Docker"],
+    process: [
+      "Requirements & Database Schema Design",
+      "API Architecture & Authentication Setup",
+      "Frontend UI Component Engineering",
+      "System Integration & End-to-End Testing",
+      "Staging Review & Client Walkthrough",
+      "Production Deployment & Monitoring"
+    ],
+    benefits: [
+      "One accountable team handling both frontend and backend seamlessly",
+      "Fast, reliable data processing with optimized database queries",
+      "Scalable foundation ready to grow alongside your user base",
+      "Complete source code ownership with clean, documented code"
+    ],
+    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
+    faq: [
+      {
+        question: "What tech stack do you recommend for full stack web applications?",
+        answer: "We primarily work with React, Node.js, Express, and PostgreSQL/MongoDB (the MERN stack or PERN stack), ensuring rapid development, excellent performance, and easy maintainability."
+      },
+      {
+        question: "Can you take over and upgrade an existing application?",
+        answer: "Yes. We can audit your current codebase, optimize database bottlenecks, refactor legacy code, and add new capabilities."
+      }
+    ]
+  },
+  {
+    id: "ui-ux-design",
+    title: "UI/UX Designing",
+    shortDescription: "User-centered interface design, interactive Figma prototypes, and complete design systems created for frictionless digital experiences.",
+    icon: "Layout",
+    category: "Design & Creative",
+    heroTitle: "Human-Centered UI/UX Design & Prototyping",
+    heroSubtitle: "Transform user impressions with clean, modern, and intuitive digital product interfaces engineered for maximum engagement and conversion.",
+    problem: "Cluttered layouts, confusing navigation, and inconsistent visual design frustrate visitors, leading to high bounce rates, low customer trust, and abandoned checkout flows.",
+    solution: "Nexora Techno designs clean, engaging, and accessible user interfaces grounded in real user behavior, usability best practices, and systematic Figma design libraries.",
+    features: [
+      { title: "User Journey & Wireframing", description: "Low-fidelity wireframes that establish intuitive site architecture and content hierarchy." },
+      { title: "High-Fidelity Interactive Prototypes", description: "Clickable Figma prototypes simulating exact app and website interactions before coding." },
+      { title: "Design Systems & Component Libraries", description: "Reusable typography tokens, color palettes, and interface components for visual consistency." },
+      { title: "Mobile & Responsive Layouts", description: "Pixel-perfect visual design optimized specifically for smartphone and desktop screens." },
+      { title: "Usability Testing & Feedback Loops", description: "Practical user testing to eliminate friction points and improve conversion rates." }
+    ],
+    technologies: ["Figma", "Adobe XD", "Wireframing", "Design Systems", "Prototyping", "Usability Testing"],
+    process: [
+      "User & Competitor Research",
+      "Information Architecture & Wireframes",
+      "Visual Style & Design System Creation",
+      "High-Fidelity Figma Prototyping",
+      "Client Review & Interactive Walkthrough",
+      "Developer Hand-off with Design Specs"
+    ],
+    benefits: [
+      "Noticeably higher user retention and satisfaction",
+      "Clear visual hierarchy that guides visitors toward inquiries and sales",
+      "Faster development times thanks to organized component libraries",
+      "Consistent, modern brand presentation across all touchpoints"
+    ],
+    relevantProjects: ["codexpertai", "home-nest", "varavu-selavu"],
+    faq: [
+      {
+        question: "Do you provide editable design files in Figma?",
+        answer: "Yes, you receive complete access to all Figma source files, vector assets, component styles, and typography tokens."
+      },
+      {
+        question: "Can you redesign an existing website or mobile app?",
+        answer: "Absolutely. We can perform a UX audit of your current product and deliver an upgraded, modern redesign."
+      }
+    ]
+  },
+  {
+    id: "digital-marketing",
+    title: "Digital Marketing",
+    shortDescription: "Targeted digital marketing campaigns, Google Ads, Meta advertising, WhatsApp outreach, and local growth strategies that generate real business leads.",
+    icon: "Megaphone",
+    category: "Growth & Marketing",
+    heroTitle: "Results-Driven Digital Marketing & Lead Generation",
+    heroSubtitle: "Reach qualified customers and grow your revenue with targeted marketing campaigns across Google, Meta, WhatsApp, and social media channels.",
+    problem: "Many businesses spend money on random boosts and generic ads that bring low-quality clicks, without a structured conversion funnel or transparent return on investment.",
+    solution: "Nexora Techno builds focused digital marketing campaigns with laser-targeted audiences, compelling ad copy, dedicated landing pages, and real-time lead tracking.",
+    features: [
+      { title: "Google Search & Display Ads", description: "High-intent search campaigns targeting users actively searching for your services." },
+      { title: "Meta Ads (Instagram & Facebook)", description: "Visual lead generation ads, carousel campaigns, and localized audience targeting." },
+      { title: "WhatsApp Marketing & Funnels", description: "Direct click-to-WhatsApp ads with automated greetings for instant lead qualification." },
+      { title: "Landing Page Optimization", description: "High-converting destination pages designed specifically to turn ad clicks into calls and forms." },
+      { title: "Analytics & ROI Reporting", description: "Transparent reporting on cost-per-lead, click-through rates, and customer acquisition metrics." }
+    ],
+    technologies: ["Google Ads", "Meta Ads Manager", "WhatsApp Business API", "Google Analytics 4", "Canva / Figma", "Tag Manager"],
+    process: [
+      "Target Audience & Competitor Analysis",
+      "Campaign Strategy & Budget Planning",
+      "Ad Creative Design & Copywriting",
+      "Landing Page & Conversion Tracking Setup",
+      "Campaign Launch & A/B Testing",
+      "Weekly Performance Optimization & Reporting"
+    ],
+    benefits: [
+      "Steady flow of verified customer inquiries directly to your phone and email",
+      "Target customers in specific geographic regions like Salem, Tamil Nadu, or all-India",
+      "Full transparency on where every rupee of your ad spend goes",
+      "Scalable budget: start small and expand as your business converts leads"
+    ],
+    relevantProjects: ["buddies-unleashed", "home-nest"],
+    faq: [
+      {
+        question: "What is the minimum budget required to start digital marketing?",
+        answer: "You can start with modest daily ad budgets (e.g., ₹300 - ₹500/day) on Google or Meta Ads, testing and scaling as leads come in."
+      },
+      {
+        question: "How do we receive leads from the campaigns?",
+        answer: "Leads can be sent directly to your WhatsApp, emailed to your sales inbox in real-time, or organized in an online spreadsheet."
       }
     ]
   }

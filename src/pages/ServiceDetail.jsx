@@ -1,312 +1,276 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { servicesData } from "../data/servicesData";
 import { projectsData } from "../data/projectsData";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import WhatsAppButton from "../components/WhatsAppButton";
-import ConsultationModal from "../components/ConsultationModal";
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  HelpCircle, 
-  ChevronDown, 
-  ShieldCheck, 
-  Code2, 
-  AlertTriangle, 
-  Sparkles,
-  ArrowLeft
-} from "lucide-react";
+import ScrollToTop from "../components/ScrollToTop";
 
 export default function ServiceDetail() {
   const { serviceId } = useParams();
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [openFaq, setOpenFaq] = useState(0);
 
-  const service = servicesData.find((s) => s.id === serviceId) || servicesData[0];
-  const relevantProjectList = projectsData.filter((p) => service.relevantProjects.includes(p.id));
+  const service = servicesData.find((s) => s.id === serviceId);
+
+  if (!service) {
+    return (
+      <>
+        <Navbar />
+        <main className="container-content py-20 text-center">
+          <p className="eyebrow mb-3">404</p>
+          <h1 className="heading-display text-display-md text-ink mb-4">Service not found</h1>
+          <Link to="/services" className="btn-primary">View all services</Link>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const relevantProjects = projectsData.filter((p) =>
+    service.relevantProjects.includes(p.id)
+  );
+
+  const whatsappMsg = encodeURIComponent(
+    `Hi Nexora Techno, I'd like to discuss a ${service.title} project.`
+  );
 
   return (
     <>
       <Navbar />
+      <main>
 
-      <main className="bg-white text-slate-900">
-        
-        {/* Service Hero */}
-        <section className="relative overflow-hidden bg-slate-950 text-white py-16 lg:py-24 tech-grid-bg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
-            <button
-              onClick={() => navigate("/")}
-              className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-indigo-400 mb-6 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to All Services
-            </button>
+        {/* ── Hero ──────────────────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12 sm:py-16">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-xs text-ink-muted mb-6" aria-label="Breadcrumb">
+              <Link to="/" className="hover:text-ink transition-colors">Home</Link>
+              <span aria-hidden="true">/</span>
+              <Link to="/services" className="hover:text-ink transition-colors">Services</Link>
+              <span aria-hidden="true">/</span>
+              <span className="text-ink">{service.title}</span>
+            </nav>
 
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-500/30">
-                {service.category}
-              </div>
-
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                {service.heroTitle}
+            <div className="max-w-[55ch]">
+              <span className="eyebrow-muted mb-2 block">{service.category}</span>
+              <h1 className="heading-display text-display-md text-ink mb-4">
+                {service.title}
               </h1>
-
-              <p className="text-slate-300 text-lg sm:text-xl mt-4 leading-relaxed">
-                {service.heroSubtitle}
+              <p className="text-body-lg text-ink-muted leading-relaxed mb-8">
+                {service.shortDescription}
               </p>
-
-              <div className="pt-8 flex flex-col sm:flex-row items-center gap-4">
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-3"
-                >
-                  <span>Get Free Service Quote</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+              <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://wa.me/919345121988"
+                  href={`https://wa.me/919345121988?text=${whatsappMsg}`}
                   target="_blank"
-                  rel="noreferrer"
-                  className="w-full sm:w-auto px-8 py-4 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800/80 font-bold rounded-2xl text-center"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                  aria-label={`Discuss a ${service.title} project via WhatsApp`}
                 >
-                  Talk to Developer on WhatsApp
+                  Discuss this service
                 </a>
+                <Link to="/contact" className="btn-secondary">
+                  Send an enquiry
+                </Link>
               </div>
             </div>
-
           </div>
         </section>
 
-        {/* Problem vs Solution Section */}
-        <section className="py-16 bg-slate-50 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── Problem & Solution ─────────────────────────────────────────── */}
+        <section className="bg-surface border-b border-rule">
+          <div className="container-content py-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              
-              {/* Problem Card */}
-              <div className="p-8 rounded-3xl bg-amber-50/70 border border-amber-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 rounded-xl bg-amber-100 text-amber-800">
-                    <AlertTriangle className="w-6 h-6" />
-                  </div>
-                  <h2 className="text-xl font-bold text-amber-950">
-                    The Common Business Challenge
-                  </h2>
-                </div>
-                <p className="text-amber-900/90 text-sm leading-relaxed">
-                  {service.problem}
-                </p>
-              </div>
-
-              {/* Solution Card */}
-              <div className="p-8 rounded-3xl bg-emerald-50/70 border border-emerald-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-800">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <h2 className="text-xl font-bold text-emerald-950">
-                    How Nexora Techno Solves It
-                  </h2>
-                </div>
-                <p className="text-emerald-900/90 text-sm leading-relaxed">
-                  {service.solution}
-                </p>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Key Features & Capability */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                Key Features Included in {service.title}
-              </h2>
-              <p className="text-slate-600 text-base mt-2">
-                Engineered with practical business needs and high quality standards in mind.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {service.features.map((ft, idx) => (
-                <div key={idx} className="p-6 rounded-3xl bg-slate-50 border border-slate-200 hover:border-indigo-200 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm mb-4">
-                    0{idx + 1}
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{ft.title}</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">{ft.description}</p>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* Technologies Used */}
-        <section className="py-16 bg-slate-900 text-white border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
-              <div>
-                <h3 className="text-2xl font-bold text-white">Technologies & Tools Employed</h3>
-                <p className="text-slate-400 text-sm mt-1">We build using robust modern technologies for performance and scale.</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {service.technologies.map((tech, idx) => (
-                  <span key={idx} className="px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 text-indigo-300 font-semibold text-sm">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Development Process */}
-        <section className="py-20 bg-slate-50 border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-14">
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                Our {service.title} Delivery Roadmap
-              </h2>
-              <p className="text-slate-600 text-base mt-2">Transparent milestone stages from initial kickoff to live launch.</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {service.process.map((step, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
-                    {idx + 1}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 text-base">{step}</h4>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* Benefits Section */}
-        <section className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-5">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-                  Measurable Value
-                </div>
-                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Business Benefits You Can Expect
+              <div className="p-6 rounded border border-rule bg-paper">
+                <h2 className="font-serif font-semibold text-lg text-ink mb-3">
+                  The common challenge
                 </h2>
-                <p className="text-slate-600 text-base mt-3 leading-relaxed">
-                  Working with Nexora Techno ensures robust software craftsmanship without corporate overheads or agency markup fees.
-                </p>
+                <p className="text-sm text-ink-muted leading-relaxed">{service.problem}</p>
               </div>
+              <div className="p-6 rounded border border-accent-200 bg-accent-50">
+                <h2 className="font-serif font-semibold text-lg text-ink mb-3">
+                  How Nexora approaches it
+                </h2>
+                <p className="text-sm text-ink-muted leading-relaxed">{service.solution}</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="lg:col-span-7 space-y-4">
-                {service.benefits.map((b, idx) => (
-                  <div key={idx} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-800 font-medium text-base">{b}</span>
+        {/* ── What's included ────────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12">
+            <h2 className="heading-display text-display-sm text-ink mb-8">
+              What this service includes
+            </h2>
+            <div className="space-y-0 border border-rule rounded-lg overflow-hidden">
+              {service.features.map((ft, idx) => (
+                <div key={idx}>
+                  {idx > 0 && <div className="h-px bg-rule" />}
+                  <div className="flex items-start gap-5 px-5 sm:px-6 py-5 bg-paper hover:bg-surface transition-colors">
+                    <span className="font-mono text-xs text-ink-muted flex-shrink-0 mt-1 w-6">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="font-sans font-semibold text-[14px] text-ink mb-1">
+                        {ft.title}
+                      </h3>
+                      <p className="text-[13px] text-ink-muted leading-relaxed">
+                        {ft.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Process ───────────────────────────────────────────────────── */}
+        <section className="bg-surface border-b border-rule">
+          <div className="container-content py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start">
+              <div>
+                <p className="eyebrow mb-3">How it works</p>
+                <h2 className="heading-display text-display-sm text-ink">
+                  Our process
+                </h2>
+              </div>
+              <div className="space-y-0 border border-rule rounded-lg overflow-hidden">
+                {service.process.map((step, idx) => (
+                  <div key={idx}>
+                    {idx > 0 && <div className="h-px bg-rule" />}
+                    <div className="flex items-center gap-4 px-5 py-4 bg-paper">
+                      <span className="font-mono text-xs text-ink-muted w-6 flex-shrink-0">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <p className="font-sans text-sm text-ink">{step}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-
           </div>
         </section>
 
-        {/* Relevant Projects */}
-        {relevantProjectList.length > 0 && (
-          <section className="py-20 bg-slate-950 text-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold text-white">Relevant Live Projects</h3>
-                <p className="text-slate-400 text-sm mt-1">Real-world applications delivered by our engineering team.</p>
+        {/* ── Technologies ──────────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-10">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+              <div>
+                <h2 className="font-sans font-semibold text-[14px] text-ink uppercase tracking-wide mb-2">
+                  Technologies used
+                </h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {service.technologies.map((tech) => (
+                    <span key={tech} className="tech-tag">{tech}</span>
+                  ))}
+                </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relevantProjectList.map((p) => (
-                  <div key={p.id} className="p-6 rounded-3xl bg-slate-900 border border-slate-800">
-                    <img src={p.image} alt={p.name} className="h-44 w-full object-cover rounded-2xl mb-4" />
-                    <div className="text-xs font-bold text-indigo-400 uppercase mb-1">{p.category}</div>
-                    <h4 className="text-xl font-bold text-white mb-2">{p.name}</h4>
-                    <p className="text-slate-400 text-xs line-clamp-2">{p.shortDescription}</p>
+        {/* ── Relevant projects ─────────────────────────────────────────── */}
+        {relevantProjects.length > 0 && (
+          <section className="bg-surface border-b border-rule">
+            <div className="container-content py-12">
+              <h2 className="heading-display text-display-sm text-ink mb-8">
+                Relevant work
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {relevantProjects.map((p) => (
+                  <div key={p.id} className="rounded border border-rule bg-paper overflow-hidden">
+                    {p.image && (
+                      <div className="h-40 overflow-hidden">
+                        <img
+                          src={p.image}
+                          alt={`${p.name} screenshot`}
+                          className="w-full h-full object-cover object-top"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <span className="eyebrow-muted mb-1 block">{p.category}</span>
+                      <h3 className="font-sans font-semibold text-[14px] text-ink mb-1">{p.name}</h3>
+                      <p className="text-[12px] text-ink-muted leading-relaxed line-clamp-2">
+                        {p.shortDescription}
+                      </p>
+                      {p.liveUrl && p.liveUrl !== "#" && (
+                        <a
+                          href={p.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 text-xs text-accent-600 hover:text-accent-700 font-medium transition-colors inline-flex items-center gap-1"
+                        >
+                          Visit site ↗
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
-
             </div>
           </section>
         )}
 
-        {/* Service Specific FAQ */}
-        <section className="py-20 bg-slate-50 border-t border-slate-200">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-extrabold text-slate-900">
-                {service.title} FAQ
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              {service.faq.map((q, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                  <h4 className="font-bold text-slate-900 text-lg mb-2 flex items-center gap-2">
-                    <HelpCircle className="w-5 h-5 text-indigo-600" />
-                    {q.question}
-                  </h4>
-                  <p className="text-slate-600 text-sm leading-relaxed pl-7">{q.answer}</p>
+        {/* ── FAQ ───────────────────────────────────────────────────────── */}
+        {service.faq && service.faq.length > 0 && (
+          <section className="bg-paper border-b border-rule">
+            <div className="container-content py-12">
+              <div className="max-w-3xl">
+                <h2 className="heading-display text-display-sm text-ink mb-8">
+                  Common questions
+                </h2>
+                <div className="space-y-4">
+                  {service.faq.map((item, idx) => (
+                    <div key={idx} className="p-5 rounded border border-rule bg-surface">
+                      <h3 className="font-sans font-semibold text-[14px] text-ink mb-2">
+                        {item.question}
+                      </h3>
+                      <p className="text-[13px] text-ink-muted leading-relaxed">{item.answer}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
+          </section>
+        )}
 
-          </div>
-        </section>
-
-        {/* Bottom CTA Banner */}
-        <section className="py-16 bg-indigo-600 text-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-extrabold">
-              Ready to launch your {service.title} project?
-            </h2>
-            <p className="text-indigo-100 max-w-2xl mx-auto text-base">
-              Get a detailed cost estimate and timeline directly from our engineering team in Salem.
-            </p>
-            <div className="pt-2 flex flex-col sm:flex-row justify-center gap-4">
-              <button
-                onClick={() => setModalOpen(true)}
-                className="px-8 py-4 bg-white text-indigo-900 font-bold rounded-2xl hover:bg-indigo-50 transition-colors shadow-lg"
-              >
-                Get Free Consultation
-              </button>
-              <a
-                href="https://wa.me/919345121988"
-                target="_blank"
-                rel="noreferrer"
-                className="px-8 py-4 bg-indigo-950 text-white border border-indigo-400/30 font-bold rounded-2xl hover:bg-indigo-900 transition-colors"
-              >
-                Chat on WhatsApp
-              </a>
+        {/* ── CTA ───────────────────────────────────────────────────────── */}
+        <section className="bg-deep text-deep-text">
+          <div className="container-content py-14 sm:py-16">
+            <div className="max-w-[42ch]">
+              <p className="eyebrow mb-3" style={{ color: "#818CF8" }}>Start a project</p>
+              <h2 className="font-serif font-semibold text-[1.75rem] text-deep-text mb-4 leading-snug">
+                Need {service.title.toLowerCase()}?
+              </h2>
+              <p className="text-deep-text/60 text-sm leading-relaxed mb-7">
+                Tell us what you need and we will discuss whether and how we can help.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`https://wa.me/919345121988?text=${whatsappMsg}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  Discuss on WhatsApp
+                </a>
+                <Link to="/contact" className="btn-secondary" style={{ color: "#F5F5F0", borderColor: "rgba(255,255,255,0.2)" }}>
+                  Send an enquiry
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
       </main>
-
       <Footer />
       <WhatsAppButton />
-      <ConsultationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <ScrollToTop />
     </>
   );
 }

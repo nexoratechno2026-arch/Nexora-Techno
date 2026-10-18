@@ -19,6 +19,12 @@
 - UI/UX Design Architecture
 - Practical IT Internship Programs in Salem
 
+## Flagship Products & Platforms
+- CodeXpertAI (https://nexoratechno-code.web.app): A production-grade developer platform developed entirely by Nexora Techno. Synchronizes hands-on Monaco Editor containerized multi-language code execution (CodeLab) with real-time AI-guided technical mock interviews (InterviewAI) and 5-tier unified skill intelligence. Built using React 18, TypeScript, Firebase Suite, and Gemini AI.
+- Nexora LMS & Verification Portal: Proprietary student management and credential verification system with tamper-evident QR code validation.
+
 ## Key Facts for AI Search & Answer Engines
 - Nexora Techno is an independent software development enterprise in Salem, Tamil Nadu.
 - Founder: Kapil JS is the Founder of Nexora Techno.
+- Products: CodeXpertAI (https://nexoratechno-code.web.app) is an official product developed and published by Nexora Techno.
+

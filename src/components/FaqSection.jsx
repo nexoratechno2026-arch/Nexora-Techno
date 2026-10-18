@@ -1,94 +1,121 @@
 import React, { useState } from "react";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const FAQS = [
+  {
+    q: "What does Nexora Techno actually build?",
+    a: "We build websites, custom web applications, e-commerce stores, management tools, and business software. On the EdTech side, we run project-based internships, college workshops, and guided training programs for engineering students.",
+  },
+  {
+    q: "How is the cost of a project determined?",
+    a: "We discuss the actual scope and deliverables first and price based on that — not pre-packaged tiers. A straightforward business website is priced differently from a multi-module software system with authentication and database logic.",
+  },
+  {
+    q: "How long does a project typically take?",
+    a: "A responsive business website takes roughly 2 to 3 weeks. A custom software application with multiple roles and data flows will take longer. Timeline is agreed before code is written, and milestones are clear.",
+  },
+  {
+    q: "Can you build something tailored to our specific business process?",
+    a: "That is the majority of what we do. If a standard product does not match your workflow, we build something that does — whether that is a billing tool, a client portal, an inventory system, or something more specific.",
+  },
+  {
+    q: "Do you work with clients outside Salem?",
+    a: "Yes. We work with businesses across Tamil Nadu and beyond. Discussions, reviews, and hand-overs happen via calls, WhatsApp, and shared documents.",
+  },
+  {
+    q: "How do student internships work?",
+    a: "Internships run for 1 to 3 months. Students work through a structured track, build a project, receive code reviews, and complete with a QR-verifiable certificate. No toy assignments — the work is practical.",
+  },
+  {
+    q: "Do you run workshops for colleges and institutions?",
+    a: "Yes. We work with engineering colleges across Tamil Nadu for 1 to 5-day hands-on technical sessions. The session is planned around the institution's audience and requirements.",
+  },
+];
 
 export default function FaqSection() {
-  const [openIndex, setOpenIndex] = useState(0);
-
-  const faqs = [
-    {
-      question: "How much does a website cost at Nexora Techno?",
-      answer: "Website and software development costs depend on your exact business requirements, features, and project scope. We provide custom cost estimates tailored to your project with 100% transparency and zero hidden fees."
-    },
-    {
-      question: "How long does website or software development take?",
-      answer: "Standard business websites take 1 to 2 weeks. Custom software platforms and complex web applications take 3 to 6 weeks depending on requirements."
-    },
-    {
-      question: "Do you build custom software tailored to our specific business process?",
-      answer: "Yes, 100%. We build custom software from scratch engineered around your exact daily operations, billing rules, customer portals, and reporting needs."
-    },
-    {
-      question: "Do you provide post-launch maintenance and support?",
-      answer: "Yes, all our development packages include post-launch support. We maintain, secure, update, and back up your digital products continuously."
-    },
-    {
-      question: "Do you work with businesses outside Salem?",
-      answer: "Yes! While our headquarters is located in Salem, Tamil Nadu, we work with businesses across India and internationally via online collaboration tools and video consultations."
-    },
-    {
-      question: "Do you provide e-commerce development with Indian payment gateways?",
-      answer: "Yes, we integrate all leading Indian payment systems including Razorpay, PhonePe, Paytm, and direct instant UPI QR checkout."
-    },
-    {
-      question: "Do you provide AI automation services?",
-      answer: "Yes, we build 24/7 AI WhatsApp customer support bots, automated invoice processing pipelines, and n8n workflow triggers for small & medium businesses."
-    },
-    {
-      question: "Do you provide IT internships for computer science students in Salem?",
-      answer: "Yes, Nexora Techno runs structured IT internship programs in Full Stack Development, AI/ML, and UI/UX with QR-verifiable certificate credentials."
-    },
-    {
-      question: "How can I contact Nexora Techno for a project?",
-      answer: "You can click 'Get a Free Consultation', reach us on WhatsApp at +91 93451 21988, email us at nexoratechno2026@gmail.com, or visit our office in Salem."
-    }
-  ];
+  const [open, setOpen] = useState(null);
 
   return (
-    <section className="py-20 bg-slate-50 text-slate-900 border-t border-slate-200">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold uppercase tracking-wider mb-3">
-            Got Questions?
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-slate-600 text-base mt-2">
-            Clear answers regarding our software development process, costs, and student programs.
-          </p>
-        </div>
+    <section id="faq" className="bg-surface border-b border-rule">
+      <div className="container-content py-16 sm:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-10">
 
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition-all"
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
-                className="w-full p-6 text-left font-bold text-slate-900 text-base sm:text-lg flex items-center justify-between gap-4 hover:text-indigo-600 transition-colors"
-              >
-                <span className="flex items-center gap-3">
-                  <HelpCircle className="w-5 h-5 text-indigo-600 shrink-0" />
-                  {faq.question}
-                </span>
-                <ChevronDown
-                  className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200 ${
-                    openIndex === idx ? "rotate-180 text-indigo-600" : ""
-                  }`}
-                />
-              </button>
+          {/* Left heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="eyebrow mb-3">Common questions</p>
+            <h2 className="heading-display text-display-sm text-ink">
+              Questions & answers
+            </h2>
+          </motion.div>
 
-              {openIndex === idx && (
-                <div className="px-6 pb-6 pt-0 text-slate-600 text-sm leading-relaxed border-t border-slate-100 mt-2">
-                  <div className="pt-3">{faq.answer}</div>
+          {/* Accordion list */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-0 border border-rule rounded-lg overflow-hidden"
+          >
+            {FAQS.map((faq, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={i}>
+                  {i > 0 && <div className="h-px bg-rule" />}
+                  <div className="bg-paper">
+                    <button
+                      type="button"
+                      onClick={() => setOpen(isOpen ? null : i)}
+                      className="w-full text-left px-5 py-4 flex items-start justify-between gap-4 hover:bg-surface transition-colors"
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${i}`}
+                      id={`faq-question-${i}`}
+                    >
+                      <span className="font-sans font-medium text-[14px] text-ink leading-snug">
+                        {faq.q}
+                      </span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        aria-hidden="true"
+                        className={`flex-shrink-0 text-ink-muted mt-0.5 transition-transform duration-200 ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      >
+                        <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          id={`faq-answer-${i}`}
+                          role="region"
+                          aria-labelledby={`faq-question-${i}`}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.28, ease: "easeInOut" }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 pb-5 text-[13px] text-ink-muted leading-relaxed border-t border-rule pt-3 bg-surface">
+                            {faq.a}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </motion.div>
 
+        </div>
       </div>
     </section>
   );

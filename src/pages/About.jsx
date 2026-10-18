@@ -4,226 +4,327 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import WhatsAppButton from "../components/WhatsAppButton";
 import ScrollToTop from "../components/ScrollToTop";
-import teamMembers from "../data/team.json";
-import {
-  Building2,
-  Target,
-  Eye,
-  ShieldCheck,
-  Award,
-  MapPin,
-  Phone,
-  Mail,
-  ArrowRight,
-  Code2,
-  Users
-} from "lucide-react";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <>
       <Navbar />
-      <ScrollToTop />
-      <WhatsAppButton />
+      <main>
 
-      <main className="flex-grow">
-
-        {/* About Hero */}
-        <section className="relative py-16 lg:py-24 tech-grid-bg border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-500/30">
-                <Building2 className="w-4 h-4" /> Who We Are
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                Software Development & AI Solutions Company in Salem
-              </h1>
-
-              <p className="text-slate-300 text-lg sm:text-xl mt-4 leading-relaxed">
-                Nexora Techno is a technology company headquartered in Salem, Tamil Nadu. We specialize in custom web application engineering, software automation, e-commerce systems, and practical student internship training.
-              </p>
-
-              <div className="pt-6 flex flex-wrap items-center gap-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>Government Registered MSME Entity</span>
-                </div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">
-                  <MapPin className="w-4 h-4 text-indigo-400" />
-                  <span>Salem, Tamil Nadu, India</span>
-                </div>
-              </div>
-
-            </div>
+        {/* ── Hero ──────────────────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12 sm:py-16">
+            <nav className="flex items-center gap-2 text-xs text-ink-muted mb-6" aria-label="Breadcrumb">
+              <Link to="/" className="hover:text-ink transition-colors">Home</Link>
+              <span aria-hidden="true">/</span>
+              <span className="text-ink">About</span>
+            </nav>
+            <p className="eyebrow mb-4">About Nexora Techno</p>
+            <h1 className="heading-display text-display-md text-ink mb-5 max-w-[28ch]">
+              A small software team doing straightforward engineering in Salem.
+            </h1>
+            <p className="text-body-lg text-ink-muted max-w-[55ch] leading-relaxed">
+              We build websites, custom software, and practical digital tools for
+              businesses — and help engineering students gain real experience through
+              project-based internships and workshops.
+            </p>
           </div>
         </section>
 
-        {/* Mission & Vision */}
-        <section className="py-20 bg-slate-900 border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-              <div className="p-8 sm:p-10 rounded-3xl bg-slate-950 border border-indigo-500/30 space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-                  <Target className="w-6 h-6" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">Our Mission</h2>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  To empower growing businesses with high-speed, reliable, custom software and AI automation, while bridging the gap between academic education and industry software engineering for students across Tamil Nadu.
+        {/* ── Why we exist ──────────────────────────────────────────────── */}
+        <section className="bg-surface border-b border-rule">
+          <div className="container-content py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+              <div>
+                <p className="eyebrow mb-3">Why we exist</p>
+              </div>
+              <div className="space-y-5 max-w-[58ch]">
+                <p className="text-body-md text-ink-muted leading-relaxed">
+                  Nexora Techno started because local businesses and institutions needed
+                  practical digital tools — not expensive agency projects or generic
+                  SaaS platforms with features they would never use.
+                </p>
+                <p className="text-body-md text-ink-muted leading-relaxed">
+                  At the same time, engineering students in Salem needed a place to
+                  do real project work — not dummy exercises or certification courses
+                  without substance. The two sides of the company connect naturally:
+                  students work on real problems, and clients get practical solutions.
+                </p>
+                <p className="text-body-md text-ink-muted leading-relaxed">
+                  The goal is not to be the largest or most visible agency. It is to
+                  do the work well, communicate clearly, and be genuinely useful to
+                  the people we work with.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="p-8 sm:p-10 rounded-3xl bg-slate-950 border border-emerald-500/30 space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                  <Eye className="w-6 h-6" />
+        {/* ── Flagship Product: CodeXpertAI ─────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12 sm:py-16">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+              <div>
+                <p className="eyebrow mb-3">Flagship Product</p>
+                <div className="mt-3 p-4 rounded-lg border border-rule bg-white inline-block shadow-sm max-w-[240px]">
+                  <img
+                    src="/projects/codexpertai-logo.png"
+                    alt="CodeXpertAI official logo by Nexora Techno"
+                    className="w-full h-auto object-contain"
+                    loading="lazy"
+                  />
                 </div>
-                <h2 className="text-2xl font-bold text-white">Our Vision</h2>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  To become the most trusted technology solution partner in Salem and regional South India, recognized for transparent craftsmanship, high quality products, and real-world student mentorship.
+                <p className="text-xs text-ink-muted mt-3 leading-relaxed">
+                  Official product of Nexora Techno.<br />
+                  Architected and engineered in-house.
                 </p>
               </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Meet the Team Section */}
-        <section id="team" className="py-20 bg-slate-950">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-3 border border-indigo-500/30">
-                Leadership & Developers
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Our Engineering & Leadership Team
-              </h2>
-              <p className="text-slate-400 text-base mt-2">
-                Meet the passionate founders, project managers, HR leads, and developers driving Nexora Techno forward.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {teamMembers.map((m) => (
-                <div
-                  key={m.id}
-                  className="bg-slate-900 rounded-3xl p-6 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between group shadow-xl"
-                >
-                  <div>
-                    <div className="relative h-72 overflow-hidden rounded-2xl bg-slate-950 mb-6 border border-slate-800 flex items-center justify-center">
-                      <img
-                        src={m.image}
-                        alt={m.name}
-                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${m.name.toLowerCase().includes("kapil")
-                          ? "object-cover object-top"
-                          : m.name.toLowerCase().includes("tharani")
-                            ? "object-cover object-[center_20%]"
-                            : "object-cover object-top"
-                          }`}
-                        onError={(e) => { e.target.style.display = "none"; }}
-                      />
-                    </div>
-
-                    <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
-                      {m.role}
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{m.name}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed mb-3">
-                      {m.education}
-                    </p>
-                    <p className="text-slate-300 text-xs leading-relaxed line-clamp-4 mb-4">
-                      {m.bio}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                    <a
-                      href={m.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-semibold"
-                    >
-                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      </svg>
-                      Connect on LinkedIn
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* Credentials & Location */}
-        <section className="py-20 bg-slate-900 border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
               <div className="space-y-6">
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider border border-emerald-500/30">
-                  Business Entity Details
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span className="text-[10px] font-mono text-accent-600 border border-accent-200 bg-accent-50 rounded px-2 py-0.5">
+                      Production SaaS
+                    </span>
+                    <span className="text-[10px] font-mono text-ink-muted border border-rule bg-surface rounded px-2 py-0.5">
+                      Live Platform
+                    </span>
+                  </div>
+                  <h2 className="heading-display text-display-sm text-ink mb-3">
+                    CodeXpertAI: Synchronized Coding Execution &amp; AI Interview Intelligence
+                  </h2>
+                  <p className="text-body-md text-ink-muted leading-relaxed max-w-[62ch]">
+                    Developed entirely by the engineering team at Nexora Techno, CodeXpertAI is a production-grade developer platform designed for software engineering students, job candidates, and practicing developers. Unlike traditional learning portals that isolate practice questions from interview rehearsal, CodeXpertAI seamlessly synchronizes hands-on coding execution and interactive AI interview evaluations.
+                  </p>
                 </div>
-                <h2 className="text-3xl font-extrabold text-white">
-                  MSME Registered Technology Enterprise
-                </h2>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  Nexora Techno operates under official Government of India MSME registration in Salem, Tamil Nadu. We maintain strict professional standards, data security practices, and reliable project delivery schedules.
-                </p>
 
-                <div className="space-y-3">
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-indigo-400 shrink-0" />
-                    <span className="text-xs text-slate-300">
-                      <strong>Office Address:</strong> 241, East Permanur, Anna Park Backside, Salem - 636007, TN
-                    </span>
+                {/* 3 Pillars */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-1">
+                  <div className="p-4 rounded-lg border border-rule bg-surface space-y-1.5">
+                    <div className="w-7 h-7 rounded bg-accent-50 border border-accent-200 flex items-center justify-center text-accent-700 font-mono text-xs font-bold">
+                      01
+                    </div>
+                    <h3 className="font-semibold text-sm text-ink">CodeLab</h3>
+                    <p className="text-[11px] text-accent-700 font-mono">Sandboxed Code Execution</p>
+                    <p className="text-xs text-ink-muted leading-relaxed">
+                      Monaco Editor supporting 7 languages, isolated containerized execution, 14 CS domains, and dual-stage automated test evaluation.
+                    </p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
-                    <span className="text-xs text-slate-300">
-                      <strong>Contact Helpline:</strong> +91 93451 21988
-                    </span>
+
+                  <div className="p-4 rounded-lg border border-rule bg-surface space-y-1.5">
+                    <div className="w-7 h-7 rounded bg-accent-50 border border-accent-200 flex items-center justify-center text-accent-700 font-mono text-xs font-bold">
+                      02
+                    </div>
+                    <h3 className="font-semibold text-sm text-ink">InterviewAI</h3>
+                    <p className="text-[11px] text-accent-700 font-mono">Conversational AI Mock Interviews</p>
+                    <p className="text-xs text-ink-muted leading-relaxed">
+                      Real-time interactive mock interviews across 5 disciplines with adaptive follow-up questioning and diagnostic reports.
+                    </p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-sky-400 shrink-0" />
-                    <span className="text-xs text-slate-300">
-                      <strong>Official Email:</strong> nexoratechno2026@gmail.com
-                    </span>
+
+                  <div className="p-4 rounded-lg border border-rule bg-surface space-y-1.5">
+                    <div className="w-7 h-7 rounded bg-accent-50 border border-accent-200 flex items-center justify-center text-accent-700 font-mono text-xs font-bold">
+                      03
+                    </div>
+                    <h3 className="font-semibold text-sm text-ink">Unified Intelligence</h3>
+                    <p className="text-[11px] text-accent-700 font-mono">Skill Progression Engine</p>
+                    <p className="text-xs text-ink-muted leading-relaxed">
+                      5-tier product-wide levels (Beginner to Expert) correlating code submission benchmarks with interview performance.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Tech chips & links */}
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-rule">
+                  <div className="flex flex-wrap gap-1.5">
+                    {["React 18", "TypeScript 5", "Monaco Editor", "Google Gemini AI", "Firebase Suite", "GCP"].map((t) => (
+                      <span key={t} className="tech-tag">{t}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <a
+                      href="https://nexoratechno-code.web.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary text-xs"
+                      aria-label="Launch CodeXpertAI platform (opens in new tab)"
+                    >
+                      Launch CodeXpertAI ↗
+                    </a>
+                    <Link to="/projects" className="btn-secondary text-xs">
+                      View in Projects →
+                    </Link>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="p-8 rounded-3xl bg-slate-950 border border-slate-800 space-y-6">
-                <h3 className="text-2xl font-bold text-white">Our Journey</h3>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  Founded in Salem by computer science engineers driven by passion for software design and entrepreneurship, Nexora Techno has rapidly expanded from core web design into AI workflow automation, custom corporate software systems, and student internship training.
-                </p>
-                <div className="pt-4 flex items-center gap-4">
-                  <Link
-                    to="/contact"
-                    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-colors"
-                  >
-                    Work With Us
-                  </Link>
-                  <Link
-                    to="/projects"
-                    className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-sm transition-colors"
-                  >
-                    View Our Work
-                  </Link>
+        {/* ── How we work ───────────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+              <div>
+                <p className="eyebrow mb-3">How we work</p>
+              </div>
+              <div className="space-y-0 border border-rule rounded-lg overflow-hidden">
+                {[
+                  {
+                    title: "Direct access",
+                    desc: "You talk to the engineers building your system — not a project manager passing messages.",
+                  },
+                  {
+                    title: "Scope before code",
+                    desc: "We understand the actual requirement before committing to an approach or timeline.",
+                  },
+                  {
+                    title: "Clear milestones",
+                    desc: "Every project has defined stages. You know what is coming before it is built.",
+                  },
+                  {
+                    title: "Handover with documentation",
+                    desc: "You own what we build. We provide access, documentation, and a proper handover.",
+                  },
+                  {
+                    title: "Local accountability",
+                    desc: "We are based in Salem and available for discussions in-person if needed.",
+                  },
+                ].map((item, i) => (
+                  <div key={item.title}>
+                    {i > 0 && <div className="h-px bg-rule" />}
+                    <div className="flex items-start gap-5 px-5 py-5 bg-paper">
+                      <span className="font-mono text-xs text-ink-muted w-6 flex-shrink-0 mt-0.5">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <h3 className="font-sans font-semibold text-[14px] text-ink mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-[13px] text-ink-muted leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Founder ───────────────────────────────────────────────────── */}
+        <section className="bg-surface border-b border-rule">
+          <div className="container-content py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+              <div>
+                <p className="eyebrow mb-3">Founder</p>
+              </div>
+              <div>
+                <div className="flex items-start gap-5">
+                  <img
+                    src="/Kapil Js.png"
+                    alt="Kapil JS — Founder and CEO of Nexora Techno"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover object-top border border-rule flex-shrink-0"
+                    loading="lazy"
+                  />
+                  <div>
+                    <h2 className="font-serif font-semibold text-xl text-ink mb-0.5">
+                      Kapil JS
+                    </h2>
+                    <p className="text-sm text-ink-muted mb-4">Founder &amp; CEO</p>
+                    <p className="text-sm text-ink-muted leading-relaxed max-w-[50ch]">
+                      Building practical software and guiding student projects from Salem, Tamil Nadu.
+                      Direct involvement in every project and every student batch.
+                    </p>
+                    <div className="mt-4 flex items-center gap-4">
+                      <a
+                        href="https://www.linkedin.com/in/kapil-js-99a37130a"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-ink-muted hover:text-accent-600 transition-colors flex items-center gap-2"
+                        aria-label="Kapil JS on LinkedIn (opens in new tab)"
+                      >
+                        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z"/>
+                        </svg>
+                        LinkedIn
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
+        {/* ── Company details ───────────────────────────────────────────── */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+              <div>
+                <p className="eyebrow mb-3">Company details</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                <div>
+                  <p className="font-semibold text-ink mb-2">Nexora Techno</p>
+                  <p className="text-ink-muted leading-relaxed">
+                    241, East Permanur, Anna Park Backside<br />
+                    Salem — 636007<br />
+                    Tamil Nadu, India
+                  </p>
+                </div>
+                <div className="space-y-2 text-ink-muted">
+                  <p>
+                    <a href="tel:+919345121988" className="hover:text-accent-600 transition-colors">
+                      +91 93451 21988
+                    </a>
+                  </p>
+                  <p>
+                    <a href="mailto:nexoratechno2026@gmail.com" className="hover:text-accent-600 transition-colors">
+                      nexoratechno2026@gmail.com
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://www.nexoratechno.in"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-accent-600 transition-colors"
+                    >
+                      nexoratechno.in ↗
+                    </a>
+                  </p>
+                  <p className="text-xs text-ink-muted pt-1">
+                    MSME Registered Enterprise, Govt. of India
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── CTA ───────────────────────────────────────────────────────── */}
+        <section className="bg-surface">
+          <div className="container-content py-14">
+            <div className="max-w-[42ch]">
+              <h2 className="heading-display text-display-sm text-ink mb-3">
+                Work with us.
+              </h2>
+              <p className="text-body-md text-ink-muted mb-6">
+                Whether you have a software project in mind or are looking to discuss
+                an internship programme, we are happy to talk.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/contact" className="btn-primary">Get in touch</Link>
+                <Link to="/projects" className="btn-secondary">View our work</Link>
+              </div>
             </div>
           </div>
         </section>
 
       </main>
-
       <Footer />
-    </div>
+      <WhatsAppButton />
+      <ScrollToTop />
+    </>
   );
 }

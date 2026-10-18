@@ -5,6 +5,7 @@
   },
   "css.lint.vendorPrefix": "ignore",
   "css.lint.propertyIgnoredDueToDisplay": "ignore",
+  "css.validate": false,
   "css.lint.unknownAtRules": "ignore",
   "search.exclude": {
     "**/dist/**": true

@@ -2,114 +2,148 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { servicesData } from "../data/servicesData";
-import { 
-  Globe, 
-  Code2, 
-  Bot, 
-  ShoppingBag, 
-  Zap, 
-  Smartphone, 
-  TrendingUp, 
-  ArrowRight 
-} from "lucide-react";
+
+// Curated homepage service list — short editorial copy, no hype
+const SERVICE_LIST = [
+  {
+    id: "website-development",
+    label: "Website Development",
+    note: "Responsive business websites, landing pages, and institution portals.",
+  },
+  {
+    id: "software-development",
+    label: "Custom Software",
+    note: "Management dashboards, customer portals, and internal workflow tools.",
+  },
+  {
+    id: "ecommerce-development",
+    label: "E-commerce",
+    note: "Online stores with WhatsApp ordering, UPI payments, and catalogue management.",
+  },
+  {
+    id: "ai-automation",
+    label: "AI &amp; Workflow Automation",
+    note: "Practical automation for enquiries, document processing, and notifications.",
+  },
+  {
+    id: "business-automation",
+    label: "Business Automation",
+    note: "Connecting forms, sheets, messages, and operations into clean workflows.",
+  },
+  {
+    id: "web-app-development",
+    label: "Web &amp; Mobile Applications",
+    note: "Full-stack applications with user accounts, APIs, and responsive interfaces.",
+  },
+  {
+    id: "ui-ux-design",
+    label: "UI/UX Design",
+    note: "Wireframes, Figma prototypes, and design systems for digital products.",
+  },
+  {
+    id: "seo",
+    label: "SEO &amp; Local Visibility",
+    note: "Technical structure, metadata, and local search setup.",
+  },
+];
 
 export default function ServicesSection() {
-  const getIconComponent = (iconName) => {
-    switch (iconName) {
-      case "Globe": return <Globe className="w-6 h-6 text-indigo-600" />;
-      case "Code2": return <Code2 className="w-6 h-6 text-indigo-600" />;
-      case "Bot": return <Bot className="w-6 h-6 text-indigo-600" />;
-      case "ShoppingBag": return <ShoppingBag className="w-6 h-6 text-indigo-600" />;
-      case "Zap": return <Zap className="w-6 h-6 text-indigo-600" />;
-      case "Smartphone": return <Smartphone className="w-6 h-6 text-indigo-600" />;
-      case "TrendingUp": return <TrendingUp className="w-6 h-6 text-indigo-600" />;
-      default: return <Globe className="w-6 h-6 text-indigo-600" />;
-    }
-  };
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-  };
-
   return (
-    <section className="py-20 bg-slate-50 text-slate-900 border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
+    <section id="services" className="bg-surface border-b border-rule">
+      <div className="container-content py-16 sm:py-20">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10"
+        >
+          <div>
+            <p className="eyebrow mb-3">How we help</p>
+            <h2 className="heading-display text-display-sm text-ink">
+              Services
+            </h2>
+            <p className="text-body-md text-ink-muted mt-3 max-w-[52ch]">
+              We build practical digital tools around how your organisation
+              already works.
+            </p>
+          </div>
+          <Link to="/services" className="btn-ghost text-sm flex-shrink-0 inline-flex items-center gap-1 group">
+            <span>All services</span>
+            <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
+          </Link>
+        </motion.div>
+
+        {/* Editorial service list */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-rule border border-rule rounded-lg overflow-hidden shadow-sm"
         >
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold uppercase tracking-wider mb-3">
-            Core Engineering Services
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Software & Technology Solutions Designed for Business Growth
-          </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-3">
-            From modern responsive web applications to AI workflow automation, we build custom solutions around real business requirements.
-          </p>
+          {SERVICE_LIST.map((svc, idx) => (
+            <Link
+              key={svc.id}
+              to={`/services/${svc.id}`}
+              className="block bg-paper hover:bg-surface p-6 transition-colors group"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="eyebrow-muted mb-1.5 block">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <h3
+                    className="font-sans font-semibold text-[15px] text-ink group-hover:text-accent-600 transition-colors mb-1.5"
+                    dangerouslySetInnerHTML={{ __html: svc.label }}
+                  />
+                  <p
+                    className="text-[13px] text-ink-muted leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: svc.note }}
+                  />
+                </div>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                  className="text-rule group-hover:text-accent-600 flex-shrink-0 mt-1 transition-all duration-200 group-hover:translate-x-1"
+                >
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </Link>
+          ))}
         </motion.div>
 
-        {/* Services Grid */}
+        {/* Not sure block */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-8 p-5 rounded-lg border border-rule bg-paper shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
         >
-          {servicesData.map((service) => (
-            <motion.div
-              key={service.id}
-              variants={cardVariants}
-              whileHover={{ y: -8, boxShadow: "0 20px 25px -5px rgba(79,70,229,0.1)" }}
-              className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm transition-all duration-300 flex flex-col justify-between group"
+          <p className="text-sm text-ink-muted">
+            <strong className="text-ink">Not sure what you need?</strong>{" "}
+            Tell us the problem and we will suggest the right approach.
+          </p>
+          <div className="flex flex-wrap gap-3 flex-shrink-0">
+            <Link to="/contact" className="btn-primary text-xs py-2 px-4 shadow-sm hover:shadow transition-shadow">
+              Discuss a requirement
+            </Link>
+            <a
+              href="https://wa.me/919345121988?text=Hi%20Nexora%20Techno%2C%20I%27d%20like%20to%20discuss%20a%20requirement"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary text-xs py-2 px-4"
             >
-              <div>
-                <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                  {React.cloneElement(getIconComponent(service.icon), {
-                    className: "w-7 h-7 group-hover:text-white transition-colors"
-                  })}
-                </div>
-
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
-                  {service.title}
-                </h3>
-
-                <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                  {service.shortDescription}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <Link
-                  to={`/services/${service.id}`}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors group/link"
-                >
-                  <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+              WhatsApp us
+            </a>
+          </div>
         </motion.div>
 
       </div>

@@ -1,248 +1,149 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { projectsData } from "../data/projectsData";
-import { ExternalLink, CheckCircle2, X, ArrowRight } from "lucide-react";
+
+// Full project detail for homepage section (extends projectsData)
+const EXTENDED_PROJECTS = [
+  ...projectsData,
+  {
+    id: "nexora-lms",
+    name: "Nexora LMS & Verification Portal",
+    category: "Internal Platform",
+    shortDescription:
+      "Student management and credential verification system used by Nexora for internship administration, project tracking, and tamper-evident certificate issuance.",
+    image: "/projects/nexora-lms.png",
+    technologies: ["React", "Firebase", "Node.js", "QR Code"],
+    liveUrl: "/lms/login",
+    badge: "Internal",
+  },
+];
 
 export default function PortfolioSection() {
-  const [selectedProject, setSelectedProject] = useState(null);
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 35 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-  };
+  const [activeId, setActiveId] = useState(null);
+  const active = EXTENDED_PROJECTS.find((p) => p.id === activeId) || null;
 
   return (
-    <section className="py-20 bg-slate-950 text-white relative border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <section id="projects" className="bg-paper border-b border-rule">
+      <div className="container-content py-16 sm:py-20">
+
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10"
         >
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-3 border border-indigo-500/30">
-              Proven Deliveries
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Real Projects Built by Nexora Techno
+            <p className="eyebrow mb-3">Selected work</p>
+            <h2 className="heading-display text-display-sm text-ink">
+              A few things we've built.
             </h2>
-            <p className="text-slate-400 text-base sm:text-lg mt-2 max-w-2xl">
-              We build functional, real-world digital products for businesses and users. Explore our recent live software and web platforms.
-            </p>
           </div>
-
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-semibold text-sm hover:underline"
-          >
-            <span>View All Case Studies</span>
-            <ArrowRight className="w-4 h-4" />
+          <Link to="/projects" className="btn-ghost text-sm flex-shrink-0 inline-flex items-center gap-1 group">
+            <span>All projects</span>
+            <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
           </Link>
         </motion.div>
 
-        {/* Project Grid */}
+        {/* Horizontal project list */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="space-y-0 border border-rule rounded-lg overflow-hidden shadow-sm"
         >
-          {projectsData.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={cardVariants}
-              whileHover={{ y: -6, borderColor: "rgba(99, 102, 241, 0.5)" }}
-              className="bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 transition-all duration-300 flex flex-col justify-between group shadow-xl"
-            >
-              <div>
-                {/* Image Container */}
-                <div className="relative h-56 overflow-hidden bg-slate-950">
-                  <img
-                    src={project.image}
-                    alt={project.name}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                  
-                  <span className="absolute top-4 right-4 px-3 py-1 bg-emerald-500/90 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-                    {project.badge}
-                  </span>
-                </div>
+          {EXTENDED_PROJECTS.map((project, idx) => (
+            <div key={project.id}>
+              {idx > 0 && <div className="h-px bg-rule" />}
+              <div
+                className="group flex flex-col sm:flex-row sm:items-center gap-4 p-5 sm:p-6 hover:bg-surface transition-colors cursor-default"
+              >
+                {/* Index */}
+                <span className="text-[11px] font-mono text-ink-muted w-6 flex-shrink-0 hidden sm:block">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
 
-                {/* Content */}
-                <div className="p-6 sm:p-8">
-                  <div className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
-                    {project.category}
+                {/* Thumbnail (if available) */}
+                {project.image ? (
+                  <div className="w-full sm:w-24 h-16 sm:h-16 flex-shrink-0 rounded overflow-hidden border border-rule bg-surface">
+                    <img
+                      src={project.image}
+                      alt={`${project.name} screenshot`}
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-indigo-300 transition-colors">
-                    {project.name}
-                  </h3>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                ) : (
+                  <div className="w-full sm:w-24 h-16 sm:h-16 flex-shrink-0 rounded border border-rule bg-surface flex items-center justify-center">
+                    <span className="text-[10px] font-mono text-ink-muted text-center px-1 leading-tight">
+                      Internal<br/>Platform
+                    </span>
+                  </div>
+                )}
+
+                {/* Main info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <h3 className="font-sans font-semibold text-[15px] text-ink">
+                      {project.name}
+                    </h3>
+                    <span className="text-[10px] font-mono text-ink-muted border border-rule rounded px-1.5 py-0.5 bg-surface">
+                      {project.category}
+                    </span>
+                    {project.badge && (
+                      <span className="text-[10px] font-mono text-accent-600 border border-accent-200 bg-accent-50 rounded px-1.5 py-0.5">
+                        {project.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[13px] text-ink-muted leading-relaxed line-clamp-2">
                     {project.shortDescription}
                   </p>
-
-                  {/* Technologies tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.technologies.map((tech, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs font-medium border border-slate-700"
-                      >
-                        {tech}
-                      </span>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {project.technologies?.slice(0, 4).map((t) => (
+                      <span key={t} className="tech-tag">{t}</span>
                     ))}
                   </div>
                 </div>
-              </div>
 
-              {/* Card Footer */}
-              <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-0">
-                <button
-                  onClick={() => setSelectedProject(project)}
-                  className="w-full py-3 px-4 bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm shadow-md"
-                >
-                  <span>View Case Study</span>
-                  <ExternalLink className="w-4 h-4" />
-                </button>
+                {/* Actions */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  {project.liveUrl && project.liveUrl !== "#" ? (
+                    project.liveUrl.startsWith("http") ? (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-accent-600 hover:text-accent-700 font-medium transition-colors"
+                        aria-label={`Visit ${project.name} (opens in new tab)`}
+                      >
+                        Visit site ↗
+                      </a>
+                    ) : (
+                      <Link
+                        to={project.liveUrl}
+                        className="text-xs text-accent-600 hover:text-accent-700 font-medium transition-colors"
+                      >
+                        Open →
+                      </Link>
+                    )
+                  ) : null}
+                  <Link
+                    to="/projects"
+                    className="text-xs text-ink-muted hover:text-ink transition-colors"
+                  >
+                    Details →
+                  </Link>
+                </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </motion.div>
 
       </div>
-
-      {/* Case Study Modal with AnimatePresence */}
-      <AnimatePresence>
-        {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ duration: 0.3 }}
-              className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col text-white"
-            >
-              
-              {/* Header */}
-              <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950">
-                <div>
-                  <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
-                    {selectedProject.category}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white mt-0.5">
-                    {selectedProject.name} — Case Study
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="p-2 text-slate-400 hover:text-white rounded-full bg-slate-800 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Modal Scrollable Content */}
-              <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
-                
-                {/* Image Preview */}
-                <div className="rounded-2xl overflow-hidden border border-slate-800 max-h-72">
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Case Study Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800">
-                    <h4 className="text-xs font-bold uppercase text-amber-400 tracking-wider mb-2">
-                      The Problem
-                    </h4>
-                    <p className="text-slate-300 text-sm leading-relaxed">
-                      {selectedProject.problem}
-                    </p>
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800">
-                    <h4 className="text-xs font-bold uppercase text-emerald-400 tracking-wider mb-2">
-                      The Solution
-                    </h4>
-                    <p className="text-slate-300 text-sm leading-relaxed">
-                      {selectedProject.solution}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Key Features */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase text-slate-300 tracking-wider mb-3">
-                    Key Implemented Features
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {selectedProject.features.map((ft, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-sm text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
-                        <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
-                        <span>{ft}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tech Stack Used */}
-                <div>
-                  <h4 className="text-sm font-bold uppercase text-slate-300 tracking-wider mb-2">
-                    Technology Stack
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.technologies.map((t, idx) => (
-                      <span key={idx} className="px-3 py-1 rounded-lg bg-indigo-950 text-indigo-300 text-xs font-medium border border-indigo-800/50">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Result */}
-                <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/50 text-emerald-300 text-sm">
-                  <span className="font-bold">Measurable Result:</span> {selectedProject.result}
-                </div>
-
-              </div>
-
-              {/* Modal Footer */}
-              <div className="p-4 bg-slate-950 border-t border-slate-800 flex justify-end">
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition-colors"
-                >
-                  Close Case Study
-                </button>
-              </div>
-
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

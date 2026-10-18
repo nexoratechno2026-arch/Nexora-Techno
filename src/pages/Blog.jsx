@@ -2,147 +2,122 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import WhatsAppButton from "../components/WhatsAppButton";
 import ScrollToTop from "../components/ScrollToTop";
 import { blogData } from "../data/blogData";
-import { BookOpen, Clock, ArrowRight, Search, Tag } from "lucide-react";
+
+const CATEGORIES = ["All", ...Array.from(new Set(blogData.map((b) => b.category)))];
 
 export default function Blog() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCat, setSelectedCat] = useState("All");
 
-  const categories = ["All", ...new Set(blogData.map((b) => b.category))];
-
-  const filteredPosts = blogData.filter((post) => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCat = selectedCategory === "All" || post.category === selectedCategory;
-    return matchesSearch && matchesCat;
-  });
+  const filtered = selectedCat === "All"
+    ? blogData
+    : blogData.filter((b) => b.category === selectedCat);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <>
       <Navbar />
-      <ScrollToTop />
-      <WhatsAppButton />
-
-      <main className="flex-grow">
-        
-        {/* Blog Hero */}
-        <section className="relative py-16 lg:py-24 tech-grid-bg border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-500/30">
-              <BookOpen className="w-4 h-4" /> Articles & Tech Insights
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Nexora Techno Knowledge Base
+      <main>
+        {/* Hero */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-12 sm:py-16">
+            <nav className="flex items-center gap-2 text-xs text-ink-muted mb-6" aria-label="Breadcrumb">
+              <Link to="/" className="hover:text-ink transition-colors">Home</Link>
+              <span aria-hidden="true">/</span>
+              <span className="text-ink">Blog</span>
+            </nav>
+            <p className="eyebrow mb-3">Writing</p>
+            <h1 className="heading-display text-display-md text-ink mb-4">
+              Blog
             </h1>
-
-            <p className="text-slate-300 text-lg sm:text-xl max-w-3xl mx-auto mt-4 leading-relaxed">
-              Guides on website development costs in Salem, AI automation for small businesses, software engineering decisions, and student IT career paths.
+            <p className="text-body-md text-ink-muted max-w-[52ch]">
+              Articles on web development, technology, business software, and practical
+              IT education. Written by the Nexora editorial team.
             </p>
-
-            {/* Search Bar */}
-            <div className="max-w-xl mx-auto mt-8 relative">
-              <input
-                type="text"
-                placeholder="Search articles on websites, AI, costs..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-5 py-3.5 pl-12 bg-slate-900 border border-slate-700 rounded-2xl text-white placeholder-slate-400 text-sm focus:border-indigo-500 focus:outline-none shadow-lg"
-              />
-              <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-            </div>
-
           </div>
         </section>
 
-        {/* Category Filters */}
-        <section className="py-6 bg-slate-900 border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-            <span className="text-xs font-bold uppercase text-slate-400 mr-2 flex items-center gap-1">
-              <Tag className="w-3.5 h-3.5" /> Filter:
-            </span>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
-                  selectedCategory === cat
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Articles Grid */}
-        <section className="py-16 bg-slate-950">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post) => (
-                <article
-                  key={post.id}
-                  className="bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between group shadow-xl"
+        {/* Filter */}
+        <section className="bg-surface border-b border-rule">
+          <div className="container-content py-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-wide mr-2">
+                Filter:
+              </span>
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCat(cat)}
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors border ${
+                    selectedCat === cat
+                      ? "bg-accent-600 text-white border-accent-600"
+                      : "bg-paper border-rule text-ink-muted hover:text-ink hover:border-ink-muted"
+                  }`}
+                  aria-pressed={selectedCat === cat}
                 >
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                      <span className="px-2.5 py-1 rounded-md bg-indigo-950 text-indigo-300 font-semibold border border-indigo-800/40">
-                        {post.category}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" /> {post.readTime}
-                      </span>
-                    </div>
-
-                    <h2 className="text-xl font-bold text-white mb-3 group-hover:text-indigo-300 transition-colors leading-snug">
-                      <Link to={`/blog/${post.slug}`}>
-                        {post.title}
-                      </Link>
-                    </h2>
-
-                    <p className="text-slate-300 text-xs leading-relaxed line-clamp-3 mb-6">
-                      {post.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src={post.author.image}
-                        alt={post.author.name}
-                        className="w-8 h-8 rounded-full object-cover border border-slate-700"
-                      />
-                      <div>
-                        <div className="text-xs font-bold text-slate-200">{post.author.name}</div>
-                        <div className="text-[10px] text-slate-400">{post.author.role}</div>
-                      </div>
-                    </div>
-
-                    <Link
-                      to={`/blog/${post.slug}`}
-                      className="p-2 rounded-xl bg-slate-800 group-hover:bg-indigo-600 text-slate-300 group-hover:text-white transition-colors"
-                      aria-label="Read full article"
-                    >
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </article>
+                  {cat}
+                </button>
               ))}
             </div>
-
           </div>
         </section>
 
+        {/* Article list */}
+        <section className="bg-paper">
+          <div className="container-content py-10">
+            {filtered.length === 0 ? (
+              <p className="text-sm text-ink-muted py-10 text-center">
+                No articles in this category.
+              </p>
+            ) : (
+              <div className="space-y-0 border border-rule rounded-lg overflow-hidden">
+                {filtered.map((post, idx) => (
+                  <div key={post.id}>
+                    {idx > 0 && <div className="h-px bg-rule" />}
+                    <Link
+                      to={`/blog/${post.slug || post.id}`}
+                      className="flex items-start gap-5 sm:gap-6 p-5 sm:p-6 bg-paper hover:bg-surface transition-colors group"
+                    >
+                      <span className="font-mono text-xs text-ink-muted w-6 flex-shrink-0 pt-1 hidden sm:block">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="text-[10px] font-mono text-ink-muted border border-rule rounded px-1.5 py-0.5 bg-surface">
+                            {post.category}
+                          </span>
+                          <span className="text-[10px] text-ink-muted">{post.readTime}</span>
+                        </div>
+                        <h2 className="font-serif font-semibold text-lg text-ink group-hover:text-accent-600 transition-colors leading-snug mb-1.5">
+                          {post.title}
+                        </h2>
+                        <p className="text-[13px] text-ink-muted leading-relaxed line-clamp-2">
+                          {post.excerpt}
+                        </p>
+                        <p className="mt-2 text-[11px] text-ink-muted">
+                          {post.author?.name || "Nexora Editorial Team"}
+                        </p>
+                      </div>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        aria-hidden="true"
+                        className="text-rule group-hover:text-accent-600 flex-shrink-0 transition-colors self-center"
+                      >
+                        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
       </main>
-
       <Footer />
-    </div>
+      <ScrollToTop />
+    </>
   );
 }

@@ -7,16 +7,23 @@ import ScrollToTop from "../components/ScrollToTop";
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <>
       <Navbar />
-      <ScrollToTop />
-      <WhatsAppButton />
-
-      <main className="flex-grow pt-8">
+      <main>
+        {/* Page title header */}
+        <section className="bg-paper border-b border-rule">
+          <div className="container-content py-10 sm:py-12">
+            <p className="eyebrow mb-3">Get in touch</p>
+            <h1 className="heading-display text-display-md text-ink">
+              Start with a conversation.
+            </h1>
+          </div>
+        </section>
         <ContactSection />
       </main>
-
       <Footer />
-    </div>
+      <WhatsAppButton />
+      <ScrollToTop />
+    </>
   );
 }

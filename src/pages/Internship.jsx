@@ -1,87 +1,270 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 import WhatsAppButton from "../components/WhatsAppButton";
 import StudentImpactSection from "../components/StudentImpactSection";
-import { 
-  GraduationCap, 
-  Award, 
-  CheckCircle2, 
-  BookOpen, 
-  Code, 
-  Bot, 
-  Sparkles, 
-  ShieldCheck, 
-  ArrowRight,
-  FileCheck,
-  Send
-} from "lucide-react";
+import { ArrowRight, Send } from "lucide-react";
 
 export default function Internship() {
   const [formStatus, setFormStatus] = useState("idle");
-  const [resumeFile, setResumeFile] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [activeCourse, setActiveCourse] = useState("AI with Python");
   const formRef = useRef();
 
-  const programs = [
+  const categories = [
+    { id: "all", label: "All Tracks (12)" },
+    { id: "fullstack", label: "Web & Full Stack (4)" },
+    { id: "ai", label: "AI & Machine Learning (3)" },
+    { id: "data", label: "Data & Analytics (2)" },
+    { id: "creative", label: "Design & Marketing (2)" },
+    { id: "security", label: "Security & Systems (1)" }
+  ];
+
+  const courses = [
+    {
+      id: "ai-python",
+      number: "01",
+      code: "NT-AIP-01",
+      category: "ai",
+      title: "AI with Python",
+      level: "Core Machine Learning",
+      duration: "1–3 Months",
+      eligibility: "B.E/B.Tech, B.Sc CS/IT, BCA & Engineering Students",
+      tagline: "Build, evaluate, and deploy predictive ML models and neural architectures using modern Python.",
+      tech: ["Python 3.12", "NumPy", "Pandas", "Scikit-Learn", "TensorFlow", "FastAPI"],
+      curriculum: [
+        "Vectorized Data Operations & Feature Engineering (NumPy & Pandas)",
+        "Supervised & Unsupervised Machine Learning Algorithms",
+        "Neural Network Foundations & Deep Learning Inference",
+        "FastAPI Microservice Deployment for Real-Time Model Inference"
+      ],
+      capstone: "Production-ready predictive intelligence API with automated data pipeline."
+    },
+    {
+      id: "javascript",
+      number: "02",
+      code: "NT-JS-02",
+      category: "fullstack",
+      title: "JavaScript",
+      level: "Deep Language Architecture",
+      duration: "1–2 Months",
+      eligibility: "Computer Science Students & Aspiring Frontend Engineers",
+      tagline: "Master JavaScript under the hood: closures, prototypes, asynchronous runtime, and DOM architecture.",
+      tech: ["JavaScript (ES2024)", "TypeScript Basics", "Async / Await", "Web APIs", "Jest", "Vite"],
+      curriculum: [
+        "Execution Context, Event Loop, Microtask Queues & Memory Lifecycle",
+        "Functional Patterns, Higher-Order Functions & Immutability",
+        "Asynchronous Data Streaming, Fetch & WebSocket Communication",
+        "Modular Architecture, Bundle Optimization & Unit Testing with Jest"
+      ],
+      capstone: "High-performance reactive data dashboard built from scratch with zero framework overhead."
+    },
+    {
+      id: "mern-stack",
+      number: "03",
+      code: "NT-MERN-03",
+      category: "fullstack",
+      title: "MERN Stack",
+      level: "Full-Stack Web Engineering",
+      duration: "2–3 Months",
+      eligibility: "Students wanting complete full-stack web engineering capability",
+      tagline: "Architect scalable full-stack web applications from schema design to single-page applications and cloud deployment.",
+      tech: ["MongoDB", "Express.js", "React 19", "Node.js", "Tailwind CSS", "JWT Auth"],
+      curriculum: [
+        "NoSQL Database Modeling, Aggregation Pipelines & Indexing (MongoDB)",
+        "RESTful API Architecture, Middleware & Security Hardening (Express/Node)",
+        "React Component Lifecycle, Custom Hooks & Global State Management",
+        "Authentication with JWT, File Pipelines & Production Cloud Deployment"
+      ],
+      capstone: "Full-featured multi-tenant SaaS application with role-based access control."
+    },
+    {
+      id: "mobile-app",
+      number: "04",
+      code: "NT-MOB-04",
+      category: "fullstack",
+      title: "Mobile App Development",
+      level: "Native & Modern Mobile",
+      duration: "2–3 Months",
+      eligibility: "Students interested in Android & multi-platform mobile engineering",
+      tagline: "Build native Android applications with Kotlin and modern declarative UI using Jetpack Compose.",
+      tech: ["Android SDK", "Kotlin", "Jetpack Compose", "MVVM", "Room DB", "Retrofit"],
+      curriculum: [
+        "Modern Kotlin Language Essentials, Coroutines & Flow Mechanics",
+        "Declarative Mobile UI Engineering with Jetpack Compose",
+        "Offline-First Architecture with SQLite / Room Database",
+        "REST API Network Integration, Background Services & Play Store Guidelines"
+      ],
+      capstone: "Offline-first mobile application featuring room caching and cloud sync."
+    },
+    {
+      id: "data-science",
+      number: "05",
+      code: "NT-DSP-05",
+      category: "data",
+      title: "Data Science with Python",
+      level: "Applied Data Science",
+      duration: "2–3 Months",
+      eligibility: "Math, Stats, Data Science & Computer Science Students",
+      tagline: "Extract actionable signals from complex datasets through exploratory data analysis and hypothesis testing.",
+      tech: ["Python", "Pandas", "Matplotlib", "Seaborn", "Scikit-Learn", "Jupyter"],
+      curriculum: [
+        "Exploratory Data Analysis (EDA) & Data Cleaning at Scale",
+        "Statistical Inference, Distributions, Correlation & Hypothesis Testing",
+        "Feature Engineering, Dimensionality Reduction & Pipeline Automation",
+        "Model Validation, Cross-Validation & Metric Evaluation Metrics"
+      ],
+      capstone: "End-to-end data science study analyzing real-world transactional datasets."
+    },
+    {
+      id: "data-analytics",
+      number: "06",
+      code: "NT-DA-06",
+      category: "data",
+      title: "Data Analytics",
+      level: "Business Intelligence & SQL",
+      duration: "1–2 Months",
+      eligibility: "BCA, B.Sc, B.Com, B.E. & Students interested in Analytics careers",
+      tagline: "Turn raw transactional data into high-impact executive dashboards and automated business reports.",
+      tech: ["Advanced SQL", "Power BI", "Tableau", "Excel Modeling", "Data Modeling"],
+      curriculum: [
+        "Relational Database Querying: Window Functions, CTEs & Complex Joins",
+        "Data Warehousing Concepts, Star Schemas & ETL Pipeline Basics",
+        "Interactive KPI Dashboard Architecture in Power BI & Tableau",
+        "Cohort Retention, Funnel Conversion & Business Metric Analytics"
+      ],
+      capstone: "Executive business intelligence reporting suite with automated live data feeds."
+    },
+    {
+      id: "cyber-security",
+      number: "07",
+      code: "NT-SEC-07",
+      category: "security",
+      title: "Cyber Security",
+      level: "Defensive & Application Security",
+      duration: "2–3 Months",
+      eligibility: "IT, CS, Networking & Security Enthusiasts",
+      tagline: "Learn defensive security, vulnerability scanning, network traffic analysis, and OWASP Top 10 remediation.",
+      tech: ["Kali Linux", "Wireshark", "Burp Suite", "OWASP Top 10", "Network Protocols", "Nmap"],
+      curriculum: [
+        "TCP/IP Networking Deep Dive, Packet Inspection & Wireshark Diagnostics",
+        "Web Application Vulnerabilities (SQL Injection, XSS, CSRF) & Exploits",
+        "Reconnaissance, Port Scanning & Network Vulnerability Auditing",
+        "Defensive Hardening, Cryptographic Basics & Incident Response Runbooks"
+      ],
+      capstone: "Full vulnerability assessment report and security patch audit on simulated infrastructure."
+    },
+    {
+      id: "generative-ai",
+      number: "08",
+      code: "NT-GENAI-08",
+      category: "ai",
+      title: "Generative AI",
+      level: "LLMs, RAG & Vector Systems",
+      duration: "1–2 Months",
+      eligibility: "Students familiar with Python wanting to build modern AI software",
+      tagline: "Build production applications powered by Large Language Models, embeddings, and vector databases.",
+      tech: ["LangChain", "OpenAI / Claude APIs", "ChromaDB", "Vector Embeddings", "RAG Pipelines"],
+      curriculum: [
+        "Transformer Architecture Foundations, Tokenization & Context Windows",
+        "Retrieval-Augmented Generation (RAG) Architecture & Vector Embeddings",
+        "Semantic Search, Chunking Strategies & Vector Database Indexing",
+        "Evaluation Frameworks, Hallucination Mitigation & Production Guardrails"
+      ],
+      capstone: "Enterprise RAG question-answering system over private document libraries."
+    },
+    {
+      id: "agentic-ai",
+      number: "09",
+      code: "NT-AGAI-09",
+      category: "ai",
+      title: "Agentic AI",
+      level: "Autonomous Multi-Agent Systems",
+      duration: "1–2 Months",
+      eligibility: "Advanced Python/AI Students, Developers & Researchers",
+      tagline: "Engineer autonomous AI agents with reasoning loops, tool-calling capabilities, and multi-agent coordination.",
+      tech: ["LangGraph", "CrewAI", "MCP Protocols", "Function Calling", "Agent Workflows"],
+      curriculum: [
+        "ReAct Loop (Reasoning + Acting) & Autonomous State Graph Mechanics",
+        "Function Calling, Tool Invocation & Database Integration",
+        "Multi-Agent Orchestration, Role Assignment & Hierarchical Consensus",
+        "Memory Systems (Short-term, Long-term & Episodic) for AI Agents"
+      ],
+      capstone: "Autonomous software development agent team that drafts specs, writes code, and tests output."
+    },
     {
       id: "full-stack",
-      code: "FS",
+      number: "10",
+      code: "NT-FSD-10",
+      category: "fullstack",
       title: "Full Stack Development",
-      duration: "3 Months",
-      eligibility: "B.Sc. CS/IT, BCA, B.E./B.Tech Students & Recent Graduates",
-      tech: ["HTML5", "CSS3 / Tailwind", "JavaScript (ES6+)", "React", "Node.js", "MySQL / MongoDB"],
-      outcomes: [
-        "Build 2 production-ready web applications",
-        "Master Git version control & GitHub workflows",
-        "Understand REST API design & database queries",
-        "Receive QR-verifiable internship certificate"
-      ]
-    },
-    {
-      id: "python-full-stack",
-      code: "PFS",
-      title: "Python Full Stack",
-      duration: "3 Months",
-      eligibility: "B.Sc. CS/IT, BCA, B.E./B.Tech Students & Recent Graduates",
-      tech: ["HTML5", "CSS3 / Tailwind", "Python", "Django / FastAPI", "MySQL / PostgreSQL"],
-      outcomes: [
-        "Build 2 production-ready web applications",
-        "Master Git version control & GitHub workflows",
-        "Understand REST API design & database queries",
-        "Receive QR-verifiable internship certificate"
-      ]
-    },
-    {
-      id: "ai-ml",
-      code: "PE",
-      title: "Prompt Engineering & AI/ML",
-      duration: "3 Months",
-      eligibility: "Computer Science, AI/ML, Data Science & Tech Enthusiasts",
-      tech: ["Python", "OpenAI / Anthropic APIs", "n8n Workflow Tools", "JSON Data Pipelines", "Prompt Guardrails"],
-      outcomes: [
-        "Build custom AI chatbots and document automation bots",
-        "Learn prompt engineering principles & LLM evaluation",
-        "Integrate AI models into web applications",
-        "Receive QR-verifiable internship certificate"
-      ]
+      level: "Comprehensive Web Stack",
+      duration: "2–3 Months",
+      eligibility: "Engineering, MCA, BCA & CS/IT Students",
+      tagline: "Master full stack web development: modern HTML5/CSS, React frontend, Node.js API backends, and databases.",
+      tech: ["HTML5 / CSS3", "JavaScript", "React", "Node.js", "Express", "MongoDB / SQL"],
+      curriculum: [
+        "Responsive Web Engineering with Modern CSS, Tailwind & JavaScript",
+        "React Component Lifecycle, Custom Hooks, State Management & Routing",
+        "Backend Server Engineering with Node.js, Express & REST APIs",
+        "Database Architecture (NoSQL/SQL), User Auth (JWT) & Cloud Deployment"
+      ],
+      capstone: "Complete production-ready web application with user authentication and database persistence."
     },
     {
       id: "ui-ux",
-      code: "UD",
-      title: "UI/UX & Web Interface Design",
-      duration: "3 Months",
-      eligibility: "Creative students interested in product design & web interfaces",
-      tech: ["Figma", "UI Design Systems", "Responsive Layouts", "HTML/CSS Basics", "Accessibility"],
-      outcomes: [
-        "Create responsive mobile & desktop wireframes",
-        "Design intuitive user navigation & design tokens",
-        "Build a personal design portfolio",
-        "Receive QR-verifiable internship certificate"
-      ]
+      number: "11",
+      code: "NT-UIUX-11",
+      category: "creative",
+      title: "UI/UX Designing",
+      level: "Product Design & Prototyping",
+      duration: "1–2 Months",
+      eligibility: "Design Enthusiasts, CS Students & Aspiring Product Designers",
+      tagline: "Learn user research, wireframing, component design systems, and interactive clickable prototypes in Figma.",
+      tech: ["Figma", "User Research", "Wireframing", "Design Systems", "Prototyping", "Usability Testing"],
+      curriculum: [
+        "User Journey Mapping, Information Architecture & Low-Fidelity Wireframes",
+        "Visual Design Principles: Typography Tokens, Color Theory & Spacing",
+        "Mastering Figma: Auto-Layout, Component Libraries & Design Tokens",
+        "High-Fidelity Clickable Mobile & Web Prototyping and Developer Hand-off"
+      ],
+      capstone: "Complete Figma product design case study and clickable interactive prototype."
+    },
+    {
+      id: "digital-marketing",
+      number: "12",
+      code: "NT-DM-12",
+      category: "creative",
+      title: "Digital Marketing",
+      level: "Growth & Performance Marketing",
+      duration: "1–2 Months",
+      eligibility: "Students, Business Owners & Aspiring Growth Marketers",
+      tagline: "Master SEO, Google Search Ads, Meta lead generation, social media management, and performance marketing funnels.",
+      tech: ["Google Ads", "Meta Ads", "SEO & Keywords", "Google Analytics 4", "Canva", "WhatsApp Funnels"],
+      curriculum: [
+        "Search Engine Optimization (SEO): Keyword Research, On-Page & Local SEO",
+        "Google Search & Display Advertising: Setup, Bidding Strategy & Ad Copy",
+        "Meta Ads Manager: Audience Targeting, Ad Creatives & Lead Generation",
+        "Conversion Tracking, Performance Metrics & WhatsApp Sales Funnels"
+      ],
+      capstone: "Live digital marketing strategy and lead generation campaign audit."
     }
   ];
+
+  const filteredCourses = selectedCategory === "all"
+    ? courses
+    : courses.filter((c) => c.category === selectedCategory);
+
+  const handleApplyClick = (courseTitle) => {
+    setActiveCourse(courseTitle);
+    const element = document.getElementById("apply-form");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,150 +274,209 @@ export default function Internship() {
       const formData = new FormData(formRef.current);
       const data = Object.fromEntries(formData.entries());
       
-      const message = `*New Internship Application*
+      const message = `*New Nexora Techno Internship Application*
 Name: ${data.name}
 Email: ${data.email}
 Phone: ${data.phone}
 Program: ${data.program}
 College: ${data.college}
-Goals/Experience: ${data.about}`;
+Goals: ${data.about}`;
 
       const text = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/919345121988?text=${text}`;
 
-      // Open WhatsApp in a new tab
       window.open(whatsappUrl, "_blank");
 
       setFormStatus("success");
       e.target.reset();
-      setResumeFile(null);
-    } catch (error) {
+    } catch {
       setFormStatus("success");
       e.target.reset();
-      setResumeFile(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <div className="min-h-screen bg-paper text-ink flex flex-col font-sans">
       <Navbar />
       <ScrollToTop />
       <WhatsAppButton />
 
       <main className="flex-grow">
         
-        {/* Internship Hero */}
-        <section className="relative py-16 lg:py-24 tech-grid-bg border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-500/30">
-              <GraduationCap className="w-4 h-4" /> Nexora Student Academy — Salem, TN
-            </div>
+        {/* Hero Section */}
+        <section className="border-b border-rule bg-paper">
+          <div className="container-content py-14 sm:py-18 text-center">
+            <p className="eyebrow mb-4">For students and colleges</p>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-              Learn. Build. Get Real Industry Experience.
+            <h1 className="heading-display text-display-md text-ink mx-auto max-w-[28ch]">
+              Practical technology internships and workshops.
             </h1>
 
-            <p className="text-slate-300 text-lg sm:text-xl max-w-3xl mx-auto mt-4 leading-relaxed">
-              Gain practical engineering experience through IT internships, live project code reviews, and technology-focused hands-on mentorship in Salem.
+            <p className="text-body-lg text-ink-muted max-w-[52ch] mx-auto mt-5 leading-relaxed">
+              Project-based internship tracks and college workshops for engineering students.
+              Build something real, finish with a verifiable certificate.
             </p>
 
             <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="#apply-form"
-                className="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-2xl shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 text-base"
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                href="#courses-catalog"
+                className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all text-base inline-block"
               >
-                <span>Apply for Internship</span>
-                <ArrowRight className="w-5 h-5" />
-              </a>
+                Explore 12 Internship Courses
+              </motion.a>
 
-              <Link
-                to="/verify"
-                className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
-              >
-                <FileCheck className="w-5 h-5 text-indigo-400" />
-                <span>Certificate Verification Portal</span>
-              </Link>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/verification"
+                  className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold rounded-xl text-base transition-colors inline-block"
+                >
+                  Verify Issued Credentials
+                </Link>
+              </motion.div>
             </div>
 
+            {/* Quick stats banner */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-14 pt-8 border-t border-rule grid grid-cols-2 md:grid-cols-4 gap-6 text-left"
+            >
+              <div className="p-3 rounded-lg hover:bg-surface/60 transition-colors">
+                <p className="text-2xl sm:text-3xl font-black text-ink font-mono">1,000+</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mt-1">Students Oriented</p>
+              </div>
+              <div className="p-3 rounded-lg hover:bg-surface/60 transition-colors">
+                <p className="text-2xl sm:text-3xl font-black text-ink font-mono">100+</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mt-1">Online Workshops</p>
+              </div>
+              <div className="p-3 rounded-lg hover:bg-surface/60 transition-colors">
+                <p className="text-2xl sm:text-3xl font-black text-ink font-mono">12</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mt-1">Specialized Tracks</p>
+              </div>
+              <div className="p-3 rounded-lg hover:bg-surface/60 transition-colors">
+                <p className="text-2xl sm:text-3xl font-black text-emerald-600 font-mono">100%</p>
+                <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mt-1">Verifiable Records</p>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* Student Milestones & Impact: 1000+ Orientation, 100+ Workshops, 55+ Internships */}
+        {/* Impact Section */}
         <StudentImpactSection />
 
-        {/* Available Programs */}
-        <section className="py-20 bg-slate-900 border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 9 Courses Catalog */}
+        <section id="courses-catalog" className="py-20 lg:py-28 bg-slate-950 border-b border-slate-800 relative">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-3 border border-indigo-500/30">
-                Cohorts & Tracks
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+              <div>
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  Curriculum Catalog
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                  Official Internship Tracks
+                </h2>
+                <p className="text-slate-400 text-base mt-2 max-w-xl">
+                  Select your track to review syllabus modules, tech stack, and practical capstone deliverables.
+                </p>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Currently Available Internship Programs
-              </h2>
-              <p className="text-slate-400 text-base mt-2">
-                Designed specifically for computer science, engineering, and IT students wanting production skills.
-              </p>
+
+              {/* Category Filter Tabs */}
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide transition-all ${
+                      selectedCategory === cat.id
+                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
+                        : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {programs.map((p) => (
+            {/* Courses Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses.map((course) => (
                 <div
-                  key={p.id}
-                  className="bg-slate-950 rounded-3xl p-8 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between shadow-xl"
+                  key={course.id}
+                  className="rounded-2xl border border-slate-800 bg-slate-900/90 hover:border-indigo-500/40 p-7 flex flex-col justify-between transition-all card-lift relative overflow-hidden"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-xs border border-emerald-500/30">
-                        Track Code: {p.code}
+                    {/* Header: Track code + level */}
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-900/50 px-2.5 py-1 rounded-md">
+                        {course.code}
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">
-                        {p.duration}
+                      <span className="text-xs font-medium text-slate-400">
+                        {course.duration}
                       </span>
                     </div>
 
-                    <h3 className="text-2xl font-bold text-white mb-2">{p.title}</h3>
-                    <p className="text-xs text-slate-400 mb-6 font-medium">
-                      Eligibility: {p.eligibility}
+                    <h3 className="text-xl font-bold text-white mb-1.5">
+                      {course.number}. {course.title}
+                    </h3>
+                    <p className="text-xs font-semibold text-indigo-300 mb-3">
+                      {course.level}
+                    </p>
+                    <p className="text-slate-400 text-xs leading-relaxed mb-5">
+                      {course.tagline}
                     </p>
 
-                    <div className="mb-6">
-                      <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                        Technologies Mastered:
-                      </div>
+                    {/* Tech Badges */}
+                    <div className="mb-5">
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                        Stack & Tools:
+                      </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {p.tech.map((t, idx) => (
-                          <span key={idx} className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-xs">
+                        {course.tech.map((t, idx) => (
+                          <span key={idx} className="tech-tag text-[11px]">
                             {t}
                           </span>
                         ))}
                       </div>
                     </div>
 
-                    <div>
-                      <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                        Key Outcomes:
-                      </div>
-                      <div className="space-y-2">
-                        {p.outcomes.map((o, idx) => (
-                          <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                            <span>{o}</span>
-                          </div>
-                        ))}
-                      </div>
+                    {/* Curriculum Modules */}
+                    <div className="mb-6 space-y-2">
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        Syllabus Highlights:
+                      </p>
+                      {course.curriculum.map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                          <span className="font-mono text-indigo-400 font-bold shrink-0">·</span>
+                          <span className="leading-snug">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Capstone Box */}
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs mb-6">
+                      <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block mb-1">
+                        Capstone Deliverable
+                      </span>
+                      <p className="text-slate-300 leading-snug">
+                        {course.capstone}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-slate-900">
-                    <a
-                      href="#apply-form"
-                      className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-center text-sm transition-colors block"
+                  {/* Action */}
+                  <div className="pt-4 border-t border-slate-800">
+                    <button
+                      onClick={() => handleApplyClick(course.title)}
+                      className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center text-xs transition-colors block shadow-md shadow-indigo-600/20"
                     >
-                      Apply for {p.title}
-                    </a>
+                      Apply for {course.title}
+                    </button>
                   </div>
                 </div>
               ))}
@@ -243,29 +485,29 @@ Goals/Experience: ${data.about}`;
           </div>
         </section>
 
-        {/* Certificate Credential Feature */}
-        <section className="py-16 bg-slate-950 border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-8">
+        {/* Certificate Credential Verification Banner */}
+        <section className="py-16 bg-slate-900/50 border-b border-slate-800">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="p-8 sm:p-12 rounded-3xl bg-slate-950 border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
               
               <div className="space-y-3 max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider border border-amber-500/30">
-                  <ShieldCheck className="w-4 h-4" /> QR-Verifiable Credential
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-bold uppercase tracking-wider border border-indigo-500/20">
+                  Verifiable Credential Index
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   Earn an Official Nexora Techno Internship Certificate
                 </h3>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  Every student who successfully completes their project track receives a verifiable certificate indexed on our public verification portal with unique intern credential IDs.
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Every intern who completes their project milestones receives a unique certificate ID. Recruiter and college verification is instantaneous through our public verification portal.
                 </p>
               </div>
 
               <div className="shrink-0">
                 <Link
-                  to="/verify"
-                  className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-lg flex items-center gap-2 text-sm"
+                  to="/verification"
+                  className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 text-sm transition-all"
                 >
-                  <span>Verify Existing Certificate</span>
+                  <span>Verification Portal</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -275,135 +517,211 @@ Goals/Experience: ${data.about}`;
         </section>
 
         {/* Application Form Section */}
-        <section id="apply-form" className="py-20 bg-slate-900">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="bg-slate-950 border border-slate-800 rounded-3xl p-8 sm:p-12 shadow-2xl">
+        <section id="apply-form" className="py-20 lg:py-28 bg-slate-950 border-t border-slate-800/80">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               
-              <div className="text-center mb-10">
-                <h2 className="text-3xl font-extrabold text-white">
-                  Apply for Internship Cohort
-                </h2>
-                <p className="text-slate-400 text-sm mt-2">
-                  Fill in your details below. Our HR team in Salem will review your application and send confirmation.
-                </p>
+              {/* Left Column: Context & Guarantees */}
+              <div className="lg:col-span-5 space-y-6">
+                <div>
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                    Internship Enrollment
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                    Apply for your internship cohort.
+                  </h2>
+                  <p className="text-slate-400 text-sm sm:text-base mt-3 leading-relaxed">
+                    Submit your details to secure a seat in our upcoming batch. Our team in Salem will contact you directly to discuss batch timings, prerequisite materials, and orientation.
+                  </p>
+                </div>
+
+                <div className="space-y-4 pt-2">
+                  {[
+                    {
+                      title: "Practical, Project-Driven Learning",
+                      desc: "Build genuine applications from day one with modern developer tools and GitHub workflows."
+                    },
+                    {
+                      title: "Direct Mentor Support",
+                      desc: "Regular code reviews and 1-on-1 guidance from software engineers who build for real clients."
+                    },
+                    {
+                      title: "Flexible Online & Salem Offline Batches",
+                      desc: "Classes and mentoring sessions scheduled around college and semester exam timetables."
+                    },
+                    {
+                      title: "Online Verifiable Certificate",
+                      desc: "Every graduate receives an official completion certificate with a verifiable ID on our public portal."
+                    }
+                  ].map((point, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+                      <div>
+                        <span className="text-white font-semibold text-sm block">{point.title}</span>
+                        <span className="text-slate-400 text-xs leading-relaxed">{point.desc}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 space-y-1">
+                  <p className="font-semibold text-slate-300">Need guidance choosing a track?</p>
+                  <p>
+                    Chat directly with our course coordinators on WhatsApp:{" "}
+                    <a
+                      href="https://wa.me/919345121988"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-emerald-400 hover:text-emerald-300 font-medium underline"
+                    >
+                      +91 93451 21988
+                    </a>
+                  </p>
+                </div>
               </div>
 
-              {formStatus === "success" ? (
-                <div className="text-center py-12 space-y-4">
-                  <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-10 h-10" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Application Submitted Successfully!</h3>
-                  <p className="text-slate-300 text-sm max-w-md mx-auto">
-                    Our HR team will reach out to you via WhatsApp / Email with orientation details.
-                  </p>
-                  <button
-                    onClick={() => setFormStatus("idle")}
-                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-sm"
-                  >
-                    Submit Another Application
-                  </button>
-                </div>
-              ) : (
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              {/* Right Column: Reframed Application Form */}
+              <div className="lg:col-span-7">
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Full Name *</label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        placeholder="e.g. John Doe"
-                        className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Email Address *</label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        placeholder="john@example.com"
-                        className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none"
-                      />
-                    </div>
+                  <div className="mb-6 pb-4 border-b border-slate-800">
+                    <h3 className="text-xl font-bold text-white">Student Application Form</h3>
+                    <p className="text-slate-400 text-xs mt-1">
+                      Fill out the form below. Applications are reviewed on a rolling basis.
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">WhatsApp Phone Number *</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        placeholder="+91 98765 43210"
-                        className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Internship Program / Session Track *</label>
-                      <select
-                        name="program"
-                        required
-                        className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm focus:border-emerald-500 focus:outline-none"
+                  {formStatus === "success" ? (
+                    <div className="text-center py-10 space-y-4">
+                      <div className="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
+                        <span className="text-2xl font-bold">✓</span>
+                      </div>
+                      <h4 className="text-xl font-bold text-white">Application Received</h4>
+                      <p className="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
+                        Your application has been received. Our team will contact you via WhatsApp / Email with orientation details.
+                      </p>
+                      <button
+                        onClick={() => setFormStatus("idle")}
+                        className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-xs transition-colors"
                       >
-                        <option value="full-stack">Full Stack Development (FS) - Internship</option>
-                        <option value="python-full-stack">Python Full Stack (PFS) - Internship</option>
-                        <option value="prompt-engineering-ai-ml">Prompt Engineering & AI/ML (PE) - Internship</option>
-                        <option value="ui-ux">UI/UX Development (UD) - Internship</option>
-                        <option value="college-workshop">College Campus Technical Workshop (Hands-on)</option>
-                        <option value="college-orientation">College Orientation & Career Roadmap Session</option>
-                      </select>
+                        Submit Another Application
+                      </button>
                     </div>
-                  </div>
+                  ) : (
+                    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                            Your Name *
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            required
+                            placeholder="Your name"
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-indigo-500 focus:outline-none transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                            Email Address *
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            required
+                            placeholder="you@example.com"
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-indigo-500 focus:outline-none transition-colors"
+                          />
+                        </div>
+                      </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">College Name & Degree</label>
-                    <input
-                      type="text"
-                      name="college"
-                      placeholder="e.g. Government Engineering College - Final Year B.E. / B.Sc."
-                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none"
-                    />
-                  </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                            WhatsApp Number *
+                          </label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            required
+                            placeholder="Your 10-digit number"
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-indigo-500 focus:outline-none transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                            Selected Course *
+                          </label>
+                          <select
+                            name="program"
+                            required
+                            defaultValue={activeCourse}
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:border-indigo-500 focus:outline-none transition-colors"
+                          >
+                            <option value="1. AI with Python">1. AI with Python (NT-AIP-01)</option>
+                            <option value="2. JavaScript">2. JavaScript (NT-JS-02)</option>
+                            <option value="3. MERN Stack">3. MERN Stack (NT-MERN-03)</option>
+                            <option value="4. Mobile App Development">4. Mobile App Development (NT-MOB-04)</option>
+                            <option value="5. Data Science with Python">5. Data Science with Python (NT-DSP-05)</option>
+                            <option value="6. Data Analytics">6. Data Analytics (NT-DA-06)</option>
+                            <option value="7. Cyber Security">7. Cyber Security (NT-SEC-07)</option>
+                            <option value="8. Generative AI">8. Generative AI (NT-GENAI-08)</option>
+                            <option value="9. Agentic AI">9. Agentic AI (NT-AGAI-09)</option>
+                            <option value="10. Full Stack Development">10. Full Stack Development (NT-FSD-10)</option>
+                            <option value="11. UI/UX Designing">11. UI/UX Designing (NT-UIUX-11)</option>
+                            <option value="12. Digital Marketing">12. Digital Marketing (NT-DM-12)</option>
+                          </select>
+                        </div>
+                      </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Attachment: Resume (PDF optional)</label>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={(e) => setResumeFile(e.target.files[0])}
-                      className="w-full px-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500"
-                    />
-                  </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                          College & Degree (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          name="college"
+                          placeholder="Your college, degree & year (e.g. College Name, B.E / B.Sc)"
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-indigo-500 focus:outline-none transition-colors"
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Brief Goals / Experience</label>
-                    <textarea
-                      name="about"
-                      rows="3"
-                      required
-                      placeholder="Tell us what programming languages you have studied and what you want to learn..."
-                      className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-emerald-500 focus:outline-none resize-none"
-                    ></textarea>
-                  </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-1.5">
+                          Learning Goals & Interests *
+                        </label>
+                        <textarea
+                          name="about"
+                          rows="3"
+                          required
+                          placeholder="Tell us what technologies you want to learn or what project you would like to build..."
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-sm focus:border-indigo-500 focus:outline-none resize-none transition-colors"
+                        ></textarea>
+                      </div>
 
-                  <button
-                    type="submit"
-                    disabled={formStatus === "loading"}
-                    className="w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 text-base"
-                  >
-                    <Send className="w-5 h-5" />
-                    <span>{formStatus === "loading" ? "Submitting Application..." : "Submit Internship Application"}</span>
-                  </button>
+                      <button
+                        type="submit"
+                        disabled={formStatus === "loading"}
+                        className="w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Send className="w-4 h-4" />
+                        <span>{formStatus === "loading" ? "Submitting Application..." : "Submit Application via WhatsApp"}</span>
+                      </button>
 
-                </form>
-              )}
+                      <p className="text-center text-[11px] text-slate-500 pt-1">
+                        We respect your privacy. Your information is only used for internship coordination.
+                      </p>
+
+                    </form>
+                  )}
+
+                </div>
+              </div>
 
             </div>
-
           </div>
         </section>
 

@@ -50,25 +50,55 @@ function Verification() {
       const end = new Date(record.batches.end_date);
       const diffTime = Math.abs(end - start);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      const typeLabel = record.batches.name || "Program";
+      const typeLabel = record.batches.name || record.type || "Program";
       
       // If it's a webinar and 1 day, just say '1 Day Webinar'
-      return `${diffDays} Day${diffDays !== 1 ? 's' : ''} ${typeLabel.includes('Webinar') ? 'Webinar' : 'Internship'}`;
+      return `${diffDays} Day${diffDays !== 1 ? 's' : ''} ${typeLabel.toLowerCase().includes('webinar') ? 'Webinar' : 'Internship'}`;
     }
-    return "30 Days Internship";
+    if (record?.duration) return record.duration;
+    const isWeb =
+      record?.type === "Webinar" ||
+      record?.cert_number?.toUpperCase().includes("WEB") ||
+      record?.batches?.name?.toLowerCase().includes("webinar");
+    return isWeb ? "1 Day Technical Webinar" : "30 Days Practical Internship";
   };
 
   const getProgramLabel = (record) => {
-    return record?.profiles?.domain || "Unknown Program";
+    return (
+      record?.profiles?.domain ||
+      record?.domain ||
+      record?.batches?.domain ||
+      record?.batches?.name ||
+      record?.project_name ||
+      record?.program ||
+      "Technology & Software Engineering"
+    );
   };
 
   const getNameLabel = (record) => {
-    return record?.profiles?.name || "Unknown Intern";
+    return (
+      record?.profiles?.name ||
+      record?.profiles?.full_name ||
+      record?.name ||
+      record?.student_name ||
+      record?.intern_name ||
+      record?.participant_name ||
+      "Verified Student"
+    );
   };
 
   const getDateLabel = (record) => {
-    if (!record?.issued_at) return "-";
-    return new Date(record.issued_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+    if (!record?.issued_at) return "Active Verified";
+    let dateObj;
+    if (typeof record.issued_at?.toDate === "function") {
+      dateObj = record.issued_at.toDate();
+    } else if (record.issued_at?.seconds) {
+      dateObj = new Date(record.issued_at.seconds * 1000);
+    } else {
+      dateObj = new Date(record.issued_at);
+    }
+    if (isNaN(dateObj?.getTime())) return "Active Verified";
+    return dateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   };
 
   const handleDownload = async () => {
@@ -351,43 +381,51 @@ function Verification() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
       <Navbar />
       <ScrollToTop />
       <WhatsAppButton />
 
-      <main className="flex-grow flex items-center justify-center py-20 lg:py-32">
-        <div className="mx-auto max-w-2xl px-6 w-full">
-          <div className="text-center mb-12">
+      <main className="flex-grow flex items-center justify-center py-20 lg:py-28 relative">
+        {/* Subtle background ambient light */}
+        <div
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(99,102,241,0.12) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 w-full relative z-10">
+          <div className="text-center mb-10">
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-sm font-semibold uppercase tracking-widest text-brand-300"
+              className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2"
             >
-              Secure Verification
+              Official Verification Portal
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="mt-4 font-display text-4xl font-bold text-white sm:text-5xl"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight"
             >
-              Verify Internship <span className="text-accent-400">Completion</span>
+              Verify Certificate <span className="text-indigo-400">& Credentials</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mt-4 text-slate-400"
+              className="mt-3 text-slate-400 text-sm sm:text-base max-w-lg mx-auto"
             >
-              Enter the Certificate ID provided on the internship completion certificate to verify its authenticity.
+              Enter the Certificate ID found on your certificate to instantly verify its authenticity and view issued records.
             </motion.p>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-xl shadow-glow"
+            className="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-black/50"
           >
             <form onSubmit={handleVerify} className="space-y-4">
               <div className="relative">
@@ -395,8 +433,8 @@ function Verification() {
                   type="text"
                   value={searchId}
                   onChange={(e) => setSearchId(e.target.value)}
-                  placeholder="Enter Certificate ID (e.g., NT26FS001)"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-900/50 px-6 py-5 text-center text-xl font-bold uppercase tracking-widest text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none transition-all shadow-inner"
+                  placeholder="e.g. NT-WEB-JDXU6 or NT26FS001"
+                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-6 py-4.5 text-center text-lg sm:text-xl font-mono font-bold uppercase tracking-wider text-white placeholder:text-slate-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all shadow-inner"
                   required
                 />
               </div>
@@ -404,28 +442,28 @@ function Verification() {
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="flex-grow rounded-full bg-gradient-to-r from-brand-500 to-brand-300 py-4 font-bold text-slate-950 shadow-xl transition hover:brightness-110 active:scale-[0.98] disabled:opacity-70"
+                  className="flex-grow rounded-xl bg-indigo-600 hover:bg-indigo-500 py-3.5 px-6 font-bold text-white shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {isSearching ? (
                     <span className="flex items-center justify-center gap-2">
-                        <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Verifying...
+                      </svg>
+                      Verifying...
                     </span>
                   ) : (
-                    "Verify Now →"
+                    "Verify Authenticity →"
                   )}
                 </button>
                 {(result || error) && (
-                    <button
-                        type="button"
-                        onClick={() => { setSearchId(""); setResult(null); setError(""); }}
-                        className="px-6 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 transition"
-                    >
-                        Reset
-                    </button>
+                  <button
+                    type="button"
+                    onClick={() => { setSearchId(""); setResult(null); setError(""); }}
+                    className="px-5 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-medium text-sm transition"
+                  >
+                    Reset
+                  </button>
                 )}
               </div>
             </form>
@@ -436,7 +474,7 @@ function Verification() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-center text-sm font-medium text-red-400"
+                  className="mt-6 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm font-medium text-red-400"
                 >
                   <p>{error}</p>
                 </motion.div>
@@ -444,15 +482,15 @@ function Verification() {
 
               {result && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="mt-8 rounded-3xl border border-brand-500/30 bg-brand-500/5 p-6 backdrop-blur-md"
+                  className="mt-8 rounded-3xl border border-indigo-500/30 bg-slate-900/95 p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-indigo-950/40 relative overflow-hidden"
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div className="h-16 w-16 mb-4 rounded-full bg-brand-500/20 text-brand-300 flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" className="h-8 w-8 fill-none stroke-current" strokeWidth="2">
-                        <path d="M5 13l4 4L19 7" />
+                    <div className="h-14 w-14 mb-3 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
+                      <svg viewBox="0 0 24 24" className="h-7 w-7 fill-none stroke-current" strokeWidth="2.5">
+                        <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
                     {(() => {
@@ -468,61 +506,66 @@ function Verification() {
                       return (
                         <>
                           <div className="mb-2">
-                            <span className="inline-flex items-center rounded-full bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-300 border border-sky-500/30">
+                            <span className="inline-flex items-center rounded-full bg-indigo-500/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-indigo-300 border border-indigo-500/30">
                               {isWeb ? "Certificate of Participation" : "Certificate of Completion"}
                             </span>
                           </div>
-                          <h3 className="text-xl font-bold text-white mb-1">Authenticity Verified</h3>
-                          <p className="text-sm text-slate-400 mb-6">This document is legitimate and verified by Nexora Techno.</p>
+                          <h3 className="text-2xl font-bold text-white mb-1">Authenticity Verified</h3>
+                          <p className="text-xs sm:text-sm text-slate-400 mb-6">
+                            This document is an authentic record verified by Nexora Techno.
+                          </p>
 
-                          <div className="w-full space-y-3 pt-4 border-t border-white/10">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-400">
+                          <div className="w-full space-y-3 pt-4 border-t border-slate-800 text-left">
+                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                              <span className="text-slate-400 text-xs sm:text-sm font-medium">
                                 {isStaff ? "Faculty / Staff Name" : isWeb ? "Participant Name" : "Intern Name"}
                               </span>
-                              <span className="font-semibold text-white">{getNameLabel(result)}</span>
+                              <span className="font-bold text-white text-base sm:text-lg">{getNameLabel(result)}</span>
                             </div>
 
                             {role && role.toLowerCase() !== "student" && role.toLowerCase() !== "intern" && (
-                              <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">Designation / Role</span>
-                                <span className="font-semibold text-sky-300">{role}</span>
+                              <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                                <span className="text-slate-400 text-xs sm:text-sm font-medium">Designation / Role</span>
+                                <span className="font-semibold text-indigo-300 text-sm">{role}</span>
                               </div>
                             )}
 
                             {regNo && (
-                              <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">
+                              <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                                <span className="text-slate-400 text-xs sm:text-sm font-medium">
                                   {isStaff ? "Staff ID" : "Register Number"}
                                 </span>
-                                <span className="font-semibold font-mono text-white">{regNo}</span>
+                                <span className="font-semibold font-mono text-white text-sm bg-slate-950 px-2 py-0.5 rounded border border-slate-800">{regNo}</span>
                               </div>
                             )}
 
                             {college && (
-                              <div className="flex justify-between text-sm text-left">
-                                <span className="text-slate-400 shrink-0 mr-4">College / University</span>
-                                <span className="font-semibold text-white text-right">{college}</span>
+                              <div className="flex justify-between items-start py-2 border-b border-slate-800/80">
+                                <span className="text-slate-400 text-xs sm:text-sm font-medium shrink-0 mr-4">Institution</span>
+                                <span className="font-medium text-slate-200 text-xs sm:text-sm text-right max-w-xs">{college}</span>
                               </div>
                             )}
 
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-400">{isWeb ? "Webinar Topic" : "Program"}</span>
-                              <span className="font-semibold text-white">{getProgramLabel(result)}</span>
+                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                              <span className="text-slate-400 text-xs sm:text-sm font-medium">{isWeb ? "Webinar Topic" : "Domain / Program"}</span>
+                              <span className="font-semibold text-indigo-300 text-sm text-right">{getProgramLabel(result)}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-400">Duration</span>
-                              <span className="font-semibold text-white">{parseDurationDays(result)}</span>
+
+                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Duration</span>
+                              <span className="font-semibold text-white text-sm">{parseDurationDays(result)}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-400">Status</span>
-                              <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-                                {isWeb ? "Participated" : "Completed"}
+
+                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
+                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Verification Status</span>
+                              <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-bold text-emerald-400 border border-emerald-500/30">
+                                {isWeb ? "Verified Participant" : "Verified Completion"}
                               </span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-400">Date</span>
-                              <span className="font-semibold text-white">{getDateLabel(result)}</span>
+
+                            <div className="flex justify-between items-center py-2">
+                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Issue Date</span>
+                              <span className="font-semibold text-white text-sm">{getDateLabel(result)}</span>
                             </div>
                           </div>
                         </>
@@ -533,7 +576,7 @@ function Verification() {
                       <button
                         onClick={handleDownload}
                         disabled={downloading}
-                        className="flex-1 rounded-xl bg-brand-500/20 py-3 font-semibold text-brand-300 hover:bg-brand-500/30 transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-500 py-3.5 font-bold text-white shadow-lg shadow-indigo-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm"
                       >
                         {downloading ? (
                           <>
@@ -541,11 +584,11 @@ function Verification() {
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                             </svg>
-                            Generating PDF...
+                            Generating Certificate...
                           </>
                         ) : (
                           <>
-                            <Download size={16} /> Download Certificate
+                            <Download size={16} /> Download Official PDF
                           </>
                         )}
                       </button>
@@ -554,10 +597,10 @@ function Verification() {
                         <button
                           onClick={openEditModal}
                           type="button"
-                          className="rounded-xl border border-white/20 bg-white/5 px-4 py-3 font-semibold text-slate-200 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 text-sm"
+                          className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3.5 font-semibold text-slate-200 hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 text-sm"
                           title="Administrator Only: Edit Certificate"
                         >
-                          <Edit2 size={15} className="text-brand-300" /> Edit Details
+                          <Edit2 size={15} className="text-indigo-400" /> Edit Record
                         </button>
                       )}
                     </div>

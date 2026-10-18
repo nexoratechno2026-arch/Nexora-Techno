@@ -1,109 +1,122 @@
-import { motion } from "framer-motion";
+import React from "react";
+import { Link } from "react-router-dom";
 
-function AboutSection() {
+export default function AboutSection() {
   return (
-    <section id="about" className="bg-white py-20 lg:py-32">
-      <div className="mx-auto max-w-[1200px] px-6">
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
-          {/* Left: Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 p-1 shadow-2xl shadow-blue-500/20">
-              <div className="rounded-[22px] bg-[#F8FAFC] p-10">
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { label: "Design", icon: "🎨", color: "bg-blue-50" },
-                    { label: "Engineering", icon: "⚙️", color: "bg-slate-50" },
-                    { label: "AI & Automation", icon: "🤖", color: "bg-blue-50" },
-                    { label: "Growth", icon: "📈", color: "bg-slate-50" },
-                  ].map((item) => (
-                    <div key={item.label} className={`${item.color} rounded-2xl p-6 text-center transition-all duration-200 hover:-translate-y-1`}>
-                      <div className="text-3xl mb-2">{item.icon}</div>
-                      <p className="text-sm font-bold text-slate-700">{item.label}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 p-5 text-center text-white">
-                  <p className="text-2xl font-black">Nexora Techno</p>
-                  <p className="text-sm text-blue-100 mt-1">Leading IT Software Company</p>
-                </div>
-              </div>
-            </div>
-            {/* Floating badge */}
-            <div className="absolute -top-4 -right-4 rounded-2xl bg-white px-5 py-3 shadow-xl border border-slate-100">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Based in</p>
-              <p className="text-sm font-black text-slate-900">Salem, Tamil Nadu</p>
-            </div>
-          </motion.div>
+    <section id="about" className="bg-surface border-b border-rule">
+      <div className="container-content py-16 sm:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-12 items-start">
 
-          {/* Right: Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <span className="mb-4 inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">
-              About Nexora
-            </span>
-            <h2 className="font-display text-4xl font-black text-slate-900 sm:text-5xl leading-tight">
-              We Engineer <br />
-              <span className="bg-gradient-to-r from-blue-700 to-blue-400 bg-clip-text text-transparent">
-                Market Leaders
-              </span>
-            </h2>
-            <p className="mt-6 text-lg text-slate-500 leading-relaxed">
-              Nexora Techno is an <strong>MSME Registered</strong> IT Software Company based in <strong>Salem, Tamil Nadu</strong>. We specialize in custom software development, web services, AI automation, and providing top-tier professional IT Internships to help students launch their careers.
+          {/* Left — narrative */}
+          <div className="space-y-6">
+            <div>
+              <p className="eyebrow mb-3">About</p>
+              <h2 className="heading-display text-display-sm text-ink">
+                A small software team in Salem.
+              </h2>
+            </div>
+
+            <p className="text-body-md text-ink-muted leading-relaxed max-w-[55ch]">
+              Nexora Techno is a software development and practical EdTech company
+              based in Salem, Tamil Nadu. We started because local businesses and
+              institutions needed straightforward digital tools — not expensive
+              agencies or generic SaaS platforms — and engineering students needed
+              real project experience, not just certificates.
             </p>
 
-            {/* MSME Badge */}
-            <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border-2 border-blue-100 bg-blue-50 px-5 py-3">
-              <span className="text-2xl">🏛️</span>
-              <div>
-                <p className="text-xs font-black uppercase tracking-widest text-blue-600">MSME Registered</p>
-                <p className="text-sm font-bold text-slate-800">Govt. of India – Salem, Tamil Nadu</p>
+            <p className="text-body-md text-ink-muted leading-relaxed max-w-[55ch]">
+              We work directly with clients and students. There is no account
+              management layer. The person you talk to is the person building
+              the system.
+            </p>
+
+            {/* Operating principles */}
+            <div className="pt-2">
+              <h3 className="text-sm font-semibold text-ink mb-4 uppercase tracking-wide">
+                How we work
+              </h3>
+              <ul className="space-y-2.5 text-sm text-ink-muted">
+                {[
+                  "Direct access — talk to the engineers building your system",
+                  "Scope before code — we understand before we start building",
+                  "Clear milestones — you know what is coming at each stage",
+                  "Handover with documentation — you own what we build",
+                  "Local accountability — we are based here and available",
+                ].map((p) => (
+                  <li key={p} className="flex items-start gap-2">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent-600 flex-shrink-0" aria-hidden="true" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link to="/about" className="btn-primary">
+                More about us
+              </Link>
+              <Link to="/projects" className="btn-secondary">
+                View our work
+              </Link>
+            </div>
+          </div>
+
+          {/* Right — founder card */}
+          <div className="space-y-4">
+            {/* Founder */}
+            <div className="p-6 rounded border border-rule bg-paper">
+              <div className="flex items-center gap-4 mb-4">
+                <img
+                  src="/Kapil Js.png"
+                  alt="Kapil JS — Founder & CEO, Nexora Techno"
+                  className="w-14 h-14 rounded-full object-cover object-top border border-rule"
+                  loading="lazy"
+                />
+                <div>
+                  <p className="font-sans font-semibold text-[15px] text-ink">Kapil JS</p>
+                  <p className="text-[12px] text-ink-muted">Founder &amp; CEO</p>
+                </div>
+              </div>
+              <p className="text-[13px] text-ink-muted leading-relaxed">
+                Building practical software and guiding student projects from Salem, Tamil Nadu.
+              </p>
+              <div className="mt-4 flex items-center gap-3">
+                <a
+                  href="https://www.linkedin.com/in/kapil-js-99a37130a"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-ink-muted hover:text-accent-600 transition-colors flex items-center gap-1.5"
+                  aria-label="Kapil JS on LinkedIn (opens in new tab)"
+                >
+                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor" aria-hidden="true">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z"/>
+                  </svg>
+                  LinkedIn
+                </a>
               </div>
             </div>
 
-            <div className="mt-10 grid gap-4">
-              {[
-                "High-Conversion Software & Web Development",
-                "Scalable Full-Stack Engineering",
-                "AI Workflow Automation & Integration",
-                "Professional IT Internships in Salem",
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-4 group">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 transition-transform group-hover:scale-110">
-                    <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M2 6l3 3 5-5" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-semibold text-slate-700">{item}</p>
-                </div>
-              ))}
+            {/* Company details */}
+            <div className="p-5 rounded border border-rule bg-paper text-[12px] text-ink-muted space-y-2.5">
+              <p className="font-semibold text-ink text-[13px]">Company details</p>
+              <p>Nexora Techno</p>
+              <p>241, East Permanur, Anna Park Backside<br/>Salem — 636007, Tamil Nadu, India</p>
+              <p>
+                <a href="tel:+919345121988" className="hover:text-accent-600 transition-colors">
+                  +91 93451 21988
+                </a>
+              </p>
+              <p>
+                <a href="mailto:nexoratechno2026@gmail.com" className="hover:text-accent-600 transition-colors">
+                  nexoratechno2026@gmail.com
+                </a>
+              </p>
+              <p className="text-[11px] text-ink-muted pt-1">MSME Registered Enterprise</p>
             </div>
+          </div>
 
-            <div className="mt-10">
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-[1.02]"
-              >
-                Start a Conversation
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
   );
 }
-
-export default AboutSection;

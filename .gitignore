@@ -5,3 +5,4 @@ dist
 *.local
 .netlify
 *.timestamp-*.mjs
+UI_CHANGES_README.md

@@ -10,6 +10,7 @@ import Internship from "./pages/Internship";
 import Verification from "./pages/Verification";
 import AdminInterns from "./pages/AdminInterns";
 import ServiceDetail from "./pages/ServiceDetail";
+import Services from "./pages/Services";
 import Projects from "./pages/Projects";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
@@ -51,26 +52,25 @@ const InternProfile     = lazy(() => import("./lms/pages/intern/Profile"));
 
 const LMSFallback = () => (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+    <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+  </div>
+);
+
+// Marketing page wrapper — applies the editorial paper background
+const MarketingPage = ({ children }) => (
+  <div className="min-h-screen bg-paper text-ink overflow-x-clip">
+    {children}
   </div>
 );
 
 function ScrollToTopHandler() {
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname.startsWith('/lms')) {
-      document.body.classList.remove('bg-ink');
-      document.body.classList.add('bg-slate-50');
-    } else {
-      document.body.classList.remove('bg-slate-50');
-      document.body.classList.add('bg-ink');
-    }
-
     if (location.hash) {
       const id = location.hash.replace("#", "");
       const target = document.getElementById(id);
       if (target) {
-        const headerOffset = 96;
+        const headerOffset = 72;
         const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
         window.scrollTo({ top, behavior: "smooth" });
         return;
@@ -88,26 +88,36 @@ function App() {
         <Toaster
           position="top-right"
           toastOptions={{
-            style: { background: "#0a1628", color: "#e2e8f0", border: "1px solid rgba(255,255,255,0.08)", fontSize: "14px" },
-            success: { iconTheme: { primary: "#10b981", secondary: "#0a1628" } },
-            error:   { iconTheme: { primary: "#ef4444", secondary: "#0a1628" } },
+            style: {
+              background: "#ffffff",
+              color: "#151515",
+              border: "1px solid #D8D6D0",
+              fontSize: "14px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+            },
+            success: { iconTheme: { primary: "#4F46E5", secondary: "#ffffff" } },
+            error:   { iconTheme: { primary: "#DC2626", secondary: "#ffffff" } },
           }}
         />
         <Suspense fallback={<LMSFallback />}>
           <Routes>
             {/* ── Marketing site ─────────────────────────────────────────────── */}
-            <Route path="/" element={<div className="relative min-h-screen overflow-x-clip bg-white text-slate-900 font-sans"><ScrollToTopHandler /><Home /></div>} />
-            <Route path="/services/:serviceId" element={<div className="overflow-x-clip"><ScrollToTopHandler /><ServiceDetail /></div>} />
-            <Route path="/projects"  element={<><ScrollToTopHandler /><Projects /></>} />
-            <Route path="/about"     element={<><ScrollToTopHandler /><About /></>} />
-            <Route path="/internship" element={<><ScrollToTopHandler /><Internship /></>} />
-            <Route path="/verify"    element={<><ScrollToTopHandler /><Verification /></>} />
+            <Route path="/" element={<MarketingPage><ScrollToTopHandler /><Home /></MarketingPage>} />
+            <Route path="/services" element={<MarketingPage><ScrollToTopHandler /><Services /></MarketingPage>} />
+            <Route path="/services/:serviceId" element={<MarketingPage><ScrollToTopHandler /><ServiceDetail /></MarketingPage>} />
+            <Route path="/projects" element={<MarketingPage><ScrollToTopHandler /><Projects /></MarketingPage>} />
+            <Route path="/about" element={<MarketingPage><ScrollToTopHandler /><About /></MarketingPage>} />
+            <Route path="/internship" element={<MarketingPage><ScrollToTopHandler /><Internship /></MarketingPage>} />
+            <Route path="/edtech" element={<MarketingPage><ScrollToTopHandler /><Internship /></MarketingPage>} />
+            <Route path="/verify" element={<MarketingPage><ScrollToTopHandler /><Verification /></MarketingPage>} />
+            <Route path="/verification" element={<MarketingPage><ScrollToTopHandler /><Verification /></MarketingPage>} />
             <Route path="/admin-data" element={<><ScrollToTopHandler /><AdminInterns /></>} />
-            <Route path="/blog"      element={<><ScrollToTopHandler /><Blog /></>} />
-            <Route path="/blog/:blogId" element={<><ScrollToTopHandler /><BlogPost /></>} />
-            <Route path="/contact"   element={<><ScrollToTopHandler /><Contact /></>} />
-            <Route path="/terms"     element={<><ScrollToTopHandler /><TermsOfService /></>} />
-            <Route path="/privacy"   element={<><ScrollToTopHandler /><PrivacyPolicy /></>} />
+            <Route path="/blog" element={<MarketingPage><ScrollToTopHandler /><Blog /></MarketingPage>} />
+            <Route path="/blog/:blogId" element={<MarketingPage><ScrollToTopHandler /><BlogPost /></MarketingPage>} />
+            <Route path="/contact" element={<MarketingPage><ScrollToTopHandler /><Contact /></MarketingPage>} />
+            <Route path="/terms" element={<MarketingPage><ScrollToTopHandler /><TermsOfService /></MarketingPage>} />
+            <Route path="/privacy" element={<MarketingPage><ScrollToTopHandler /><PrivacyPolicy /></MarketingPage>} />
 
             {/* ── LMS Auth ───────────────────────────────────────────────────── */}
             <Route path="/lms/login"      element={<Login />} />
