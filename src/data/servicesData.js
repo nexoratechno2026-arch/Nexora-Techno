@@ -1,430 +1,230 @@
+// Service pages. Keep the wording plain: say what we do and how, skip the adjectives.
+
 export const servicesData = [
   {
     id: "website-development",
-    title: "Website Development",
-    shortDescription: "Modern, responsive websites designed to establish a strong online presence and convert visitors into leads.",
-    icon: "Globe",
-    category: "Web & Design",
-    heroTitle: "High-Performance Website Development in Salem",
-    heroSubtitle: "Transform your brand with ultra-fast, mobile-responsive, and SEO-optimized business websites crafted for maximum conversion.",
-    problem: "Many Salem & Indian businesses lose potential customers because of outdated, slow, or mobile-unfriendly websites that fail to communicate value and convert traffic into actual business inquiries.",
-    solution: "Nexora Techno designs and develops custom, modern, high-speed websites tailored specifically to your business goals. We blend clean UI/UX with modern frameworks like React and Vite to ensure high speed, accessibility, and high conversion rates.",
+    title: "Websites",
+    category: "Web",
+    shortDescription: "Business websites that load quickly, work on phones, and that you can update yourself.",
+    problem:
+      "A lot of local businesses either have no website, or one that was made years ago, is slow on a phone, and nobody knows how to change. People look you up, can't find the basics, and call someone else.",
+    solution:
+      "We build a site around the few things your customers actually come for: what you do, where you are, prices or a catalogue if you have one, and a quick way to call or WhatsApp you. Then we show you how to edit it.",
     features: [
-      { title: "Mobile-First Responsive Design", description: "Seamless user experience across smartphones, tablets, and desktop displays." },
-      { title: "SEO-Optimized Codebase", description: "Built with search engine best practices, meta markup, and schema for fast Google indexing." },
-      { title: "Ultra-Fast Performance", description: "Optimized asset delivery ensuring sub-second page loads and 90+ PageSpeed scores." },
-      { title: "Lead Generation Integration", description: "Direct WhatsApp triggers, interactive forms, and quick call-to-actions to capture inquiries." },
-      { title: "Custom CMS & Admin Controls", description: "Easy content management without technical complexity or expensive maintenance fees." }
+      { title: "Works on phones first", description: "Most of your visitors are on mobile, so that's where we design and test." },
+      { title: "Fast", description: "Small pages, compressed images, no heavy page builders." },
+      { title: "Easy to contact you", description: "Call, WhatsApp and enquiry form, placed where people look for them." },
+      { title: "Set up for Google", description: "Proper titles, descriptions and business details so search engines can read the site." },
+      { title: "You can edit it", description: "Change text, photos and prices without calling us every time." },
     ],
-    technologies: ["React", "HTML5", "CSS3 / Tailwind", "JavaScript (ES6+)", "Vite", "Node.js"],
-    process: [
-      "Discovery & Business Goals Analysis",
-      "UI/UX Design Wireframing",
-      "Frontend & Responsive Coding",
-      "SEO & Performance Optimization",
-      "Cross-Device Testing & Launch",
-      "Post-Launch Maintenance & Support"
-    ],
-    benefits: [
-      "Professional brand presentation that builds immediate trust",
-      "Increased lead capture with optimized WhatsApp & form triggers",
-      "Higher Google search rankings in local Salem and regional searches",
-      "Complete ownership with zero mandatory monthly software lock-ins"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed", "home-nest"],
+    technologies: ["React", "Tailwind CSS", "Vite", "Node.js"],
+    process: ["A call about your business", "Page list and rough layout", "Design and build", "Your review and changes", "Launch on your domain", "Support after launch"],
+    relevantProjects: ["buddies-unleashed", "home-nest"],
     faq: [
-      {
-        question: "How long does it take to build a business website?",
-        answer: "Standard business websites typically take 1 to 2 weeks. Custom enterprise websites with complex features can take 3 to 4 weeks depending on scope."
-      },
-      {
-        question: "Will my website work well on mobile phones?",
-        answer: "Yes, 100%. All Nexora Techno websites are built with a mobile-first design strategy, ensuring flawless performance on all screens."
-      },
-      {
-        question: "Do you handle domain and website hosting setup?",
-        answer: "Yes, we assist with domain registration, SSL setup, cloud hosting configuration, and professional email setup."
-      }
-    ]
+      { question: "How long does a website take?", answer: "A normal business site takes one to two weeks once we have your content. Bigger sites with custom features take three to four." },
+      { question: "Will it work on mobile?", answer: "Yes. We design for phones first and check it on real devices before launch." },
+      { question: "Can you handle the domain and hosting?", answer: "Yes. We can register the domain, set up hosting and SSL, and create business email addresses for you. Everything is in your name." },
+    ],
   },
   {
     id: "software-development",
-    title: "Custom Software Development",
-    shortDescription: "Business-specific software built around your exact operational workflows, management needs, and metrics.",
-    icon: "Code2",
-    category: "Engineering",
-    heroTitle: "Custom Software Development for Growing Enterprises",
-    heroSubtitle: "Replace fragmented spreadsheets and off-the-shelf limits with tailor-made software engineered for your business.",
-    problem: "Off-the-shelf software often comes with unnecessary monthly subscription costs, missing crucial features, or forcing your operational workflow to adapt to rigid external software limitations.",
-    solution: "We build custom web & cloud software aligned 100% with your business processes—ranging from billing, inventory management, customer portals, and internal productivity dashboards.",
+    title: "Custom software",
+    category: "Software",
+    shortDescription: "Billing, stock, bookings and client portals, built around the way your business already runs.",
+    problem:
+      "Many businesses run on a mix of Excel sheets, notebooks and WhatsApp groups. It works until it doesn't: data gets lost, two people update the same thing, and nobody can see the full picture.",
+    solution:
+      "We sit with the people who will use the software, write down what they do each day, and build a tool that does exactly that. Nothing extra you'll have to pay for or learn.",
     features: [
-      { title: "Tailored Business Logic", description: "Engineered around your exact daily operations, roles, approval workflows, and business rules." },
-      { title: "Scalable Cloud Architecture", description: "Built with Node.js, Python, and robust SQL/NoSQL databases to support growing user loads." },
-      { title: "Role-Based Security", description: "Granular access control ensuring sensitive data is protected and restricted to authorized personnel." },
-      { title: "Real-time Reporting & Analytics", description: "Custom dashboards for revenue, inventory tracking, attendance, and operational metrics." },
-      { title: "API Integration", description: "Seamless connection with payment gateways, SMS/WhatsApp gateways, and existing tools." }
+      { title: "Built around your process", description: "Your steps, your approval rules, your terms. Not a generic template." },
+      { title: "Different access for different people", description: "Staff see what they need; owners see everything." },
+      { title: "Reports you'll use", description: "Daily sales, stock levels, attendance, whatever you check most." },
+      { title: "Connects to what you have", description: "Payment gateways, SMS and WhatsApp, and existing databases." },
     ],
-    technologies: ["Node.js", "Python", "Flask", "React", "MySQL", "MongoDB", "REST APIs"],
-    process: [
-      "Requirement Workshop & Workflow Mapping",
-      "System Architecture & DB Design",
-      "Sprint Development & Incremental Demos",
-      "Security Audits & Data Testing",
-      "Deployment & User Training",
-      "Continuous Enhancements"
-    ],
-    benefits: [
-      "Eliminate recurring per-user SaaS license fees",
-      "Drastically reduce human data entry errors and manual paperwork",
-      "Gain total control and security over proprietary business data",
-      "Scale features seamlessly as your business grows"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
+    technologies: ["React", "Node.js", "Python", "MySQL", "MongoDB", "REST APIs"],
+    process: ["Watch how the work is done today", "Write down what the first version must do", "Build in short rounds you can try", "Move your existing data across", "Train your staff", "Support and changes"],
+    relevantProjects: ["codexpertai", "varavu-selavu"],
     faq: [
-      {
-        question: "Why should we choose custom software over ready-made SaaS tools?",
-        answer: "Custom software belongs to you forever with zero user subscription costs. It fits your exact process rather than forcing you to adjust your business."
-      },
-      {
-        question: "Can custom software integrate with our existing database or accounting system?",
-        answer: "Yes, we build custom REST APIs and connectors to link your software with existing databases, payment gateways, and WhatsApp/SMS tools."
-      }
-    ]
-  },
-  {
-    id: "ai-automation",
-    title: "AI Automation",
-    shortDescription: "Automate repetitive business tasks and customer interactions using modern AI models and intelligent workflows.",
-    icon: "Bot",
-    category: "AI & Innovation",
-    heroTitle: "AI Automation Solutions for Modern Businesses",
-    heroSubtitle: "Leverage artificial intelligence, smart agents, and workflow bots to save hours of manual effort daily.",
-    problem: "Businesses spend hundreds of hours manually responding to repeat inquiries, classifying customer messages, extracting document data, and performing repetitive data entry tasks.",
-    solution: "Nexora Techno deploys practical AI automation tools, custom AI chat agents, document processing pipelines, and n8n workflow triggers that automate routines and boost staff productivity.",
-    features: [
-      { title: "Custom AI Chatbots & Support Agents", description: "24/7 intelligent customer response bots connected to your website and WhatsApp." },
-      { title: "Document & Invoice OCR Processing", description: "Extract key figures from invoices, receipts, and order forms directly into database records." },
-      { title: "Lead Qualification Workflows", description: "Automatically triage leads, send follow-ups, and notify your sales team instantly." },
-      { title: "Prompt Engineering & Custom Models", description: "Tailored AI prompts trained on your operational data and brand guidelines." }
+      { question: "Why not just use ready-made software?", answer: "If something off the shelf fits, use it, and we'll tell you so. Custom software makes sense when your process is different, or the per-user subscriptions add up." },
+      { question: "Can it connect to our existing database or accounting system?", answer: "Usually, yes. We'll check what you use and tell you what's possible before we start." },
     ],
-    technologies: ["AI APIs (OpenAI/Anthropic)", "n8n Automation", "Python", "Node.js", "Webhooks", "JSON Schema"],
-    process: [
-      "Automation Opportunity Audit",
-      "AI Workflow Prototype Development",
-      "API & Tooling Integration",
-      "Accuracy Testing & Guardrail Setup",
-      "Production Deployment",
-      "Monitoring & Tuning"
-    ],
-    benefits: [
-      "24/7 instant customer inquiry responses without extra headcount",
-      "Save 15+ hours per week on manual data entry and email sorting",
-      "Zero human error in structured data extraction and routing",
-      "Stay ahead of local competitors with modern AI capabilities"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
-    faq: [
-      {
-        question: "Is AI automation expensive for small or medium businesses?",
-        answer: "Not at all. We utilize pay-per-use AI APIs and open automation tools like n8n, making it extremely cost-effective with immediate ROI."
-      },
-      {
-        question: "Can AI respond to WhatsApp messages automatically?",
-        answer: "Yes, we can build custom WhatsApp AI assistants that qualify leads, answer FAQs, and book appointments directly."
-      }
-    ]
   },
   {
     id: "ecommerce-development",
-    title: "E-commerce Development",
-    shortDescription: "Build scalable online stores with product catalogs, shopping carts, order tracking, and UPI/Payment gateway integration.",
-    icon: "ShoppingBag",
-    category: "Web & Retail",
-    heroTitle: "High-Converting E-commerce Website Development",
-    heroSubtitle: "Launch a powerful online store designed to showcase products, accept payments smoothly, and drive repeat customer purchases.",
-    problem: "Selling products online without a optimized, mobile-friendly store leads to high cart abandonment, payment failure drops, and lack of customer trust.",
-    solution: "We build custom, fast-loading e-commerce websites integrated with UPI, Razorpay, PhonePe, credit card gateways, inventory tracking, and direct WhatsApp order notifications.",
+    title: "Online stores",
+    category: "Web",
+    shortDescription: "A shop with your catalogue, WhatsApp ordering and UPI payments, that you manage yourself.",
+    problem:
+      "Selling through Instagram DMs and WhatsApp works for a while, but orders get missed, stock goes out of sync, and customers can't browse everything you have.",
+    solution:
+      "We build a store with your products, prices and photos, connect UPI and card payments, and keep WhatsApp ordering for customers who prefer it. You get a simple admin page to add products and see orders.",
     features: [
-      { title: "Custom Product Catalog & Filtering", description: "Clean category browsing, search, multi-image galleries, and variant selections." },
-      { title: "Seamless Checkout & UPI Integration", description: "Fast 1-click checkout supporting Razorpay, UPI, Credit/Debit cards, and Net Banking." },
-      { title: "Direct WhatsApp Order Dispatch", description: "Allow customers to place orders directly through WhatsApp for instant engagement." },
-      { title: "Admin Management Dashboard", description: "Manage products, track orders, update inventory, and manage coupons with ease." },
-      { title: "Mobile-Optimized Shopping Experience", description: "Lightning-fast image loading and touch-friendly interface built for mobile shoppers." }
+      { title: "Catalogue", description: "Categories, search, photos and product variants like size or colour." },
+      { title: "Payments", description: "UPI, cards and net banking through Razorpay or a similar gateway." },
+      { title: "WhatsApp orders", description: "Customers can send their cart to you on WhatsApp if they'd rather." },
+      { title: "Admin page", description: "Add products, change prices, track orders and stock." },
     ],
-    technologies: ["React", "Node.js", "MongoDB / MySQL", "Razorpay API", "WhatsApp Business API", "Tailwind CSS"],
-    process: [
-      "Store Planning & Architecture",
-      "UX & Cart Experience Design",
-      "Catalog & Payment Gateway Setup",
-      "Order Management & Email/SMS Alerts",
-      "Security & Performance Testing",
-      "Store Launch & Go-Live Support"
-    ],
-    benefits: [
-      "Direct-to-consumer sales channel with zero marketplace commission fees",
-      "Smooth UPI checkout experience tailored for Indian shoppers",
-      "Real-time inventory and sales tracking dashboard",
-      "High conversion rates with instant WhatsApp order confirmations"
-    ],
-    relevantProjects: ["home-nest", "varavu-selavu"],
+    technologies: ["React", "Node.js", "MongoDB", "Razorpay", "WhatsApp Business API"],
+    process: ["Products, pricing and delivery rules", "Store layout", "Build and payment setup", "Add your products", "Test orders end to end", "Launch"],
+    relevantProjects: ["home-nest"],
     faq: [
-      {
-        question: "Which payment gateways do you support?",
-        answer: "We integrate all major Indian payment solutions including Razorpay, PayU, PhonePe, Paytm, and custom UPI QR gateways."
-      },
-      {
-        question: "Can I update products and prices myself after the website launch?",
-        answer: "Yes! We provide an intuitive admin dashboard where you can easily add, edit, or remove products without coding skills."
-      }
-    ]
+      { question: "Which payment gateways do you support?", answer: "Razorpay, PayU, PhonePe and Paytm, or a simple UPI QR if you'd rather avoid gateway fees." },
+      { question: "Can I add products myself later?", answer: "Yes. You get an admin page for products, prices and orders. No coding needed." },
+    ],
+  },
+  {
+    id: "ai-automation",
+    title: "Automation and AI",
+    category: "Automation",
+    shortDescription: "Using AI for the boring, repetitive parts of the job, where it actually saves time.",
+    problem:
+      "Your team answers the same ten questions every day, types figures from invoices into a sheet, and chases people for follow-ups. It's slow, and mistakes creep in.",
+    solution:
+      "We look for the tasks that are repetitive and rule-based, and hand those to an AI model or a simple workflow. A person still checks anything important.",
+    features: [
+      { title: "Answering common questions", description: "A website or WhatsApp assistant that handles routine enquiries and passes the rest to you." },
+      { title: "Reading documents", description: "Pulling figures from invoices, receipts and forms into a sheet or database." },
+      { title: "Follow-ups", description: "Sorting new enquiries and sending reminders automatically." },
+    ],
+    technologies: ["OpenAI / Anthropic APIs", "n8n", "Python", "Node.js", "Webhooks"],
+    process: ["List the repetitive tasks", "Pick one to try first", "Build and test on real examples", "Run it alongside your team", "Extend if it works"],
+    relevantProjects: ["codexpertai", "varavu-selavu"],
+    faq: [
+      { question: "Is this expensive for a small business?", answer: "Usually not. AI APIs are pay-per-use, and tools like n8n are free to self-host. We'll estimate running costs before you commit." },
+      { question: "Can AI reply on WhatsApp for us?", answer: "Yes. It can answer common questions and take bookings, and hand over to a person when it should." },
+    ],
   },
   {
     id: "business-automation",
-    title: "Business Automation",
-    shortDescription: "Automate internal workflows, customer management, inventory alerts, reporting, and operational task routing.",
-    icon: "Zap",
-    category: "Operations",
-    heroTitle: "Streamline Business Operations with Smart Automation",
-    heroSubtitle: "Connect your team's software tools into automated pipelines that eliminate repetitive work and boost speed.",
-    problem: "Businesses lose momentum when team members spend half their working hours transferring data between spreadsheets, email accounts, accounting software, and messaging apps.",
-    solution: "Nexora Techno designs end-to-end business automation pipelines using webhooks, database triggers, and custom scripts to connect all your business tools effortlessly.",
+    title: "Connecting your tools",
+    category: "Automation",
+    shortDescription: "Forms, Google Sheets, WhatsApp and email passing data to each other, so nobody copies it by hand.",
+    problem:
+      "Enquiries arrive on the website, someone copies them into a sheet, someone else messages the customer. Every hand-off is a chance to forget something.",
+    solution:
+      "We connect the tools you already use so the data moves on its own: a form entry lands in your sheet, the customer gets a confirmation, and your team gets a WhatsApp alert.",
     features: [
-      { title: "Automated WhatsApp & SMS Notifications", description: "Send automated booking confirmations, payment reminders, and status updates." },
-      { title: "Lead Routing & CRM Sync", description: "Automatically capture incoming website leads into Google Sheets, Notion, or custom CRMs." },
-      { title: "Inventory & Billing Syncing", description: "Trigger re-order alerts and automated invoice generation upon sales confirmation." },
-      { title: "Automated Scheduled Reports", description: "Receive daily summary reports on revenue, student enrollments, or tasks directly on Telegram or WhatsApp." }
+      { title: "Notifications", description: "Booking confirmations, payment reminders and status updates on WhatsApp or SMS." },
+      { title: "Enquiries into your sheet or CRM", description: "Every lead saved in one place, automatically." },
+      { title: "Billing and stock", description: "Invoices generated and low-stock alerts sent when a sale is made." },
+      { title: "Daily summaries", description: "A short report on sales or enrolments sent to your phone each morning." },
     ],
-    technologies: ["n8n", "Node.js", "Python Scripts", "Webhooks", "Google Sheets API", "WhatsApp Cloud API"],
-    process: [
-      "Workflow Audit & Bottleneck Mapping",
-      "Automation Architecture Plan",
-      "Scripting & Integration Setup",
-      "Testing with Live Sample Data",
-      "Team Onboarding & Monitoring",
-      "Quarterly Workflow Audits"
-    ],
-    benefits: [
-      "Accelerate response times to client inquiries from hours to seconds",
-      "Free up operational team members for high-value growth initiatives",
-      "Reduce human error in invoice generation and lead tracking",
-      "Complete visibility over daily operations through automated alerts"
-    ],
-    relevantProjects: ["varavu-selavu", "buddies-unleashed"],
+    technologies: ["n8n", "Node.js", "Python", "Google Sheets API", "WhatsApp Cloud API"],
+    process: ["Map where data comes from and goes", "Connect the first two tools", "Test with real entries", "Add the rest"],
+    relevantProjects: ["varavu-selavu"],
     faq: [
-      {
-        question: "Can you automate our existing Excel or Google Sheet workflows?",
-        answer: "Absolutely. We can connect your Google Sheets to WhatsApp alerts, CRM software, email databases, and payment alerts seamlessly."
-      }
-    ]
+      { question: "Can you automate our existing Google Sheets?", answer: "Yes. Sheets connect easily to WhatsApp, email and most other tools." },
+    ],
   },
   {
     id: "web-app-development",
-    title: "Web & Mobile Applications",
-    shortDescription: "Modern progressive applications for customers, internal staff, and digital platforms built with React and modern tech.",
-    icon: "Smartphone",
-    category: "Engineering",
-    heroTitle: "Scalable Web & Mobile Application Engineering",
-    heroSubtitle: "Deliver engaging cross-platform app experiences with responsive frontend architectures and secure backends.",
-    problem: "Off-the-shelf software often fails to deliver progressive web experience, offline usability, or rapid mobile interface execution.",
-    solution: "We build modern Progressive Web Apps (PWA) and dynamic React-based applications with fast state management, clean design systems, and real-time backend synchronization.",
+    title: "Web and mobile apps",
+    category: "Software",
+    shortDescription: "Apps with user accounts and a proper backend, for your customers or your staff. Android apps in Kotlin.",
+    problem:
+      "Some ideas need more than a website: people logging in, saving their own data, getting updates. That needs a real application behind it.",
+    solution:
+      "We build the app and the server it talks to. For most business apps a web app that installs from the browser (a PWA) is enough; when you need a native Android app, we build that in Kotlin.",
     features: [
-      { title: "Cross-Platform PWA Support", description: "Install directly on desktop and mobile devices without app store delays." },
-      { title: "Dynamic Real-Time Dashboards", description: "Interactive charts, live status updates, and fast table filtering." },
-      { title: "Secure Authentication & Roles", description: "JWT, OAuth, and encrypted session management for safe multi-user access." },
-      { title: "Offline Data Capability", description: "Local caching ensuring critical application tasks work even on slow connections." }
+      { title: "Accounts and roles", description: "Secure sign-in, and different access for different users." },
+      { title: "Installs from the browser", description: "A PWA works on phone and desktop without going through an app store." },
+      { title: "Works on poor connections", description: "Key screens keep working when the network is slow." },
+      { title: "Native Android when needed", description: "Kotlin and Jetpack Compose, like our Varavu Selavu app." },
     ],
-    technologies: ["React", "JavaScript", "Node.js", "PWA", "Supabase", "MongoDB"],
-    process: [
-      "Wireframing & App Blueprint",
-      "Frontend UI Component Building",
-      "State Management & API Integration",
-      "Performance & Device Testing",
-      "PWA Packaging & Server Deployment",
-      "Ongoing App Upgrades"
-    ],
-    benefits: [
-      "Provide app-like experiences without requiring users to download heavy mobile packages",
-      "Single codebase reducing ongoing development and support costs",
-      "High performance on low-bandwidth mobile networks",
-      "Immediate over-the-air updates without app store approval waits"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
+    technologies: ["React", "Node.js", "Kotlin", "Jetpack Compose", "Firebase", "MongoDB"],
+    process: ["What users need to do", "Screens and data", "Build in rounds", "Test with real users", "Release"],
+    relevantProjects: ["codexpertai", "varavu-selavu"],
     faq: [
-      {
-        question: "Is a Progressive Web Application (PWA) better than a native mobile app?",
-        answer: "For most business apps, yes! PWAs install directly from the browser, load instantly, work offline, and cost a fraction of building separate iOS and Android apps."
-      }
-    ]
+      { question: "Is a PWA better than a native app?", answer: "For most business apps it's cheaper and faster to ship, and works on both Android and iPhone. If you need deep phone features or the Play Store, go native." },
+    ],
   },
   {
     id: "seo",
-    title: "Search Engine Optimization (SEO)",
-    shortDescription: "Improve local and regional Google search visibility to connect your business with high-intent local clients.",
-    icon: "TrendingUp",
-    category: "Growth & Analytics",
-    heroTitle: "Result-Driven Local SEO & Visibility in Salem",
-    heroSubtitle: "Put your website at the top of Google search results when local businesses and customers search for your services.",
-    problem: "Having a website is useless if no one can find it on Google when searching for products or services in Salem and Tamil Nadu.",
-    solution: "Nexora Techno implements technical SEO, local schema markup, page speed optimization, and targeted content strategies to boost rankings for high-value business keywords.",
+    title: "Getting found on Google",
+    category: "Marketing",
+    shortDescription: "Page structure, Google Business Profile and local search setup.",
+    problem:
+      "If someone in Salem searches for what you sell and you don't show up, you've lost them before they knew you existed.",
+    solution:
+      "We fix the technical basics on your site, set up and fill out your Google Business Profile, and make sure your name, address and phone number match everywhere.",
     features: [
-      { title: "Technical & On-Page SEO", description: "Meta tags, clean URL structures, semantic HTML tags, and canonical setup." },
-      { title: "Local Salem Business SEO", description: "Google Business Profile optimization, Salem geotargeting, and local citation schema." },
-      { title: "Page Speed & Core Web Vitals", description: "Compress assets, eliminate render-blocking scripts, and achieve 90+ PageSpeed scores." },
-      { title: "Schema Markup & Rich Snippets", description: "Structured JSON-LD code for organization, service, pricing, and FAQ snippets." }
+      { title: "Technical fixes", description: "Titles, descriptions, headings, speed and structured data." },
+      { title: "Google Business Profile", description: "Photos, hours, categories and posts, so you show on Maps." },
+      { title: "Search Console", description: "Set up so you can see what people search to find you." },
     ],
-    technologies: ["Google Search Console", "Google Analytics 4", "JSON-LD Schema", "Lighthouse", "Vite SSR/Static Optimization"],
-    process: [
-      "Technical SEO Audit",
-      "Keyword & Competitor Research",
-      "On-Page Optimization & Schema Setup",
-      "Core Web Vitals Performance Tuning",
-      "Google Business Profile Linkage",
-      "Monthly Ranking & Traffic Reporting"
-    ],
-    benefits: [
-      "Consistent stream of organic, high-intent leads without paying for ad clicks",
-      "Dominant local presence in Salem, Erode, Namakkal, and Tamil Nadu search results",
-      "Improved brand authority and online credibility",
-      "Long-term value that compounds over time"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "home-nest"],
+    technologies: ["Google Search Console", "Google Analytics 4", "Structured data", "Lighthouse"],
+    process: ["Check where you stand", "Fix the site", "Set up the Business Profile", "Review after a month"],
+    relevantProjects: ["home-nest", "buddies-unleashed"],
     faq: [
-      {
-        question: "How soon can we see SEO results on Google?",
-        answer: "Local SEO optimizations in Salem typically begin showing improved search positions and local maps visibility within 4 to 8 weeks."
-      }
-    ]
+      { question: "How soon will we see results?", answer: "Local changes usually start to show in four to eight weeks. Nobody can promise a ranking, and you should be wary of anyone who does." },
+    ],
   },
   {
     id: "full-stack-development",
-    title: "Full Stack Development",
-    shortDescription: "End-to-end full stack web applications with modern frontends, robust REST APIs, scalable database architectures, and seamless cloud deployments.",
-    icon: "Layers",
-    category: "Engineering",
-    heroTitle: "Scalable Full Stack Web Application Development",
-    heroSubtitle: "Build robust, scalable, and responsive web applications from database modeling to intuitive user interfaces.",
-    problem: "Businesses often suffer when separate frontend and backend systems aren't designed to work together, resulting in sluggish performance, data synchronization bugs, and expensive maintenance.",
-    solution: "Nexora Techno delivers unified full stack systems using modern JavaScript/TypeScript, React, Node.js, and relational or NoSQL databases. We build cohesive architectures with end-to-end security, authentication, and cloud scalability.",
+    title: "Full stack development",
+    category: "Software",
+    shortDescription: "The whole application, database to screen, built by one team.",
+    problem:
+      "When the frontend, backend and database are built by different people who never talk, things break at the joins.",
+    solution:
+      "One small team builds the database, the server and the interface together, so changes in one place don't surprise the others.",
     features: [
-      { title: "Custom API & Microservice Engineering", description: "Secure, high-throughput REST and GraphQL APIs with input validation and rate limiting." },
-      { title: "Database Modeling & Optimization", description: "Normalized relational schemas or flexible NoSQL architectures in PostgreSQL and MongoDB." },
-      { title: "Authentication & Role-Based Access", description: "JWT, OAuth, and multi-tenant permission controls designed for enterprise security." },
-      { title: "Responsive Frontend Integration", description: "High-performance reactive interfaces built with React, Vite, and modern styling." },
-      { title: "CI/CD & Cloud Deployment", description: "Automated test runs, containerization with Docker, and cloud hosting on VPS or AWS." }
+      { title: "Database design", description: "Tables and relationships planned before code." },
+      { title: "APIs", description: "Clean, documented endpoints your other tools can use." },
+      { title: "Interface", description: "React frontends that are quick and easy to use." },
+      { title: "Taking over old code", description: "We can review an existing app, fix what's slow, and keep building on it." },
     ],
-    technologies: ["React", "Node.js", "Express.js", "MongoDB", "PostgreSQL", "REST APIs", "Tailwind CSS", "Docker"],
-    process: [
-      "Requirements & Database Schema Design",
-      "API Architecture & Authentication Setup",
-      "Frontend UI Component Engineering",
-      "System Integration & End-to-End Testing",
-      "Staging Review & Client Walkthrough",
-      "Production Deployment & Monitoring"
-    ],
-    benefits: [
-      "One accountable team handling both frontend and backend seamlessly",
-      "Fast, reliable data processing with optimized database queries",
-      "Scalable foundation ready to grow alongside your user base",
-      "Complete source code ownership with clean, documented code"
-    ],
-    relevantProjects: ["codexpertai", "varavu-selavu", "buddies-unleashed"],
+    technologies: ["React", "Node.js", "Express", "PostgreSQL", "MongoDB", "Docker"],
+    process: ["Requirements", "Data model", "Build", "Test", "Deploy", "Maintain"],
+    relevantProjects: ["codexpertai"],
     faq: [
-      {
-        question: "What tech stack do you recommend for full stack web applications?",
-        answer: "We primarily work with React, Node.js, Express, and PostgreSQL/MongoDB (the MERN stack or PERN stack), ensuring rapid development, excellent performance, and easy maintainability."
-      },
-      {
-        question: "Can you take over and upgrade an existing application?",
-        answer: "Yes. We can audit your current codebase, optimize database bottlenecks, refactor legacy code, and add new capabilities."
-      }
-    ]
+      { question: "Which stack do you use?", answer: "Mostly React and Node.js with PostgreSQL or MongoDB. If you already have a stack, we'll usually stick with it." },
+      { question: "Can you take over an existing app?", answer: "Yes. We'll read the code first and tell you honestly what state it's in." },
+    ],
   },
   {
     id: "ui-ux-design",
-    title: "UI/UX Designing",
-    shortDescription: "User-centered interface design, interactive Figma prototypes, and complete design systems created for frictionless digital experiences.",
-    icon: "Layout",
-    category: "Design & Creative",
-    heroTitle: "Human-Centered UI/UX Design & Prototyping",
-    heroSubtitle: "Transform user impressions with clean, modern, and intuitive digital product interfaces engineered for maximum engagement and conversion.",
-    problem: "Cluttered layouts, confusing navigation, and inconsistent visual design frustrate visitors, leading to high bounce rates, low customer trust, and abandoned checkout flows.",
-    solution: "Nexora Techno designs clean, engaging, and accessible user interfaces grounded in real user behavior, usability best practices, and systematic Figma design libraries.",
+    title: "Design",
+    category: "Design",
+    shortDescription: "Wireframes and clickable Figma prototypes, before or instead of building.",
+    problem:
+      "Building straight away without a plan is how you end up paying to rebuild screens twice.",
+    solution:
+      "We sketch the screens, make a clickable prototype in Figma, and test it with a few real users before anyone writes code.",
     features: [
-      { title: "User Journey & Wireframing", description: "Low-fidelity wireframes that establish intuitive site architecture and content hierarchy." },
-      { title: "High-Fidelity Interactive Prototypes", description: "Clickable Figma prototypes simulating exact app and website interactions before coding." },
-      { title: "Design Systems & Component Libraries", description: "Reusable typography tokens, color palettes, and interface components for visual consistency." },
-      { title: "Mobile & Responsive Layouts", description: "Pixel-perfect visual design optimized specifically for smartphone and desktop screens." },
-      { title: "Usability Testing & Feedback Loops", description: "Practical user testing to eliminate friction points and improve conversion rates." }
+      { title: "Wireframes", description: "Quick layouts to agree on what goes where." },
+      { title: "Clickable prototypes", description: "Something you can tap through on your phone and show others." },
+      { title: "Design system", description: "Colours, type and components written down so the product stays consistent." },
     ],
-    technologies: ["Figma", "Adobe XD", "Wireframing", "Design Systems", "Prototyping", "Usability Testing"],
-    process: [
-      "User & Competitor Research",
-      "Information Architecture & Wireframes",
-      "Visual Style & Design System Creation",
-      "High-Fidelity Figma Prototyping",
-      "Client Review & Interactive Walkthrough",
-      "Developer Hand-off with Design Specs"
-    ],
-    benefits: [
-      "Noticeably higher user retention and satisfaction",
-      "Clear visual hierarchy that guides visitors toward inquiries and sales",
-      "Faster development times thanks to organized component libraries",
-      "Consistent, modern brand presentation across all touchpoints"
-    ],
-    relevantProjects: ["codexpertai", "home-nest", "varavu-selavu"],
+    technologies: ["Figma", "Adobe XD"],
+    process: ["Understand users", "Wireframes", "Visual design", "Prototype", "Test and adjust", "Hand over files"],
+    relevantProjects: ["codexpertai", "home-nest"],
     faq: [
-      {
-        question: "Do you provide editable design files in Figma?",
-        answer: "Yes, you receive complete access to all Figma source files, vector assets, component styles, and typography tokens."
-      },
-      {
-        question: "Can you redesign an existing website or mobile app?",
-        answer: "Absolutely. We can perform a UX audit of your current product and deliver an upgraded, modern redesign."
-      }
-    ]
+      { question: "Do we get the Figma files?", answer: "Yes, all of them." },
+      { question: "Can you redesign something we already have?", answer: "Yes. We'll review what's there first and keep what works." },
+    ],
   },
   {
     id: "digital-marketing",
-    title: "Digital Marketing",
-    shortDescription: "Targeted digital marketing campaigns, Google Ads, Meta advertising, WhatsApp outreach, and local growth strategies that generate real business leads.",
-    icon: "Megaphone",
-    category: "Growth & Marketing",
-    heroTitle: "Results-Driven Digital Marketing & Lead Generation",
-    heroSubtitle: "Reach qualified customers and grow your revenue with targeted marketing campaigns across Google, Meta, WhatsApp, and social media channels.",
-    problem: "Many businesses spend money on random boosts and generic ads that bring low-quality clicks, without a structured conversion funnel or transparent return on investment.",
-    solution: "Nexora Techno builds focused digital marketing campaigns with laser-targeted audiences, compelling ad copy, dedicated landing pages, and real-time lead tracking.",
+    title: "Ads and campaigns",
+    category: "Marketing",
+    shortDescription: "Google, Meta and WhatsApp campaigns with clear targeting and honest reporting.",
+    problem:
+      "Boosting posts without a plan spends money and brings likes, not customers.",
+    solution:
+      "We set a small budget, target the right area and audience, send people to a page built for that ad, and report what it cost per enquiry.",
     features: [
-      { title: "Google Search & Display Ads", description: "High-intent search campaigns targeting users actively searching for your services." },
-      { title: "Meta Ads (Instagram & Facebook)", description: "Visual lead generation ads, carousel campaigns, and localized audience targeting." },
-      { title: "WhatsApp Marketing & Funnels", description: "Direct click-to-WhatsApp ads with automated greetings for instant lead qualification." },
-      { title: "Landing Page Optimization", description: "High-converting destination pages designed specifically to turn ad clicks into calls and forms." },
-      { title: "Analytics & ROI Reporting", description: "Transparent reporting on cost-per-lead, click-through rates, and customer acquisition metrics." }
+      { title: "Google Ads", description: "Show up when people search for what you sell." },
+      { title: "Meta Ads", description: "Facebook and Instagram, targeted by area and interest." },
+      { title: "WhatsApp campaigns", description: "Updates and offers to customers who opted in." },
+      { title: "Plain reports", description: "Spend, enquiries and cost per enquiry. That's it." },
     ],
-    technologies: ["Google Ads", "Meta Ads Manager", "WhatsApp Business API", "Google Analytics 4", "Canva / Figma", "Tag Manager"],
-    process: [
-      "Target Audience & Competitor Analysis",
-      "Campaign Strategy & Budget Planning",
-      "Ad Creative Design & Copywriting",
-      "Landing Page & Conversion Tracking Setup",
-      "Campaign Launch & A/B Testing",
-      "Weekly Performance Optimization & Reporting"
-    ],
-    benefits: [
-      "Steady flow of verified customer inquiries directly to your phone and email",
-      "Target customers in specific geographic regions like Salem, Tamil Nadu, or all-India",
-      "Full transparency on where every rupee of your ad spend goes",
-      "Scalable budget: start small and expand as your business converts leads"
-    ],
-    relevantProjects: ["buddies-unleashed", "home-nest"],
+    technologies: ["Google Ads", "Meta Ads Manager", "WhatsApp Business API", "Google Analytics 4"],
+    process: ["Goal and budget", "Audience and area", "Ad and landing page", "Run and watch", "Adjust weekly"],
+    relevantProjects: ["home-nest", "buddies-unleashed"],
     faq: [
-      {
-        question: "What is the minimum budget required to start digital marketing?",
-        answer: "You can start with modest daily ad budgets (e.g., ₹300 - ₹500/day) on Google or Meta Ads, testing and scaling as leads come in."
-      },
-      {
-        question: "How do we receive leads from the campaigns?",
-        answer: "Leads can be sent directly to your WhatsApp, emailed to your sales inbox in real-time, or organized in an online spreadsheet."
-      }
-    ]
-  }
+      { question: "What's the minimum budget?", answer: "You can start with around ₹300 to ₹500 a day and increase it once you see what works." },
+      { question: "Where do the leads go?", answer: "Straight to your WhatsApp or email, or into a shared sheet." },
+    ],
+  },
 ];

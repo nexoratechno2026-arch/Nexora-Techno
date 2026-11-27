@@ -4,43 +4,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Editorial paper palette (marketing pages) ──────────────
-        paper:   "#F7F6F2",   // warm off-white background
-        surface: "#F0EFEB",   // secondary surfaces / alternating sections
-        ink:     "#151515",   // primary text, headings
-        "ink-muted": "#66635F", // body text, captions
-        rule:    "#D8D6D0",   // borders, dividers
+        paper:   "#FFFFFF",
+        surface: "#F5F4F0",
+        ink:     "#12161C",
+        "ink-muted": "#565C64",
+        rule:    "#E3E1DB",
+        gold:    "#B8914A",
 
-        // ── Dark section palette (footer, CTA blocks) ──────────────
-        deep:    "#101827",   // deep section background
-        "deep-text": "#F5F5F0", // text on deep sections
+        deep:    "#0B192C",
+        "deep-text": "#F3F1EA",
 
-        // ── Indigo accent ──────────────────────────────────────────
         accent: {
-          50:  "#EEF2FF",
-          100: "#E0E7FF",
-          200: "#C7D2FE",
-          300: "#A5B4FC",
-          400: "#818CF8",
-          500: "#6366F1",
-          600: "#4F46E5",  // Primary CTA
-          700: "#4338CA",
-          800: "#3730A3",
-          900: "#312E81",
-        },
-
-        // ── Legacy aliases (for LMS pages untouched) ──────────────
-        brand: {
-          500: "#4F46E5",
-          600: "#4338CA",
+          // Navy, taken from the logo and certificate.
+          50:  "#EEF2F7",
+          100: "#DCE4EF",
+          200: "#B9C8DD",
+          300: "#8BA3C4",
+          400: "#5878A3",
+          500: "#2F5384",
+          600: "#1B3A64",
+          700: "#0B192C",
+          800: "#0B192C",
+          900: "#0B192C",
         },
       },
 
       fontFamily: {
-        serif:   ["Lora", "Georgia", "ui-serif", "serif"],           // Editorial headings
-        sans:    ["Inter", "ui-sans-serif", "system-ui", "sans-serif"], // Body, labels, UI
-        mono:    ["JetBrains Mono", "Fira Code", "ui-monospace", "monospace"], // Tech/code
-        display: ["Lora", "Georgia", "ui-serif", "serif"],            // Large headlines
+        serif:   ["Familjen Grotesk", "IBM Plex Sans", "sans-serif"],
+        display: ["Familjen Grotesk", "IBM Plex Sans", "sans-serif"],
+        sans:    ["IBM Plex Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono:    ["IBM Plex Mono", "ui-monospace", "monospace"],
       },
 
       fontSize: {
@@ -66,19 +59,19 @@ export default {
       },
 
       borderRadius: {
-        "sm": "4px",
-        DEFAULT: "6px",
-        "md": "8px",
-        "lg": "12px",
-        "xl": "16px",
+        "sm": "2px",
+        DEFAULT: "3px",
+        "md": "4px",
+        "lg": "4px",
+        "xl": "6px",
+        "2xl": "8px",
+        "3xl": "10px",
       },
 
       boxShadow: {
-        subtle:  "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
-        card:    "0 4px 16px rgba(0,0,0,0.08)",
-        elevated:"0 8px 32px rgba(0,0,0,0.10)",
-        // Legacy for LMS pages
-        glow:    "0 0 0 1px rgba(255,255,255,0.08), 0 22px 60px rgba(2,16,38,0.52)",
+        subtle:  "none",
+        card:    "0 1px 2px rgba(0,0,0,0.05)",
+        elevated:"0 6px 24px rgba(11,25,44,0.12)",
       },
 
       keyframes: {

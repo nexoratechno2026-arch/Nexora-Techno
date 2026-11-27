@@ -15,7 +15,6 @@ function TermsOfService() {
               <span aria-hidden="true">/</span>
               <span className="text-ink">Terms of Service</span>
             </nav>
-            <p className="eyebrow mb-3">Legal</p>
             <h1 className="heading-display text-display-md text-ink mb-2">
               Terms of Service
             </h1>
