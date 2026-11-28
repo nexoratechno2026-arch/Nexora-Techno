@@ -394,9 +394,74 @@ export async function generateCertificatePDF({
   return URL.createObjectURL(blob);
 }
 
-/**
- * Trigger a PDF download directly
- */
-export function downloadCertificatePDF(doc, filename = "certificate.pdf") {
-  doc.save(filename);
+// ── Record helpers ─────────────────────────────────────────────────────────
+// Certificates in Firestore come from two eras: older LMS records that point at
+// a batch/profile, and flat records that carry their own `profiles`/`batches`.
+// These helpers read either shape.
+
+export const CERT_TYPES = ["Workshop", "Webinar", "Internship"];
+
+const PREFIX = { Workshop: "WRK", Webinar: "WEB", Internship: "INT" };
+
+export function newCertNumber(type) {
+  const rand = Math.random().toString(36).slice(2, 7).toUpperCase();
+  return `NT-${PREFIX[type] || "INT"}-${rand}`;
+}
+
+export function certKind(r = {}) {
+  const t = (r.type || r.batches?.type || "").toLowerCase();
+  const batch = (r.batches?.name || "").toLowerCase();
+  const id = (r.cert_number || "").toUpperCase();
+  if (t === "webinar" || batch.includes("webinar") || id.includes("-WEB-")) return "Webinar";
+  if (t === "workshop" || batch.includes("workshop") || id.includes("-WRK-")) return "Workshop";
+  return "Internship";
+}
+
+export function issuedDate(value) {
+  if (!value) return null;
+  if (typeof value.toDate === "function") return value.toDate();
+  if (value.seconds) return new Date(value.seconds * 1000);
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+export function readRecord(r = {}) {
+  const p = r.profiles || {};
+  const b = r.batches || {};
+  return {
+    id: r.id,
+    certNumber: r.cert_number || "",
+    type: certKind(r),
+    name: p.name || p.full_name || r.name || "",
+    regNo: p.regNo || p.reg_no || p.register_no || r.regNo || "",
+    college: p.college || r.college || "",
+    role: p.role || r.role || "",
+    topic: p.domain || r.domain || b.domain || b.name || r.project_name || "",
+    batchName: b.name || "",
+    startDate: b.start_date || "",
+    endDate: b.end_date || "",
+    projectName: r.project_name || "",
+    issued: issuedDate(r.issued_at),
+  };
+}
+
+export function pdfForRecord(r) {
+  const c = readRecord(r);
+  return generateCertificatePDF({
+    name: c.name || "Participant",
+    domain: c.topic || "Technology",
+    batchName: c.batchName || c.type,
+    startDate: c.startDate,
+    endDate: c.endDate,
+    certNumber: c.certNumber,
+    projectName: c.projectName || undefined,
+    regNo: c.regNo || undefined,
+    college: c.college || undefined,
+    role: c.role || undefined,
+    type: c.type,
+  });
+}
+
+export function verifyLink(certNumber) {
+  return `https://nexoratechno.in/verify?certId=${encodeURIComponent(certNumber)}`;
 }

@@ -1,17 +1,13 @@
-import React from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
-import WhatWeDoSection from "../components/WhatWeDoSection";
 import PortfolioSection from "../components/PortfolioSection";
 import ServicesSection from "../components/ServicesSection";
-import EdTechSection from "../components/EdTechSection";
 import HowWeWorkSection from "../components/HowWeWorkSection";
-import TechnologiesSection from "../components/TechnologiesSection";
+import EdTechSection from "../components/EdTechSection";
 import FaqSection from "../components/FaqSection";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
 import WhatsAppButton from "../components/WhatsAppButton";
-import ScrollToTop from "../components/ScrollToTop";
 
 export default function Home() {
   return (
@@ -19,18 +15,15 @@ export default function Home() {
       <Navbar />
       <main id="main-content">
         <HeroSection />
-        <WhatWeDoSection />
         <PortfolioSection />
         <ServicesSection />
-        <EdTechSection />
         <HowWeWorkSection />
-        <TechnologiesSection />
+        <EdTechSection />
         <FaqSection />
         <ContactSection />
       </main>
       <Footer />
       <WhatsAppButton />
-      <ScrollToTop />
     </>
   );
 }

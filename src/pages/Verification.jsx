@@ -1,741 +1,203 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ScrollToTop from "../components/ScrollToTop";
 import WhatsAppButton from "../components/WhatsAppButton";
 import { db } from "../firebase";
-import { collection, query, where, getDocs, getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
-import { generateCertificatePDF } from "../lms/utils/generateCertificate";
-import { useAuth } from "../lms/context/AuthContext";
-import { Edit2, Download, Check, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { pdfForRecord, readRecord } from "../utils/certificate";
 
-const KNOWN_CERTIFICATES = {
+// Issued before the Firestore records were cleaned up; kept so the printed QR
+// on this certificate still resolves if the lookup fails.
+const KNOWN = {
   "NT-WEB-JDXU6": {
-    name: "Kavitha",
-    regNo: "24MUCS1028",
-    college: "MUTHAYAMMAL COLLEGE OF ARTS AND SCIENCE(AUTONOMOUS), RASIPURAM",
-    role: "STUDENT",
-    domain: "How to Use AI For Career Growth",
+    cert_number: "NT-WEB-JDXU6",
     type: "Webinar",
+    issued_at: "2026-09-05",
+    profiles: {
+      name: "Kavitha",
+      regNo: "24MUCS1028",
+      college: "MUTHAYAMMAL COLLEGE OF ARTS AND SCIENCE(AUTONOMOUS), RASIPURAM",
+      role: "STUDENT",
+      domain: "How to Use AI For Career Growth",
+    },
+    batches: { name: "Webinar", start_date: "2026-09-05", end_date: "2026-09-05" },
   },
 };
 
-function Verification() {
-  const { profile } = useAuth() || {};
-  const isAdmin = profile?.role === "admin";
+const STAFF_ROLE = /(prof|faculty|staff|lecturer|teacher|hod)/i;
 
-  const [searchId, setSearchId] = useState("");
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+function longDate(d) {
+  if (!d) return null;
+  const date = d instanceof Date ? d : new Date(d);
+  if (isNaN(date.getTime())) return null;
+  return date.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function period(c) {
+  const from = longDate(c.startDate);
+  const to = longDate(c.endDate);
+  if (!from) return null;
+  if (!to || from === to) return from;
+  return `${from} – ${to}`;
+}
+
+async function lookup(id) {
+  const res = await getDocs(query(collection(db, "certificates"), where("cert_number", "==", id)));
+  if (res.empty) return null;
+  const d = res.docs[0];
+  const r = { id: d.id, ...d.data() };
+  // Older records only point at the intern's profile and batch.
+  if (!r.profiles && r.user_id) {
+    const p = await getDoc(doc(db, "profiles", r.user_id)).catch(() => null);
+    if (p?.exists()) r.profiles = p.data();
+  }
+  if (!r.batches && r.batch_id) {
+    const b = await getDoc(doc(db, "batches", r.batch_id)).catch(() => null);
+    if (b?.exists()) r.batches = b.data();
+  }
+  return r;
+}
+
+export default function Verification() {
+  const [input, setInput] = useState("");
+  const [state, setState] = useState({ status: "idle" }); // idle | loading | found | missing | offline
   const [downloading, setDownloading] = useState(false);
 
-  // Edit Certificate Modal State
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: "",
-    regNo: "",
-    college: "",
-    role: "STUDENT",
-    domain: "",
-    type: "Webinar",
-  });
-  const [isSavingEdit, setIsSavingEdit] = useState(false);
-
-  const parseDurationDays = (record) => {
-    if (record?.batches?.start_date && record?.batches?.end_date) {
-      const start = new Date(record.batches.start_date);
-      const end = new Date(record.batches.end_date);
-      const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      const typeLabel = record.batches.name || record.type || "Program";
-      
-      // If it's a webinar and 1 day, just say '1 Day Webinar'
-      return `${diffDays} Day${diffDays !== 1 ? 's' : ''} ${typeLabel.toLowerCase().includes('webinar') ? 'Webinar' : 'Internship'}`;
+  async function verify(raw) {
+    const id = raw.trim().toUpperCase();
+    if (!id) return;
+    setState({ status: "loading", id });
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("certId") !== id) {
+      window.history.replaceState(null, "", `/verify?certId=${encodeURIComponent(id)}`);
     }
-    if (record?.duration) return record.duration;
-    const isWeb =
-      record?.type === "Webinar" ||
-      record?.cert_number?.toUpperCase().includes("WEB") ||
-      record?.batches?.name?.toLowerCase().includes("webinar");
-    return isWeb ? "1 Day Technical Webinar" : "30 Days Practical Internship";
-  };
-
-  const getProgramLabel = (record) => {
-    return (
-      record?.profiles?.domain ||
-      record?.domain ||
-      record?.batches?.domain ||
-      record?.batches?.name ||
-      record?.project_name ||
-      record?.program ||
-      "Technology & Software Engineering"
-    );
-  };
-
-  const getNameLabel = (record) => {
-    return (
-      record?.profiles?.name ||
-      record?.profiles?.full_name ||
-      record?.name ||
-      record?.student_name ||
-      record?.intern_name ||
-      record?.participant_name ||
-      "Verified Student"
-    );
-  };
-
-  const getDateLabel = (record) => {
-    if (!record?.issued_at) return "Active Verified";
-    let dateObj;
-    if (typeof record.issued_at?.toDate === "function") {
-      dateObj = record.issued_at.toDate();
-    } else if (record.issued_at?.seconds) {
-      dateObj = new Date(record.issued_at.seconds * 1000);
-    } else {
-      dateObj = new Date(record.issued_at);
-    }
-    if (isNaN(dateObj?.getTime())) return "Active Verified";
-    return dateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-  };
-
-  const handleDownload = async () => {
-    if (!result) return;
-    setDownloading(true);
     try {
-      const isWeb =
-        result.type === "Webinar" ||
-        result.batches?.name?.toLowerCase().includes("webinar") ||
-        result.cert_number?.toUpperCase().includes("WEB");
-
-      const pdfUrl = await generateCertificatePDF({
-        name: result.profiles?.name || "Participant",
-        domain: result.profiles?.domain || result.batches?.domain || "Technology",
-        batchName: result.batches?.name || (isWeb ? "Webinar" : "Internship"),
-        startDate: result.batches?.start_date,
-        endDate: result.batches?.end_date,
-        certNumber: result.cert_number,
-        projectName: result.project_name || undefined,
-        regNo: result.profiles?.regNo || result.profiles?.reg_no || result.profiles?.register_no || result.regNo,
-        college: result.profiles?.college || result.college,
-        role: result.profiles?.role || result.role,
-        type: isWeb ? "Webinar" : "Internship",
-      });
-      window.open(pdfUrl, "_blank");
-    } catch (err) {
-      setError("Failed to generate certificate PDF.");
-    } finally {
-      setDownloading(false);
+      const record = (await lookup(id)) || KNOWN[id];
+      setState(record ? { status: "found", id, record } : { status: "missing", id });
+    } catch {
+      setState(KNOWN[id] ? { status: "found", id, record: KNOWN[id] } : { status: "offline", id });
     }
-  };
-
-  const performVerification = async (term) => {
-    if (!term || !term.trim()) return;
-    const searchTerm = term.trim().toUpperCase();
-    sessionStorage.setItem("last_verified_cert_id", searchTerm);
-
-    setIsSearching(true);
-    setError("");
-    setResult(null);
-
-    try {
-      const certQ = query(collection(db, "certificates"), where("cert_number", "==", searchTerm));
-      const certRes = await getDocs(certQ);
-
-      let finalData = null;
-
-      if (!certRes.empty) {
-        const certDoc = certRes.docs[0];
-        const data = certDoc.data();
-        finalData = { id: certDoc.id, ...data };
-
-        if (data.user_id && !data.profiles) {
-          try {
-            const profileDoc = await getDoc(doc(db, "profiles", data.user_id));
-            if (profileDoc.exists()) {
-              finalData.profiles = profileDoc.data();
-            }
-          } catch (e) {
-            console.warn("Could not fetch profile", e);
-          }
-        }
-
-        if (data.batch_id && !data.batches) {
-          try {
-            const batchDoc = await getDoc(doc(db, "batches", data.batch_id));
-            if (batchDoc.exists()) {
-              finalData.batches = batchDoc.data();
-            }
-          } catch (e) {
-            console.warn("Could not fetch batch", e);
-          }
-        }
-      } else if (KNOWN_CERTIFICATES[searchTerm]) {
-        // Fallback for known certificates even if DB query is delayed
-        const known = KNOWN_CERTIFICATES[searchTerm];
-        finalData = {
-          id: `local-${searchTerm}`,
-          cert_number: searchTerm,
-          issued_at: new Date("2026-09-05").getTime(),
-          profiles: {
-            name: known.name,
-            regNo: known.regNo,
-            college: known.college,
-            role: known.role,
-            domain: known.domain,
-          },
-          batches: {
-            name: known.type,
-            start_date: "2026-09-05",
-            end_date: "2026-09-05",
-          },
-          type: known.type,
-          regNo: known.regNo,
-          college: known.college,
-          role: known.role,
-        };
-      } else {
-        setError(`Certificate ID "${searchTerm}" not found. Please check the ID and try again.`);
-        return;
-      }
-
-      // 1. Overlay known defaults if any fields are missing
-      if (KNOWN_CERTIFICATES[searchTerm]) {
-        const known = KNOWN_CERTIFICATES[searchTerm];
-        finalData.profiles = {
-          ...finalData.profiles,
-          name: finalData.profiles?.name || known.name,
-          regNo: finalData.profiles?.regNo || known.regNo,
-          college: finalData.profiles?.college || known.college,
-          role: finalData.profiles?.role || known.role,
-          domain: finalData.profiles?.domain || known.domain,
-        };
-        finalData.regNo = finalData.regNo || known.regNo;
-        finalData.college = finalData.college || known.college;
-        finalData.role = finalData.role || known.role;
-        finalData.type = finalData.type || known.type;
-      }
-
-      // 2. Overlay user's saved edits from localStorage (highest precedence)
-      try {
-        const savedOverrides = JSON.parse(localStorage.getItem("nt_cert_overrides") || "{}");
-        if (savedOverrides[searchTerm]) {
-          const over = savedOverrides[searchTerm];
-          finalData.profiles = {
-            ...finalData.profiles,
-            name: over.name || finalData.profiles?.name,
-            regNo: over.regNo !== undefined ? over.regNo : finalData.profiles?.regNo,
-            college: over.college !== undefined ? over.college : finalData.profiles?.college,
-            role: over.role !== undefined ? over.role : finalData.profiles?.role,
-            domain: over.domain || finalData.profiles?.domain,
-          };
-          if (over.regNo !== undefined) finalData.regNo = over.regNo;
-          if (over.college !== undefined) finalData.college = over.college;
-          if (over.role !== undefined) finalData.role = over.role;
-          if (over.type) finalData.type = over.type;
-        }
-      } catch (err) {
-        console.warn("Could not read local overrides:", err);
-      }
-
-      console.log("Verified certificate data:", finalData);
-      setResult(finalData);
-    } catch (err) {
-      console.error("Search error:", err);
-      // Even if network fails, check known certificates or local overrides
-      if (KNOWN_CERTIFICATES[searchTerm]) {
-        const known = KNOWN_CERTIFICATES[searchTerm];
-        const savedOverrides = JSON.parse(localStorage.getItem("nt_cert_overrides") || "{}");
-        const over = savedOverrides[searchTerm] || {};
-        setResult({
-          id: `local-${searchTerm}`,
-          cert_number: searchTerm,
-          issued_at: new Date("2026-09-05").getTime(),
-          profiles: {
-            name: over.name || known.name,
-            regNo: over.regNo !== undefined ? over.regNo : known.regNo,
-            college: over.college !== undefined ? over.college : known.college,
-            role: over.role !== undefined ? over.role : known.role,
-            domain: over.domain || known.domain,
-          },
-          batches: {
-            name: over.type || known.type,
-            start_date: "2026-09-05",
-            end_date: "2026-09-05",
-          },
-          type: over.type || known.type,
-          regNo: over.regNo !== undefined ? over.regNo : known.regNo,
-          college: over.college !== undefined ? over.college : known.college,
-          role: over.role !== undefined ? over.role : known.role,
-        });
-      } else {
-        setError("Unable to connect to verification server. Please check your internet connection.");
-      }
-    } finally {
-      setIsSearching(false);
-    }
-  };
+  }
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryId = urlParams.get("id") || urlParams.get("cert") || sessionStorage.getItem("last_verified_cert_id");
-    if (queryId) {
-      setSearchId(queryId);
-      performVerification(queryId);
+    const p = new URLSearchParams(window.location.search);
+    const id = p.get("certId") || p.get("id") || p.get("cert");
+    if (id) {
+      setInput(id);
+      verify(id);
     }
   }, []);
 
-  const handleVerify = (e) => {
-    e.preventDefault();
-    if (!searchId.trim()) return;
-    performVerification(searchId);
-  };
-
-  const openEditModal = () => {
-    if (!result) return;
-    const isWeb =
-      result.type === "Webinar" ||
-      result.batches?.name?.toLowerCase().includes("webinar") ||
-      result.cert_number?.toUpperCase().includes("WEB");
-
-    setEditForm({
-      name: result.profiles?.name || "",
-      regNo: result.profiles?.regNo || result.profiles?.reg_no || result.profiles?.register_no || result.regNo || "",
-      college: result.profiles?.college || result.college || "",
-      role: result.profiles?.role || result.role || "STUDENT",
-      domain: result.profiles?.domain || result.batches?.domain || "",
-      type: isWeb ? "Webinar" : "Internship",
-    });
-    setShowEditModal(true);
-  };
-
-  const handleSaveEdit = async (e) => {
-    e.preventDefault();
-    if (!result) return;
-    setIsSavingEdit(true);
-
-    const certKey = (result.cert_number || searchId).trim().toUpperCase();
-
-    // 1. Save to persistent localStorage (GUARANTEES survival across reloads)
+  async function download() {
+    setDownloading(true);
     try {
-      const saved = JSON.parse(localStorage.getItem("nt_cert_overrides") || "{}");
-      saved[certKey] = {
-        name: editForm.name,
-        regNo: editForm.regNo || null,
-        college: editForm.college || null,
-        role: editForm.role || null,
-        domain: editForm.domain,
-        type: editForm.type,
-      };
-      localStorage.setItem("nt_cert_overrides", JSON.stringify(saved));
-    } catch (err) {
-      console.warn("Could not save to localStorage", err);
+      window.open(await pdfForRecord(state.record), "_blank");
+    } finally {
+      setDownloading(false);
     }
+  }
 
-    // 2. Also attempt syncing to Firestore
-    if (result.id && !result.id.startsWith("local-")) {
-      try {
-        const docRef = doc(db, "certificates", result.id);
-        const updates = {
-          profiles: {
-            ...(result.profiles || {}),
-            name: editForm.name,
-            regNo: editForm.regNo || null,
-            college: editForm.college || null,
-            role: editForm.role || null,
-            domain: editForm.domain,
-          },
-          regNo: editForm.regNo || null,
-          college: editForm.college || null,
-          role: editForm.role || null,
-          type: editForm.type,
-        };
-        await setDoc(docRef, updates, { merge: true });
-      } catch (err) {
-        console.warn("Firestore setDoc sync error:", err);
-      }
-    }
-
-    // 3. Immediately update UI state
-    setResult((prev) => ({
-      ...prev,
-      profiles: {
-        ...prev.profiles,
-        name: editForm.name,
-        regNo: editForm.regNo,
-        college: editForm.college,
-        role: editForm.role,
-        domain: editForm.domain,
-      },
-      regNo: editForm.regNo,
-      college: editForm.college,
-      role: editForm.role,
-      type: editForm.type,
-    }));
-
-    toast.success("Certificate details updated and saved successfully!");
-    setShowEditModal(false);
-    setIsSavingEdit(false);
-  };
+  const c = state.status === "found" ? readRecord(state.record) : null;
+  const isStaff = c && STAFF_ROLE.test(c.role);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
+    <div className="flex min-h-screen flex-col bg-paper text-ink">
       <Navbar />
-      <ScrollToTop />
       <WhatsAppButton />
 
-      <main className="flex-grow flex items-center justify-center py-20 lg:py-28 relative">
-        {/* Subtle background ambient light */}
-        <div
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, rgba(99,102,241,0.12) 0%, transparent 70%)",
-          }}
-        />
+      <main className="flex-grow">
+        <section className="container-content py-16 sm:py-20">
+          <div className="max-w-xl">
+            <h1 className="heading-display text-display-sm sm:text-display-md text-ink">
+              Check a certificate
+            </h1>
+            <p className="text-body-md text-ink-muted mt-3 max-w-[52ch]">
+              Every certificate we issue has an ID printed at the bottom left, next to the QR code.
+              Enter it here to see the record we hold for it.
+            </p>
 
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 w-full relative z-10">
-          <div className="text-center mb-10">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-2"
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                verify(input);
+              }}
+              className="mt-8 flex flex-col sm:flex-row gap-3"
             >
-              Official Verification Portal
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight"
-            >
-              Verify Certificate <span className="text-indigo-400">& Credentials</span>
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mt-3 text-slate-400 text-sm sm:text-base max-w-lg mx-auto"
-            >
-              Enter the Certificate ID found on your certificate to instantly verify its authenticity and view issued records.
-            </motion.p>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-black/50"
-          >
-            <form onSubmit={handleVerify} className="space-y-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchId}
-                  onChange={(e) => setSearchId(e.target.value)}
-                  placeholder="e.g. NT-WEB-JDXU6 or NT26FS001"
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-6 py-4.5 text-center text-lg sm:text-xl font-mono font-bold uppercase tracking-wider text-white placeholder:text-slate-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all shadow-inner"
-                  required
-                />
-              </div>
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  disabled={isSearching}
-                  className="flex-grow rounded-xl bg-indigo-600 hover:bg-indigo-500 py-3.5 px-6 font-bold text-white shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2"
-                >
-                  {isSearching ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Verifying...
-                    </span>
-                  ) : (
-                    "Verify Authenticity →"
-                  )}
-                </button>
-                {(result || error) && (
-                  <button
-                    type="button"
-                    onClick={() => { setSearchId(""); setResult(null); setError(""); }}
-                    className="px-5 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white font-medium text-sm transition"
-                  >
-                    Reset
-                  </button>
-                )}
-              </div>
+              <label htmlFor="cert-id" className="sr-only">Certificate ID</label>
+              <input
+                id="cert-id"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="NT-WEB-JDXU6"
+                autoComplete="off"
+                spellCheck={false}
+                className="form-input font-mono uppercase tracking-wide text-base flex-1"
+              />
+              <button type="submit" disabled={state.status === "loading"} className="btn-primary justify-center disabled:opacity-60">
+                {state.status === "loading" ? "Checking…" : "Check"}
+              </button>
             </form>
 
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mt-6 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm font-medium text-red-400"
-                >
-                  <p>{error}</p>
-                </motion.div>
+            <div className="mt-10" aria-live="polite">
+              {state.status === "missing" && (
+                <div className="border-l-2 border-red-700 pl-4">
+                  <p className="font-medium">No certificate with the ID {state.id}</p>
+                  <p className="text-sm text-ink-muted mt-1">
+                    Check for mix-ups like 0 and O, or 1 and I. If it still doesn't show up,{" "}
+                    <a href="/contact" className="underline underline-offset-2">get in touch</a> and we'll look into it.
+                  </p>
+                </div>
               )}
 
-              {result && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mt-8 rounded-3xl border border-indigo-500/30 bg-slate-900/95 p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-indigo-950/40 relative overflow-hidden"
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <div className="h-14 w-14 mb-3 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
-                      <svg viewBox="0 0 24 24" className="h-7 w-7 fill-none stroke-current" strokeWidth="2.5">
-                        <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    {(() => {
-                      const isWeb =
-                        result.type === "Webinar" ||
-                        result.batches?.name?.toLowerCase().includes("webinar") ||
-                        result.cert_number?.toUpperCase().includes("WEB");
-                      const role = result.profiles?.role || result.role;
-                      const isStaff = role && /^(prof|faculty|staff|lecturer|teacher)/i.test(role);
-                      const regNo = result.profiles?.regNo || result.profiles?.reg_no || result.profiles?.register_no || result.regNo;
-                      const college = result.profiles?.college || result.college;
-
-                      return (
-                        <>
-                          <div className="mb-2">
-                            <span className="inline-flex items-center rounded-full bg-indigo-500/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-indigo-300 border border-indigo-500/30">
-                              {isWeb ? "Certificate of Participation" : "Certificate of Completion"}
-                            </span>
-                          </div>
-                          <h3 className="text-2xl font-bold text-white mb-1">Authenticity Verified</h3>
-                          <p className="text-xs sm:text-sm text-slate-400 mb-6">
-                            This document is an authentic record verified by Nexora Techno.
-                          </p>
-
-                          <div className="w-full space-y-3 pt-4 border-t border-slate-800 text-left">
-                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                              <span className="text-slate-400 text-xs sm:text-sm font-medium">
-                                {isStaff ? "Faculty / Staff Name" : isWeb ? "Participant Name" : "Intern Name"}
-                              </span>
-                              <span className="font-bold text-white text-base sm:text-lg">{getNameLabel(result)}</span>
-                            </div>
-
-                            {role && role.toLowerCase() !== "student" && role.toLowerCase() !== "intern" && (
-                              <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                                <span className="text-slate-400 text-xs sm:text-sm font-medium">Designation / Role</span>
-                                <span className="font-semibold text-indigo-300 text-sm">{role}</span>
-                              </div>
-                            )}
-
-                            {regNo && (
-                              <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                                <span className="text-slate-400 text-xs sm:text-sm font-medium">
-                                  {isStaff ? "Staff ID" : "Register Number"}
-                                </span>
-                                <span className="font-semibold font-mono text-white text-sm bg-slate-950 px-2 py-0.5 rounded border border-slate-800">{regNo}</span>
-                              </div>
-                            )}
-
-                            {college && (
-                              <div className="flex justify-between items-start py-2 border-b border-slate-800/80">
-                                <span className="text-slate-400 text-xs sm:text-sm font-medium shrink-0 mr-4">Institution</span>
-                                <span className="font-medium text-slate-200 text-xs sm:text-sm text-right max-w-xs">{college}</span>
-                              </div>
-                            )}
-
-                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                              <span className="text-slate-400 text-xs sm:text-sm font-medium">{isWeb ? "Webinar Topic" : "Domain / Program"}</span>
-                              <span className="font-semibold text-indigo-300 text-sm text-right">{getProgramLabel(result)}</span>
-                            </div>
-
-                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Duration</span>
-                              <span className="font-semibold text-white text-sm">{parseDurationDays(result)}</span>
-                            </div>
-
-                            <div className="flex justify-between items-center py-2 border-b border-slate-800/80">
-                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Verification Status</span>
-                              <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-bold text-emerald-400 border border-emerald-500/30">
-                                {isWeb ? "Verified Participant" : "Verified Completion"}
-                              </span>
-                            </div>
-
-                            <div className="flex justify-between items-center py-2">
-                              <span className="text-slate-400 text-xs sm:text-sm font-medium">Issue Date</span>
-                              <span className="font-semibold text-white text-sm">{getDateLabel(result)}</span>
-                            </div>
-                          </div>
-                        </>
-                      );
-                    })()}
-                    
-                    <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
-                      <button
-                        onClick={handleDownload}
-                        disabled={downloading}
-                        className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-500 py-3.5 font-bold text-white shadow-lg shadow-indigo-600/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm"
-                      >
-                        {downloading ? (
-                          <>
-                            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                            </svg>
-                            Generating Certificate...
-                          </>
-                        ) : (
-                          <>
-                            <Download size={16} /> Download Official PDF
-                          </>
-                        )}
-                      </button>
-
-                      {isAdmin && (
-                        <button
-                          onClick={openEditModal}
-                          type="button"
-                          className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-3.5 font-semibold text-slate-200 hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 text-sm"
-                          title="Administrator Only: Edit Certificate"
-                        >
-                          <Edit2 size={15} className="text-indigo-400" /> Edit Record
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
+              {state.status === "offline" && (
+                <div className="border-l-2 border-amber-600 pl-4">
+                  <p className="font-medium">Couldn't reach our records</p>
+                  <p className="text-sm text-ink-muted mt-1">Check your connection and try again.</p>
+                </div>
               )}
-            </AnimatePresence>
-          </motion.div>
-          
-          <p className="mt-8 text-center text-sm text-slate-500">
-            Having issues? <a href="/#contact" className="text-brand-300 hover:underline">Contact our support team</a>
-          </p>
-        </div>
 
-        {/* Edit Certificate Details Modal (Admin Only) */}
-        {showEditModal && isAdmin && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-            <div className="bg-slate-900 border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-              <div className="p-5 border-b border-white/10 flex justify-between items-center bg-white/5">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Edit2 size={18} className="text-brand-300" />
-                  Edit Certificate Details
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => setShowEditModal(false)}
-                  className="text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveEdit} className="p-6 space-y-4 overflow-y-auto">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    Participant Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.name}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                      Role / Category
-                    </label>
-                    <select
-                      value={editForm.role}
-                      onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                      className="w-full bg-slate-800 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400"
-                    >
-                      <option value="STUDENT">STUDENT</option>
-                      <option value="Professor">Professor</option>
-                      <option value="Assistant Professor">Assistant Professor</option>
-                      <option value="Faculty / Staff">Faculty / Staff</option>
-                    </select>
+              {c && (
+                <article className="border border-rule rounded-md bg-white">
+                  <div className="px-5 sm:px-6 py-4 border-b border-rule flex items-center gap-2.5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-700 shrink-0" aria-hidden="true">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    <p className="text-sm">
+                      <span className="font-semibold">Genuine.</span>{" "}
+                      <span className="text-ink-muted">Issued by Nexora Techno.</span>
+                    </p>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                      Register No / Staff ID
-                    </label>
-                    <input
-                      type="text"
-                      value={editForm.regNo}
-                      onChange={(e) => setEditForm({ ...editForm, regNo: e.target.value })}
-                      className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400 font-mono"
-                    />
+                  <div className="px-5 sm:px-6 py-6">
+                    <p className="text-label-xs uppercase text-ink-muted">
+                      Certificate of {c.type === "Internship" ? "Completion" : "Participation"}
+                    </p>
+                    <h2 className="font-serif text-2xl sm:text-[28px] font-semibold mt-1.5 leading-tight">
+                      {c.name || "—"}
+                    </h2>
+                    {c.college && <p className="text-sm text-ink-muted mt-1">{c.college}</p>}
+
+                    <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+                      <Item label={c.type === "Internship" ? "Programme" : c.type}>{c.topic || "—"}</Item>
+                      {period(c) && <Item label="Held on">{period(c)}</Item>}
+                      {c.regNo && <Item label={isStaff ? "Staff ID" : "Register no."} mono>{c.regNo}</Item>}
+                      {isStaff && <Item label="Role">{c.role}</Item>}
+                      <Item label="Certificate ID" mono>{c.certNumber}</Item>
+                      {longDate(c.issued) && <Item label="Issued">{longDate(c.issued)}</Item>}
+                    </dl>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    College / University Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editForm.college}
-                    onChange={(e) => setEditForm({ ...editForm, college: e.target.value })}
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    Topic / Course / Domain
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editForm.domain}
-                    onChange={(e) => setEditForm({ ...editForm, domain: e.target.value })}
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">
-                    Certificate Type
-                  </label>
-                  <select
-                    value={editForm.type}
-                    onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
-                    className="w-full bg-slate-800 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-brand-400"
-                  >
-                    <option value="Webinar">Webinar (Certificate of Participation)</option>
-                    <option value="Internship">Internship (Certificate of Completion)</option>
-                  </select>
-                </div>
-
-                <div className="pt-3 flex gap-3 justify-end border-t border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => setShowEditModal(false)}
-                    className="px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 transition text-sm"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSavingEdit}
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-brand-300 text-slate-950 font-bold hover:brightness-110 transition flex items-center gap-2 text-sm disabled:opacity-50"
-                  >
-                    {isSavingEdit ? "Saving..." : "Save Changes"}
-                  </button>
-                </div>
-              </form>
+                  <div className="px-5 sm:px-6 py-4 border-t border-rule bg-surface/60 flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-xs text-ink-muted">If the details don't match the paper copy, it isn't ours.</p>
+                    <button onClick={download} disabled={downloading} className="btn-secondary text-sm disabled:opacity-60">
+                      {downloading ? "Preparing…" : "Download PDF"}
+                    </button>
+                  </div>
+                </article>
+              )}
             </div>
           </div>
-        )}
+        </section>
       </main>
 
       <Footer />
@@ -743,4 +205,11 @@ function Verification() {
   );
 }
 
-export default Verification;
+function Item({ label, children, mono }) {
+  return (
+    <div>
+      <dt className="text-ink-muted text-xs">{label}</dt>
+      <dd className={`mt-0.5 font-medium ${mono ? "font-mono text-[13px]" : ""}`}>{children}</dd>
+    </div>
+  );
+}
